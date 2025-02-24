@@ -79,4 +79,22 @@ public class UserService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "name", "is"));
     }
   }
+
+  /**
+   * Gets User by username
+   *
+   * @param username
+   * @throws org.springframework.web.server.ResponseStatusException
+   * @return userFound
+  */
+  public User getUserByUsername(String username) {
+    User userFound = userRepository.findByUsername(username);
+
+    if (userFound == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found");
+    }
+
+    return userFound;
+  }
+
 }
