@@ -56,6 +56,16 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
 
+  @GetMapping("/users/{id}") // retrieve user profile with userid
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO getUser(@PathVariable String id) {
+
+    User user = userService.getUserById(Long.valueOf(id));
+
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
+  }
+
   @PostMapping("/login")
   @ResponseStatus(HttpStatus.ACCEPTED)
   @ResponseBody
