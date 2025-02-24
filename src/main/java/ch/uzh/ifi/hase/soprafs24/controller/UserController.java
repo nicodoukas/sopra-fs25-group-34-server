@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,23 @@ public class UserController {
     User createdUser = userService.createUser(userInput);
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
+  }
+
+  @PostMapping("/login")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  @ResponseBody
+  public UserGetDTO login(@RequestBody UserPostDTO userPostDTO){
+  // convert API user to internal representation
+  User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+
+  //get user by username
+  User foundUser = userService.getUserByUsername(userInput.getUsername());
+
+  //check if the password is correct
+  if (!userInput.getPassword().equals(foundUser.getPassword())){
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
+  }
+  return DTOMapper.INSTANCE.convertEntityToUserGetDTO(foundUser);
   }
 
 }
