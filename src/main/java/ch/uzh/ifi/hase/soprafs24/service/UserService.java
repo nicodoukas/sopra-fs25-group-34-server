@@ -107,5 +107,21 @@ public class UserService {
     return userFound.get();
   }
 
+  /* sets UserStatus to ONLINE after login*/
+  public void login(Long id){
+    User user = getUserById(id);
+    user.setStatus(UserStatus.ONLINE);
+    userRepository.save(user);
+    userRepository.flush();
+  }
+
+  /* sets UserStatus to OFFLINE as logout*/
+  public void logout(Long id){
+    User user = getUserById(id);
+    user.setStatus(UserStatus.OFFLINE);
+    userRepository.save(user);
+    userRepository.flush();
+  }
+
 
 }
