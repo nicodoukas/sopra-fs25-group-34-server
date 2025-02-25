@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User Controller
@@ -80,7 +81,21 @@ public class UserController {
   if (!userInput.getPassword().equals(foundUser.getPassword())){
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
   }
+  //userStatus = ONLINE
+  userService.login(foundUser.getId());
+
   return DTOMapper.INSTANCE.convertEntityToUserGetDTO(foundUser);
   }
 
+  @PutMapping("/logout")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public Map<String, String> logout(@RequestBody Long id){
+
+    //userStatus = OFFLINE
+    userService.logout(id);
+
+    // Return a JSON response
+    return Map.of("message", "User successfully logged out");
+  }
 }
