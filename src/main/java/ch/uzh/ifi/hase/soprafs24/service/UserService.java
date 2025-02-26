@@ -123,5 +123,25 @@ public class UserService {
     userRepository.flush();
   }
 
+  public User updateUser(User userToUpdate){
+    User user = getUserById(userToUpdate.getId());
+
+    //check if username was changed
+    if (userToUpdate.getUsername() != null) {
+          //check if new username is unique;
+          User userByUsername = userRepository.findByUsername(userToUpdate.getUsername());
+          if (userByUsername != null) {
+              throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username not unique");
+          }
+
+          user.setUsername(userToUpdate.getUsername());
+      }
+      //check if birthday was  changed
+      if (userToUpdate.getBirthday() != null) {
+          user.setBirthday(userToUpdate.getBirthday());
+      }
+    return userRepository.save(user);
+  }
+
 
 }
