@@ -57,12 +57,12 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
 
-  @GetMapping("/users/{id}") // retrieve user profile with userid
+  @GetMapping("/users/{userId}") // retrieve user profile with userid
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public UserGetDTO getUser(@PathVariable String id) {
+  public UserGetDTO getUser(@PathVariable String userId) {
 
-    User user = userService.getUserById(Long.valueOf(id));
+    User user = userService.getUserById(Long.valueOf(userId));
 
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
@@ -98,4 +98,18 @@ public class UserController {
     // Return a JSON response
     return Map.of("message", "User successfully logged out");
   }
+
+  @PutMapping("/users/{userId}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO updateUser(@PathVariable String userId, @RequestBody UserPostDTO userPostDTO) {
+
+    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+    userInput.setId(Long.valueOf(userId));
+
+    User updatedUser = userService.updateUser(userInput);
+
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(updatedUser);
+  }
+
 }
