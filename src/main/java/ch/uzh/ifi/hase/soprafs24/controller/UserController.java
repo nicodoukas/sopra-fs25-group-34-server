@@ -88,15 +88,13 @@ public class UserController {
   }
 
   @PutMapping("/logout")
-  @ResponseStatus(HttpStatus.OK)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
-  public Map<String, String> logout(@RequestBody Long id){
+  public void logout(@RequestBody Long id){
 
     //userStatus = OFFLINE
     userService.logout(id);
 
-    // Return a JSON response
-    return Map.of("message", "User successfully logged out");
   }
 
   @PutMapping("/users/{userId}")
