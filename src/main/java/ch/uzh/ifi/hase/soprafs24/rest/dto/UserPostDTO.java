@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 public class UserPostDTO {
 
-  private String name;
-
   private String username;
 
   private String password;
@@ -13,14 +11,6 @@ public class UserPostDTO {
   private LocalDate creationdate;
 
   private LocalDate birthday;
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
 
   public String getUsername() {
     return username;
