@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,7 +51,7 @@ public class UserService {
     // saves the given entity but data is only persisted in the database once
     // flush() is called
 
-    newUser.setCreationdate(LocalDate.now());
+    newUser.setCreationdate(new Date());
     newUser = userRepository.save(newUser);
     userRepository.flush();
 
@@ -131,10 +134,10 @@ public class UserService {
 
           user.setUsername(userToUpdate.getUsername());
       }
-      //check if birthday was  changed
-      if (userToUpdate.getBirthday() != null) {
-          user.setBirthday(userToUpdate.getBirthday());
-      }
+    //check if birthday was  changed
+    if (userToUpdate.getBirthday() != null) {
+      user.setBirthday(userToUpdate.getBirthday());
+    }
     return userRepository.save(user);
   }
 
