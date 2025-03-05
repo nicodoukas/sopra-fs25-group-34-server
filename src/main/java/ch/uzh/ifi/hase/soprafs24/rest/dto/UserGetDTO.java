@@ -3,15 +3,16 @@ package ch.uzh.ifi.hase.soprafs24.rest.dto;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import org.apache.tomcat.jni.Local;
 
-import java.time.LocalDate;
+
+import java.util.Date;
 
 public class UserGetDTO {
 
   private Long id;
   private String username;
   private String password;
-  private LocalDate creationdate;
-  private LocalDate birthday;
+  private Date creationdate;
+  private Date birthday;
   private UserStatus status;
 
   public Long getId() {
@@ -34,13 +35,13 @@ public class UserGetDTO {
 
   public String getPassword() { return password; }
 
-  public void setCreationdate(LocalDate creationdate) {this.creationdate = creationdate;}
+  public void setCreationdate(Date creationdate) {this.creationdate = creationdate;}
 
-  public LocalDate getCreationdate() { return creationdate;}
+  public Date getCreationdate() { return creationdate;}
 
-  public void setBirthday(LocalDate birthday) {this.birthday = birthday;}
+  public void setBirthday(Date birthday) {this.birthday = birthday;}
 
-  public LocalDate getBirthday() { return birthday; }
+  public Date getBirthday() { return birthday; }
 
   public UserStatus getStatus() {
     return status;
