@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,7 +43,7 @@ public class UserServiceIntegrationTest {
 
     User testUser = new User();
     testUser.setUsername("testUsername");
-    testUser.setCreationdate(LocalDate.now());
+    testUser.setCreationdate(new Date());
     testUser.setPassword("1234");
 
     // when
@@ -63,7 +63,7 @@ public class UserServiceIntegrationTest {
     User testUser = new User();
     testUser.setUsername("testUsername");
     testUser.setPassword("1234");
-    testUser.setCreationdate(LocalDate.now());
+    testUser.setCreationdate(new Date());
     User createdUser = userService.createUser(testUser);
 
     // attempt to create second user with same username
