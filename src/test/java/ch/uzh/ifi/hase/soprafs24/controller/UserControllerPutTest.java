@@ -46,7 +46,7 @@ public class UserControllerPutTest {
   @Test
   public void updateUser_validInput_userUpdated() throws Exception {
     User user = new User();
-    user.setCreationdate(new Date());
+    user.setCreation_date(new Date());
     user.setUsername("OGUsername");
     user.setStatus(UserStatus.ONLINE);
     user.setId(1L);

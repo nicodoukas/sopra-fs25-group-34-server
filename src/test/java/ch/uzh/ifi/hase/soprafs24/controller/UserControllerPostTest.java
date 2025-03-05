@@ -18,10 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.web.server.ResponseStatusException;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -56,7 +53,7 @@ public class UserControllerPostTest {
     user.setUsername("testUsername");
     user.setToken("1");
     user.setStatus(UserStatus.ONLINE);
-    user.setCreationdate(new Date());
+    user.setCreation_date(new Date());
     user.setBirthday(new Date());
     user.setPassword("1234");
 
@@ -79,7 +76,7 @@ public class UserControllerPostTest {
             .andExpect(jsonPath("$.id", is(user.getId().intValue())))
             .andExpect(jsonPath("$.username", is(user.getUsername())))
             .andExpect(jsonPath("$.password", is(user.getPassword())))
-            .andExpect(jsonPath("$.creationdate", is(formatter.format(user.getCreationdate()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
+            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
             .andExpect(jsonPath("$.birthday", is(formatter.format(user.getBirthday()).replace("Z", "+00:00"))))
             .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
 

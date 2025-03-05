@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +52,7 @@ public class UserControllerGetTest {
     user.setUsername("firstname@lastname");
     user.setPassword("1234");
     user.setStatus(UserStatus.OFFLINE);
-    user.setCreationdate(new Date());
+    user.setCreation_date(new Date());
     user.setToken("1");
   }
 
@@ -74,7 +73,7 @@ public class UserControllerGetTest {
             .andExpect(jsonPath("$.id", is(user.getId().intValue())))
             .andExpect(jsonPath("$.username", is(user.getUsername())))
             .andExpect(jsonPath("$.password", is(user.getPassword())))
-            .andExpect(jsonPath("$.creationdate", is(formatter.format(user.getCreationdate()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
+            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
             .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
   }
 
@@ -115,7 +114,7 @@ public class UserControllerGetTest {
             .andExpect(jsonPath("$.id", is(user.getId().intValue())))
             .andExpect(jsonPath("$.username", is(user.getUsername())))
             .andExpect(jsonPath("$.password", is(user.getPassword())))
-            .andExpect(jsonPath("$.creationdate", is(formatter.format(user.getCreationdate()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
+            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
             .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
   }
 

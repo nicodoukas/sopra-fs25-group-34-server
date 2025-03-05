@@ -28,7 +28,7 @@ public class UserRepositoryIntegrationTest {
     user.setUsername("firstname@lastname");
     user.setStatus(UserStatus.OFFLINE);
     user.setToken("1");
-    user.setCreationdate(new Date());
+    user.setCreation_date(new Date());
     user.setPassword("1234");
 
     entityManager.persist(user);
@@ -41,7 +41,7 @@ public class UserRepositoryIntegrationTest {
     assertNotNull(found.getId());
     assertEquals(found.getUsername(), user.getUsername());
     assertEquals(found.getPassword(), user.getPassword());
-    assertEquals(found.getCreationdate(), user.getCreationdate());
+    assertEquals(found.getCreation_date(), user.getCreation_date());
     assertEquals(found.getBirthday(), user.getBirthday());
     assertEquals(found.getToken(), user.getToken());
     assertEquals(found.getStatus(), user.getStatus());
