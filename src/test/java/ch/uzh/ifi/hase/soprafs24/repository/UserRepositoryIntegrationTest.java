@@ -22,7 +22,7 @@ public class UserRepositoryIntegrationTest {
   private UserRepository userRepository;
 
   @Test
-  public void findByName_success() {
+  public void findByUsername_success() {
     // given
     User user = new User();
     user.setUsername("firstname@lastname");
@@ -40,6 +40,9 @@ public class UserRepositoryIntegrationTest {
     // then
     assertNotNull(found.getId());
     assertEquals(found.getUsername(), user.getUsername());
+    assertEquals(found.getPassword(), user.getPassword());
+    assertEquals(found.getCreationdate(), user.getCreationdate());
+    assertEquals(found.getBirthday(), user.getBirthday());
     assertEquals(found.getToken(), user.getToken());
     assertEquals(found.getStatus(), user.getStatus());
   }
