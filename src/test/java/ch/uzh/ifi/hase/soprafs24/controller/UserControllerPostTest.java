@@ -17,8 +17,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -35,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This tests if the UserController works.
  */
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+public class UserControllerPostTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -43,29 +47,7 @@ public class UserControllerTest {
   @MockBean
   private UserService userService;
 
-  @Test
-  public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
-    // given
-    User user = new User();
-    user.setUsername("firstname@lastname");
-    user.setStatus(UserStatus.OFFLINE);
-
-    List<User> allUsers = Collections.singletonList(user);
-
-    // this mocks the UserService -> we define above what the userService should
-    // return when getUsers() is called
-    given(userService.getUsers()).willReturn(allUsers);
-
-    // when
-    MockHttpServletRequestBuilder getRequest = get("/users").contentType(MediaType.APPLICATION_JSON);
-
-    // then
-    mockMvc.perform(getRequest).andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(1)))
-        .andExpect(jsonPath("$[0].username", is(user.getUsername())))
-        .andExpect(jsonPath("$[0].status", is(user.getStatus().toString())));
-  }
-
+  // POST /users
   @Test
   public void createUser_validInput_userCreated() throws Exception {
     // given
@@ -74,9 +56,13 @@ public class UserControllerTest {
     user.setUsername("testUsername");
     user.setToken("1");
     user.setStatus(UserStatus.ONLINE);
+    user.setCreationdate(new Date());
+    user.setBirthday(new Date());
+    user.setPassword("1234");
 
     UserPostDTO userPostDTO = new UserPostDTO();
     userPostDTO.setUsername("testUsername");
+    userPostDTO.setPassword("1234");
 
     given(userService.createUser(Mockito.any())).willReturn(user);
 
@@ -85,15 +71,39 @@ public class UserControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(asJsonString(userPostDTO));
 
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"); //make sure date has correct format
+    formatter.setTimeZone(TimeZone.getTimeZone("UTC")); //both are using UTC +00:00 timezone
     // then
     mockMvc.perform(postRequest)
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id", is(user.getId().intValue())))
-        .andExpect(jsonPath("$.username", is(user.getUsername())))
-        .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+            .andExpect(jsonPath("$.username", is(user.getUsername())))
+            .andExpect(jsonPath("$.password", is(user.getPassword())))
+            .andExpect(jsonPath("$.creationdate", is(formatter.format(user.getCreationdate()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
+            .andExpect(jsonPath("$.birthday", is(formatter.format(user.getBirthday()).replace("Z", "+00:00"))))
+            .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+
   }
 
-  /**
+  // POST /users ERROR
+  @Test
+  public void createUser_InvalidUsername_throwsError() throws Exception {
+    UserPostDTO userPostDTO = new UserPostDTO();
+    userPostDTO.setUsername("testUsername"); //Take existing Username
+
+    given(userService.createUser(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Username not unique"));
+
+    //when
+    MockHttpServletRequestBuilder postRequest = post("/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(userPostDTO));
+
+    //then
+    mockMvc.perform(postRequest).andExpect(status().is(409));
+  }
+
+
+    /**
    * Helper Method to convert userPostDTO into a JSON string such that the input
    * can be processed
    * Input will look like this: {"name": "Test User", "username": "testUsername"}
