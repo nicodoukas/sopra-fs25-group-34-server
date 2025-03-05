@@ -87,4 +87,9 @@ public class User implements Serializable {
   public void setStatus(UserStatus status) {
     this.status = status;
   }
+
+    @Override
+    public String toString() {
+      return "User{id=" + id + ", username='" + username + "', password='" + password + "', status=" + status + ", creation_date=" + creation_date + "}";
+    }
 }
