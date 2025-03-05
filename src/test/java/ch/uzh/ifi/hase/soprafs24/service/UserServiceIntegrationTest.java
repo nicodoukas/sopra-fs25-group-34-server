@@ -43,7 +43,7 @@ public class UserServiceIntegrationTest {
 
     User testUser = new User();
     testUser.setUsername("testUsername");
-    testUser.setCreationdate(new Date());
+    testUser.setCreation_date(new Date());
     testUser.setPassword("1234");
 
     // when
@@ -63,7 +63,7 @@ public class UserServiceIntegrationTest {
     User testUser = new User();
     testUser.setUsername("testUsername");
     testUser.setPassword("1234");
-    testUser.setCreationdate(new Date());
+    testUser.setCreation_date(new Date());
     User createdUser = userService.createUser(testUser);
 
     // attempt to create second user with same username

@@ -32,7 +32,7 @@ public class UserGetDTO {
 
   public String getPassword() { return password; }
 
-  public void setCreation_date(Date creationdate) {this.creation_date = creation_date;}
+  public void setCreation_date(Date creation_date) { this.creation_date = creation_date; }
 
   public Date getCreation_date() { return creation_date;}
 

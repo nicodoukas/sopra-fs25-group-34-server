@@ -97,7 +97,6 @@ public class UserControllerGetTest {
   @Test
   public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
     List<User> allUsers = Collections.singletonList(user);
-
     // this mocks the UserService -> we define above what the userService should
     // return when getUsers() is called
     given(userService.getUsers()).willReturn(allUsers);
@@ -111,11 +110,11 @@ public class UserControllerGetTest {
     // then
     mockMvc.perform(getRequest).andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$.id", is(user.getId().intValue())))
-            .andExpect(jsonPath("$.username", is(user.getUsername())))
-            .andExpect(jsonPath("$.password", is(user.getPassword())))
-            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
-            .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+            .andExpect(jsonPath("$[0].id", is(user.getId().intValue())))
+            .andExpect(jsonPath("$[0].username", is(user.getUsername())))
+            .andExpect(jsonPath("$[0].password", is(user.getPassword())))
+            .andExpect(jsonPath("$[0].creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
+            .andExpect(jsonPath("$[0].status", is(user.getStatus().toString())));
   }
 
   private String asJsonString(final Object object) {
