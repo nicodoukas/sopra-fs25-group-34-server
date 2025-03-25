@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User Controller
@@ -106,6 +107,17 @@ public class UserController {
     userInput.setId(userId);
 
       userService.updateUser(userInput);
+  }
+
+  @PostMapping("/users/{userId}/friends")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseBody
+  public User manageFriendRequest(@PathVariable Long userId, @RequestBody Map<String, Object> RequestBody){
+    User user = userService.getUserById(userId);
+    Long userId2 = (Long)  RequestBody.get("userId2");
+    Boolean accepted = (Boolean) RequestBody.get("accepted");
+
+    return userService.manageFriendRequest(user, userId2, accepted);
   }
 
 }

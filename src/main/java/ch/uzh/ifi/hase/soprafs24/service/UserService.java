@@ -141,5 +141,28 @@ public class UserService {
     return userRepository.save(user);
   }
 
+  /**
+   *
+   * @param user The User which friendrequests are managed
+   * @param userId2 The userId of the request
+   * @param accepted True if the friendrequest is accepted, False otherwise
+   * @return user
+  */
+  public User manageFriendRequest(User user, Long userId2, Boolean accepted){
+    //check if User with userId userId2 exists
+    getUserById(userId2);
+    //accepted
+    if (accepted) {
+      user.acceptFriendRequest(userId2);
+    }
+    //declined
+    else {
+      user.declineFriendRequest(userId2);
+    }
+    //save updated user
+    userRepository.save(user);
+    userRepository.flush();
+    return user;
+  }
 
 }
