@@ -142,6 +142,27 @@ public class UserService {
   }
 
   /**
+  * Delete Friend
+  *
+  * @param user The user whose friend is deleted
+  * @param friendUserId The userId of the friend to be removed
+  **/
+  public void deleteFriend(User user, Long friendUserId) {
+      //get friends list from the user
+      List<Long> friends = user.getFriends();
+
+      //check if user with friendUserId exists
+      getUserById(friendUserId);
+
+      //remove friendUserId from friends
+      friends.removeIf(id -> id.equals(friendUserId));
+
+      //save updated User to Database
+      userRepository.save(user);
+      userRepository.flush();
+  }
+
+  /**
    *
    * @param user The User which friendrequests are managed
    * @param userId2 The userId of the request

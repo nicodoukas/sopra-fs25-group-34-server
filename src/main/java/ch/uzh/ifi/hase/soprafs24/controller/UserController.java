@@ -120,4 +120,13 @@ public class UserController {
     return userService.manageFriendRequest(user, userId2, accepted);
   }
 
+  @DeleteMapping("/users/{userId}/friends")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void deleteFriend(@PathVariable Long userId, @RequestBody Long friendUserId) {
+    User user = userService.getUserById(userId);
+
+    userService.deleteFriend(user,friendUserId);
+  }
+
 }
