@@ -30,6 +30,13 @@ public class UserController {
     this.userService = userService;
   }
 
+  @GetMapping("/usersByUsername/{username}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO getUser(@PathVariable String username){
+    User user = userService.getUserByUsername(username);
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
+  }
   @GetMapping("/users")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
