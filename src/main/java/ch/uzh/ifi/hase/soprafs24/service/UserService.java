@@ -172,9 +172,12 @@ public class UserService {
   public User manageFriendRequest(User user, Long userId2, Boolean accepted){
     //check if User with userId userId2 exists
     getUserById(userId2);
+    User friend = getUserById(userId2);
+
     //accepted
     if (accepted) {
-      user.acceptFriendRequest(userId2);
+      user.setFriends(userId2);
+      friend.setFriends(user.getId());
     }
     //declined
     else {
