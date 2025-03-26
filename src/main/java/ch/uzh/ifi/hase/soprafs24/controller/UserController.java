@@ -33,7 +33,7 @@ public class UserController {
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public UserGetDTO getUser(@PathVariable String username){
-    User user = getUserByUsername(username);
+    User user = userService.getUserByUsername(username);
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
   @GetMapping("/users")
