@@ -148,17 +148,17 @@ public class UserService {
   * @param friendUserId The userId of the friend to be removed
   **/
   public void deleteFriend(User user, Long friendUserId) {
-      //get friends list from the user
-      List<Long> friends = user.getFriends();
-
       //check if user with friendUserId exists
       getUserById(friendUserId);
+      User friend = getUserById(friendUserId);
 
-      //remove friendUserId from friends
-      friends.removeIf(id -> id.equals(friendUserId));
+      //Remove friend
+      user.removeFriend(friendUserId);
+      friend.removeFriend(user.getId());
 
       //save updated User to Database
       userRepository.save(user);
+      userRepository.save(friend);
       userRepository.flush();
   }
 
@@ -185,6 +185,7 @@ public class UserService {
     }
     //save updated user
     userRepository.save(user);
+    userRepository.save(friend);
     userRepository.flush();
     return user;
   }

@@ -119,12 +119,12 @@ public class UserController {
   @PostMapping("/users/{userId}/friends")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public User manageFriendRequest(@PathVariable Long userId, @RequestBody Map<String, Object> RequestBody){
+  public UserGetDTO manageFriendRequest(@PathVariable Long userId, @RequestBody Map<String, Object> RequestBody){
     User user = userService.getUserById(userId);
     Long userId2 = (Long)  RequestBody.get("userId2");
     Boolean accepted = (Boolean) RequestBody.get("accepted");
 
-    return userService.manageFriendRequest(user, userId2, accepted);
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.manageFriendRequest(user, userId2, accepted));
   }
 
   @DeleteMapping("/users/{userId}/friends/{userId2}")
@@ -139,7 +139,7 @@ public class UserController {
   @PostMapping("users/{userIdSender}/friendrequests")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public void sendFriendRequest(@PathVariable Long userIdSender,@RequestBody String userIdReceiver) {
+  public void sendFriendRequest(@PathVariable Long userIdSender,@RequestBody Long userIdReceiver) {
     User userReceiver = userService.getUserById(userIdReceiver);
     userService.sendFriendRequest(userIdSender, userReceiver);
   }
