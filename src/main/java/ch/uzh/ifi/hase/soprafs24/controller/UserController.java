@@ -29,7 +29,7 @@ public class UserController {
     this.userService = userService;
   }
 
-  @GetMapping("/users/{username}")
+  @GetMapping("/usersByUsername/{username}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public UserGetDTO getUser(@PathVariable String username){
