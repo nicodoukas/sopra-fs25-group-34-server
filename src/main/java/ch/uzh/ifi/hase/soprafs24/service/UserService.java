@@ -189,4 +189,17 @@ public class UserService {
     return user;
   }
 
+  public void sendFriendRequest(Long userIdSender, User userReceiver) {
+    //to throw exception if sendeId doesn't exist
+    User userSender = this.getUserById(userIdSender);
+
+    userReceiver.sendFriendRequest(userIdSender);
+    userRepository.save(userReceiver);
+    userRepository.flush();
+  }
+
+  public List<Long> getOpenFriendRequests(User user) {
+    return user.getOpenFriendRequests();
+  }
+
 }

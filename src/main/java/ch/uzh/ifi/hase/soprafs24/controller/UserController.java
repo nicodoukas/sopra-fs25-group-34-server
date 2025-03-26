@@ -136,4 +136,21 @@ public class UserController {
     userService.deleteFriend(user,userId2);
   }
 
+  @PostMapping("users/{userIdSender}/friendrequests")
+  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseBody
+  public void sendFriendRequest(@PathVariable Long userIdSender,@RequestBody String userIdReceiver) {
+    User userReceiver = userService.getUserById(userIdReceiver);
+    userService.sendFriendRequest(userIdSender, userReceiver);
+  }
+
+  @GetMapping("/users/{userId}/friendrequests")
+  @ResponseStatus(HttpStatus.OK)  
+  @ResponseBody
+  public List<Long> getOpenFriendRequests(@PathVariable Long userId) {
+    User user = userService.getUserById(userId);
+    List<Long> openFriendRequests = userService.getOpenFriendRequests(user);
+    return openFriendRequests;
+  }
+
 }
