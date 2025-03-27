@@ -55,15 +55,15 @@ public class UserGetDTO {
     return friends;
   }
 
-  public void setFriends(Long userid){
-    this.friends.add(userid);
+  public void setFriends(List<Long> friends){
+    this.friends = friends;
   }
 
   public List<Long> getFriendrequests(){
     return friendrequests;
   }
 
-  public void setFriendrequests(Long userid){
-    this.friendrequests.add(userid);
+  public void setFriendrequests(List<Long> friendrequests){
+    this.friendrequests = friendrequests;
   }
 }
