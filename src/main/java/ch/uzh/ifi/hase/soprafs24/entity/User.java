@@ -44,6 +44,12 @@ public class User implements Serializable {
   @Column
   private Date birthday;
 
+  @Column
+  private List<Long> friends = new ArrayList<>();
+
+  @Column
+  private List<Long> friendrequests = new ArrayList<>();
+
   public Long getId() {
     return id;
   }
@@ -86,6 +92,30 @@ public class User implements Serializable {
 
   public void setStatus(UserStatus status) {
     this.status = status;
+  }
+
+  public List<Long> getFriends(){
+    return friends;
+  }
+
+  public void setFriends(Long userid){
+    this.friends.add(userid);
+  }
+
+  public void removeFriend(Long userid){
+    this.friends.remove(userid);
+  }
+
+  public List<Long> getFriendrequests(){
+    return friendrequests;
+  }
+
+  public void setFriendrequests(Long userid){
+    this.friendrequests.add(userid);
+  }
+
+  public void declineFriendRequest(Long userid){
+    this.friendrequests.remove(userid);
   }
 
     @Override
