@@ -191,7 +191,7 @@ public class UserService {
   }
 
   public void sendFriendRequest(Long userIdSender, User userReceiver) {
-    //to throw exception if sendeId doesn't exist
+    //to throw exception if senderId doesn't exist
     User userSender = this.getUserById(userIdSender);
 
     userReceiver.sendFriendRequest(userIdSender);

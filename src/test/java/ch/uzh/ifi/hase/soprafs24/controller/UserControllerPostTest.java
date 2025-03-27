@@ -99,6 +99,27 @@ public class UserControllerPostTest {
     mockMvc.perform(postRequest).andExpect(status().is(409));
   }
 
+  // for POST/users/{userIdSender}/friendrequests
+  @Test
+  public void sendFriendRequest_success() throws Exception {
+    User sender = new User();
+    sender.setId(1L);
+    sender.setUsername("Sender");
+
+    User receiver = new User();
+    receiver.setId(2L);
+    receiver.setUsername("Receiver");
+
+    given(userService.getUserById(1L)).willReturn(sender);
+    given(userService.getUserById(2L)).willReturn(receiver);
+
+    MockHttpServletRequestBuilder postRequest = post("/users/{1}/friendrequests")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(asJsonString(2));
+
+    mockMvc.perform(postRequest)
+      .andExpect(status().isCreated());
+  }
 
     /**
    * Helper Method to convert userPostDTO into a JSON string such that the input

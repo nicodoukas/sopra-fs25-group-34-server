@@ -117,6 +117,41 @@ public class UserControllerGetTest {
             .andExpect(jsonPath("$[0].status", is(user.getStatus().toString())));
   }
 
+  // for GET/users/{userId}/friendrequests
+  @Test
+  public void getOpenFriendRequests_noRequests() throws Exception {
+    User user = new User();
+    user.setId(1L);
+    user.setUsername("Username");
+
+    given(userService.getUserById(1L)).willReturn(user);
+
+    MockHttpServletRequestBuilder getRequest = get("users/1/friendrequests")
+      .contentType(MediaType.APPLICATION_JSON);
+
+    mockMvc.perform(getRequest)
+      .andExpect(status().isOk());
+      //TODO: Anja: look at how a List<Long> looks in the Response and how to test if it is an empty list
+  }
+
+    // for GET/users/{userId}/friendrequests
+  @Test
+  public void getOpenFriendRequests_oneRequests() throws Exception {
+    User user = new User();
+    user.setId(1L);
+    user.setUsername("Username");
+    user.sendFriendRequest(2L);
+
+    given(userService.getUserById(1L)).willReturn(user);
+
+    MockHttpServletRequestBuilder getRequest = get("users/1/friendrequests")
+      .contentType(MediaType.APPLICATION_JSON);
+
+    mockMvc.perform(getRequest)
+      .andExpect(status().isOk());
+      //TODO: Anja: look at how a List<Long> looks in the Response and how to test if it is [2]
+  }
+
   private String asJsonString(final Object object) {
     try {
       return new ObjectMapper().writeValueAsString(object);
