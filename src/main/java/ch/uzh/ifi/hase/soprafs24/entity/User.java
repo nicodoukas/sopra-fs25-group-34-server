@@ -47,10 +47,17 @@ public class User implements Serializable {
   private Date birthday;
 
   @Column
-  private List<Long> friends = new ArrayList<>();
+  @ElementCollection
+  private List<Long> friends;
 
   @Column
-  private List<Long> friendrequests = new ArrayList<>();
+  @ElementCollection
+  private List<Long> friendrequests;
+
+  public User() {
+    this.friends = new ArrayList<Long>();
+    this.friendrequests = new ArrayList<Long>();
+  }
 
   public Long getId() {
     return id;

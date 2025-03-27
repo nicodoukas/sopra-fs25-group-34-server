@@ -194,13 +194,13 @@ public class UserService {
     //to throw exception if senderId doesn't exist
     User userSender = this.getUserById(userIdSender);
 
-    userReceiver.sendFriendRequest(userIdSender);
+    userReceiver.setFriendrequests(userIdSender);
     userRepository.save(userReceiver);
     userRepository.flush();
   }
 
   public List<Long> getOpenFriendRequests(User user) {
-    return user.getOpenFriendRequests();
+    return user.getFriendrequests();
   }
 
 }
