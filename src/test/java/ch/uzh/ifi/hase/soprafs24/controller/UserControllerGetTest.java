@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.web.server.ResponseStatusException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -126,12 +127,12 @@ public class UserControllerGetTest {
 
     given(userService.getUserById(1L)).willReturn(user);
 
-    MockHttpServletRequestBuilder getRequest = get("users/1/friendrequests")
+    MockHttpServletRequestBuilder getRequest = get("/users/1/friendrequests")
       .contentType(MediaType.APPLICATION_JSON);
 
     mockMvc.perform(getRequest)
-      .andExpect(status().isOk());
-      //TODO: Anja: look at how a List<Long> looks in the Response and how to test if it is an empty list
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$", hasSize(0)));
   }
 
     // for GET/users/{userId}/friendrequests
@@ -142,14 +143,19 @@ public class UserControllerGetTest {
     user.setUsername("Username");
     user.setFriendrequests(2L);
 
-    given(userService.getUserById(1L)).willReturn(user);
+    List<Long> requests = new ArrayList<Long>();
+    requests.add(2L);
 
-    MockHttpServletRequestBuilder getRequest = get("users/1/friendrequests")
+    given(userService.getUserById(1L)).willReturn(user);
+    given(userService.getOpenFriendRequests(user)).willReturn(requests);
+
+    MockHttpServletRequestBuilder getRequest = get("/users/1/friendrequests")
       .contentType(MediaType.APPLICATION_JSON);
 
     mockMvc.perform(getRequest)
-      .andExpect(status().isOk());
-      //TODO: Anja: look at how a List<Long> looks in the Response and how to test if it is [2]
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$", hasSize(1)))
+      .andExpect(jsonPath("$[0]", is(2)));
   }
 
   private String asJsonString(final Object object) {

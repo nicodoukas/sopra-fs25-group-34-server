@@ -113,9 +113,9 @@ public class UserControllerPostTest {
     given(userService.getUserById(1L)).willReturn(sender);
     given(userService.getUserById(2L)).willReturn(receiver);
 
-    MockHttpServletRequestBuilder postRequest = post("/users/{1}/friendrequests")
+    MockHttpServletRequestBuilder postRequest = post("/users/1/friendrequests")
       .contentType(MediaType.APPLICATION_JSON)
-      .content(asJsonString(2));
+      .content("2");
 
     mockMvc.perform(postRequest)
       .andExpect(status().isCreated());
