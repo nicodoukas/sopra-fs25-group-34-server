@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 
 
 import java.util.Date;
+import java.util.List;
 
 public class UserGetDTO {
 
