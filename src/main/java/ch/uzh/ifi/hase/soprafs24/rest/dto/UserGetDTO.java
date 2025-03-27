@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 
 
 import java.util.Date;
+import java.util.List;
 
 public class UserGetDTO {
 
@@ -13,6 +14,8 @@ public class UserGetDTO {
   private Date creation_date;
   private Date birthday;
   private UserStatus status;
+  private List<Long> friends;
+  private List<Long> friendrequests;
 
   public Long getId() {  return id; }
 
@@ -46,5 +49,21 @@ public class UserGetDTO {
 
   public void setStatus(UserStatus status) {
     this.status = status;
+  }
+
+  public List<Long> getFriends(){
+    return friends;
+  }
+
+  public void setFriends(List<Long> friends){
+    this.friends = friends;
+  }
+
+  public List<Long> getFriendrequests(){
+    return friendrequests;
+  }
+
+  public void setFriendrequests(List<Long> friendrequests){
+    this.friendrequests = friendrequests;
   }
 }

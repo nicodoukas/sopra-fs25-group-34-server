@@ -20,6 +20,7 @@ public class UserPostDTO {
 
   private UserStatus status;
 
+
   public String getUsername() {
     return username;
   }
