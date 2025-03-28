@@ -178,6 +178,7 @@ public class UserService {
     if (accepted) {
       user.setFriends(userId2);
       friend.setFriends(user.getId());
+      user.declineFriendRequest(userId2); //delete FriendRequest since no longer needed
     }
     //declined
     else {
