@@ -121,7 +121,7 @@ public class UserController {
   @ResponseBody
   public UserGetDTO manageFriendRequest(@PathVariable Long userId, @RequestBody Map<String, Object> RequestBody){
     User user = userService.getUserById(userId);
-    Long userId2 = (Long)  RequestBody.get("userId2");
+    Long userId2 = Long.parseLong(RequestBody.get("userId2").toString());
     Boolean accepted = (Boolean) RequestBody.get("accepted");
 
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.manageFriendRequest(user, userId2, accepted));
