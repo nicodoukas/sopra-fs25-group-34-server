@@ -108,7 +108,9 @@ public class User implements Serializable {
   }
 
   public void setFriends(Long userid){
-    this.friends.add(userid);
+    if (!this.friendrequests.contains(userid)){
+      this.friends.add(userid);
+    }
   }
 
   public void removeFriend(Long userid){
@@ -120,7 +122,10 @@ public class User implements Serializable {
   }
 
   public void setFriendrequests(Long userid){
-    this.friendrequests.add(userid);
+    if (!this.friendrequests.contains(userid) && !this.friends.contains(userid)){
+      this.friendrequests.add(userid);
+    }
+
   }
 
   public void declineFriendRequest(Long userid){
