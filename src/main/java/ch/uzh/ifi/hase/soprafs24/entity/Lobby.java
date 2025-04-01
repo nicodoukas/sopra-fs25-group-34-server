@@ -13,25 +13,27 @@ import javax.persistence.*;
 public class Lobby implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private final UserService userService;
 
     @Id
     @GeneratedValue
     private Long lobbyId;
+
+    @Column(nullable = false)
+    private String lobbyName;
 
     @Column
     @ElementCollection
     private List<User> members;
 
     @Column(nullable = false)
-    private Long host;
+    private User host;
 
 
-    public Lobby(UserService userService, Long host) {
-        this.userService = userService;
+    public Lobby(User host, String lobbyName) {
         setHost(host);
         setMembers(new ArrayList<User>());
         joinLobby(host);
+        setLobbyName(lobbyName);
     }
 
     public Long getLobbyId() {
@@ -42,6 +44,14 @@ public class Lobby implements Serializable {
         this.lobbyId = lobbyId;
     }
 
+    public String getLobbyName() {
+        return lobbyName;
+    }
+
+    private void setLobbyName(String lobbyName) {
+        this.lobbyName = lobbyName;
+    }
+
     public List<User> getMembers() {
         return members;
     }
@@ -50,17 +60,17 @@ public class Lobby implements Serializable {
         this.members = members;
     }
 
-    public Long getHost() {
+    public User getHost() {
         return host;
     }
 
-    private void setHost(Long host) {
+    private void setHost(User host) {
         this.host = host;
     }
 
 
-    public void joinLobby(Long userId) {
-        members.add(userService.getUserById(userId));
+    public void joinLobby(User user) {
+        members.add(user);
     }
 
 }
