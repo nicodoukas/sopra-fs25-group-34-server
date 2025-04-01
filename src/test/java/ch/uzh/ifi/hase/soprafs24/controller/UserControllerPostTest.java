@@ -4,8 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,7 @@ public class UserControllerPostTest {
     // when/then -> do the request + validate the result
     MockHttpServletRequestBuilder postRequest = post("/users")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(asJsonString(userPostDTO));
+        .content(ControllerTestUtils.asJsonString(userPostDTO));
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"); //make sure date has correct format
     formatter.setTimeZone(TimeZone.getTimeZone("UTC")); //both are using UTC +00:00 timezone
@@ -93,7 +92,7 @@ public class UserControllerPostTest {
     //when
     MockHttpServletRequestBuilder postRequest = post("/users")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJsonString(userPostDTO));
+            .content(ControllerTestUtils.asJsonString(userPostDTO));
 
     //then
     mockMvc.perform(postRequest).andExpect(status().is(409));
@@ -121,20 +120,4 @@ public class UserControllerPostTest {
       .andExpect(status().isCreated());
   }
 
-    /**
-   * Helper Method to convert userPostDTO into a JSON string such that the input
-   * can be processed
-   * Input will look like this: {"name": "Test User", "username": "testUsername"}
-   * 
-   * @param object
-   * @return string
-   */
-  private String asJsonString(final Object object) {
-    try {
-      return new ObjectMapper().writeValueAsString(object);
-    } catch (JsonProcessingException e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          String.format("The request body could not be created.%s", e.toString()));
-    }
-  }
 }
