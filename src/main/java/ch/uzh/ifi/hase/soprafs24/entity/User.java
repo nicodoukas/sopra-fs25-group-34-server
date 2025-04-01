@@ -116,8 +116,38 @@ public class User implements Serializable {
     return friends;
   }
 
-  public void setFriends(Long userid){
-    if (!this.friendrequests.contains(userid)){
+  public void setFriends(List<Long> friends){
+    this.friends = friends;
+  }
+
+  public List<Long> getFriendrequests(){
+    return friendrequests;
+  }
+
+  public void setFriendrequests(List<Long> friendrequests){
+    this.friendrequests = friendrequests;
+  }
+
+  public Long getLobbyId(){
+    return this.lobbyId;
+  }
+
+  public void setLobbyId(Long lobbyId) {
+    this.lobbyId = lobbyId;
+  }
+
+  public List<Long> getLobbyInvitations(){
+    return this.openLobbyInvitations;
+  }
+
+  public void setOpenLobbyInvitations(List<Long> openLobbyInvitations) {
+    this.openLobbyInvitations = openLobbyInvitations;
+  }
+
+
+
+  public void addFriend(Long userid){
+    if (!this.friends.contains(userid)){
       this.friends.add(userid);
     }
   }
@@ -126,27 +156,14 @@ public class User implements Serializable {
     this.friends.remove(userid);
   }
 
-  public List<Long> getFriendrequests(){
-    return friendrequests;
-  }
-
-  public void setFriendrequests(Long userid){
+  public void addFriendrequest(Long userid){
     if (!this.friendrequests.contains(userid) && !this.friends.contains(userid)){
       this.friendrequests.add(userid);
     }
-
   }
 
   public void declineFriendRequest(Long userid){
     this.friendrequests.remove(userid);
-  }
-
-  public Long getLobbyId(){
-    return this.lobbyId;
-  }
-
-  public List<Long> getLobbyInvitations(){
-    return this.openLobbyInvitations;
   }
 
   public void addLobbyInvitation(Long lobbyid){
@@ -161,8 +178,11 @@ public class User implements Serializable {
   public void declineLobbyInvitation(Long lobbyid){
     this.openLobbyInvitations.remove(lobbyid);
   }
-    @Override
-    public String toString() {
-      return "User{id=" + id + ", username='" + username + "', password='" + password + "', status=" + status + ", creation_date=" + creation_date + "}";
-    }
+
+
+  @Override
+  public String toString() {
+    return "User{id=" + id + ", username='" + username + "', password='" + password + "', status=" + status + ", creation_date=" + creation_date + "}";
+  }
+
 }

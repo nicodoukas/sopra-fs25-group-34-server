@@ -141,10 +141,9 @@ public class UserControllerGetTest {
     User user = new User();
     user.setId(1L);
     user.setUsername("Username");
-    user.setFriendrequests(2L);
-
     List<Long> requests = new ArrayList<Long>();
     requests.add(2L);
+    user.setFriendrequests(requests);    
 
     given(userService.getUserById(1L)).willReturn(user);
     given(userService.getOpenFriendRequests(user)).willReturn(requests);

@@ -176,8 +176,8 @@ public class UserService {
 
     //accepted
     if (accepted) {
-      user.setFriends(userId2);
-      friend.setFriends(user.getId());
+      user.addFriend(userId2);
+      friend.addFriend(user.getId());
       user.declineFriendRequest(userId2); //delete FriendRequest since no longer needed
     }
     //declined
@@ -195,7 +195,7 @@ public class UserService {
     //to throw exception if senderId doesn't exist
     User userSender = this.getUserById(userIdSender);
 
-    userReceiver.setFriendrequests(userIdSender);
+    userReceiver.addFriendrequest(userIdSender);
     userRepository.save(userReceiver);
     userRepository.flush();
   }

@@ -46,6 +46,16 @@ public interface DTOMapper {
   @Mapping(source = "friendrequests", target = "friendrequests")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "username", target = "username")
+  @Mapping(source = "password", target = "password")
+  @Mapping(source = "creation_date", target = "creation_date")
+  @Mapping(source = "birthday", target = "birthday")
+  @Mapping(source = "status", target = "status")
+  @Mapping(source = "friends", target = "friends", qualifiedByName = "MapListLong")
+  @Mapping(source = "friendrequests", target = "friendrequests")
+  User convertUserGetDTOToEntity(UserGetDTO userGetDTO);
+
   @Mapping(source = "username", target = "username")
   @Mapping(source = "birthday", target = "birthday")
   @Mapping(source = "id", target = "id")
