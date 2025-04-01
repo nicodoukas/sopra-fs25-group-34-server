@@ -1,4 +1,4 @@
-package ch.uzh.ifi.hase.soprafs24.Storage;
+package ch.uzh.ifi.hase.soprafs24.storage;
 
 import org.springframework.stereotype.Component;
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
