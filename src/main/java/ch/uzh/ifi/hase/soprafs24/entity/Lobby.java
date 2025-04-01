@@ -29,18 +29,15 @@ public class Lobby implements Serializable {
     private User host;
 
 
-    public Lobby(User host, String lobbyName) {
-        setHost(host);
+    public Lobby() {
         setMembers(new ArrayList<User>());
-        joinLobby(host);
-        setLobbyName(lobbyName);
     }
 
     public Long getLobbyId() {
         return lobbyId;
     }
 
-    private void setLobbyId(Long lobbyId) {
+    public void setLobbyId(Long lobbyId) {
         this.lobbyId = lobbyId;
     }
 
@@ -48,7 +45,7 @@ public class Lobby implements Serializable {
         return lobbyName;
     }
 
-    private void setLobbyName(String lobbyName) {
+    public void setLobbyName(String lobbyName) {
         this.lobbyName = lobbyName;
     }
 
@@ -56,7 +53,7 @@ public class Lobby implements Serializable {
         return members;
     }
 
-    private void setMembers(List<User> members) {
+    public void setMembers(List<User> members) {
         this.members = members;
     }
 
@@ -64,8 +61,9 @@ public class Lobby implements Serializable {
         return host;
     }
 
-    private void setHost(User host) {
+    public void setHost(User host) {
         this.host = host;
+        joinLobby(host);
     }
 
 
