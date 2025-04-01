@@ -54,9 +54,18 @@ public class User implements Serializable {
   @ElementCollection
   private List<Long> friendrequests;
 
+  @Column
+  @ElementCollection
+  private List<Long> openLobbyInvitations;
+
+  @Column
+  private Long lobbyId=null;
+
+
   public User() {
     this.friends = new ArrayList<Long>();
     this.friendrequests = new ArrayList<Long>();
+    this.openLobbyInvitations = new ArrayList<Long>();
   }
 
   public Long getId() {
@@ -132,6 +141,26 @@ public class User implements Serializable {
     this.friendrequests.remove(userid);
   }
 
+  public Long getLobbyId(){
+    return this.lobbyId;
+  }
+
+  public List<Long> getLobbyInvitations(){
+    return this.openLobbyInvitations;
+  }
+
+  public void addLobbyInvitation(Long lobbyid){
+    if (!this.openLobbyInvitations.contains(lobbyid) && this.lobbyId != lobbyid){
+      this.openLobbyInvitations.add(lobbyid);
+    }
+  }
+  public void acceptLobbyInvitation(Long lobbyid){
+    this.lobbyId=lobbyid;
+    this.openLobbyInvitations.remove(lobbyid);
+  }
+  public void declineLobbyInvitation(Long lobbyid){
+    this.openLobbyInvitations.remove(lobbyid);
+  }
     @Override
     public String toString() {
       return "User{id=" + id + ", username='" + username + "', password='" + password + "', status=" + status + ", creation_date=" + creation_date + "}";
