@@ -59,7 +59,6 @@ public class LobbyController {
         for (User user : users) {
             userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
         }
-
         return userGetDTOs;
     }
 

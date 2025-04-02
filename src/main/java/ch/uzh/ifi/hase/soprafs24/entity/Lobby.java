@@ -6,11 +6,14 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "LOBBY")
 public class Lobby implements Serializable {
+
+    private static final AtomicLong IDCounter = new AtomicLong(1); //multi-thread safe ID
 
     private static final long serialVersionUID = 1L;
 
@@ -21,11 +24,10 @@ public class Lobby implements Serializable {
     @Column(nullable = false)
     private String lobbyName;
 
-    @Column
-    @ElementCollection
+    @OneToMany //relationship
     private List<User> members;
 
-    @Column(nullable = false)
+    @OneToOne //relationship
     private User host;
 
 
@@ -39,6 +41,10 @@ public class Lobby implements Serializable {
 
     public void setLobbyId(Long lobbyId) {
         this.lobbyId = lobbyId;
+    }
+
+    public void createLobbyId() {
+        this.lobbyId = IDCounter.getAndIncrement();
     }
 
     public String getLobbyName() {

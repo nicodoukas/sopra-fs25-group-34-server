@@ -27,8 +27,9 @@ public class LobbyService {
     }
 
     public Lobby createLobby(Lobby newLobby) {
-        newLobby = lobbyStorage.addLobby(newLobby); //stores the Lobby in the LobbyStorage
+        newLobby.createLobbyId(); //generate the lobbyID with the IDCounter
 
+        newLobby = lobbyStorage.addLobby(newLobby); //stores the Lobby in the LobbyStorage
         log.debug("Created Information for User: {}", newLobby);
         return newLobby;
     }
