@@ -1,32 +1,25 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.persistence.*;
 
-@Entity
-@Table(name = "LOBBY")
+
 public class Lobby implements Serializable {
 
     private static final AtomicLong IDCounter = new AtomicLong(1); //multi-thread safe ID
 
     private static final long serialVersionUID = 1L;
 
-    @Id
     private Long lobbyId;
 
-    @Column(nullable = false)
     private String lobbyName;
 
-    @OneToMany //relationship
     private List<User> members;
 
-    @OneToOne //relationship
     private User host;
 
 
