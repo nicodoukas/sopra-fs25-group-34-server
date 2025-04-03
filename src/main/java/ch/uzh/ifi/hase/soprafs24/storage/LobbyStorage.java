@@ -20,7 +20,7 @@ public class LobbyStorage {
         return lobby;
     }
 
-    public Lobby getLobbyBId(Long lobbyId) {
+    public Lobby getLobbyById(Long lobbyId) {
         if (!lobbies.containsKey(lobbyId)) {
             System.out.println("Lobby with ID " + lobbyId + " does not exist in storage.");
             // TODO @monolino maybe throw an error

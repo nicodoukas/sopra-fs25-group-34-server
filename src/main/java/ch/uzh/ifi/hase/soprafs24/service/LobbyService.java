@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.LobbyStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,12 @@ public class LobbyService {
     private final Logger log = LoggerFactory.getLogger(LobbyService.class);
 
     private final LobbyStorage lobbyStorage;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LobbyService(@Qualifier("lobbyStorage") LobbyStorage lobbyStorage) {
+    public LobbyService(@Qualifier("lobbyStorage") LobbyStorage lobbyStorage, UserRepository userRepository) {
         this.lobbyStorage = lobbyStorage;
+        this.userRepository = userRepository;
     }
 
     public Lobby createLobby(Lobby newLobby) {
@@ -35,13 +38,20 @@ public class LobbyService {
     }
 
     public Lobby getLobbyById(Long lobbyId) {
-        return lobbyStorage.getLobbyBId(lobbyId);
+        return lobbyStorage.getLobbyById(lobbyId);
     }
 
     public List<User> getMembers(Lobby lobby) {
         return lobby.getMembers();
     }
 
+    public User inviteUserToLobby(User user, Long lobbyId) {
+        user.addLobbyInvitation(lobbyId);
+
+        userRepository.save(user);
+        userRepository.flush();
+        return user;
+    }
 
 
 }

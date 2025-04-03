@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.LobbyService;
+import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,11 @@ public class LobbyController {
 
     private final LobbyService lobbyService;
 
-    LobbyController(LobbyService lobbyService) {
+    private final UserService userService;
+
+    LobbyController(LobbyService lobbyService, UserService userService) {
         this.lobbyService = lobbyService;
+        this.userService = userService;
     }
 
     @PostMapping("/lobbies")
@@ -60,6 +64,15 @@ public class LobbyController {
             userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
         }
         return userGetDTOs;
+    }
+
+    @PostMapping("/lobbies/invite/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public UserGetDTO inviteUser(@PathVariable Long userId, @RequestBody Long lobbyId) {
+        User user = userService.getUserById(userId);
+
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user,lobbyId));
     }
 
 

@@ -18,7 +18,6 @@ public class Lobby implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
     private Long lobbyId;
 
     @Column(nullable = false)
