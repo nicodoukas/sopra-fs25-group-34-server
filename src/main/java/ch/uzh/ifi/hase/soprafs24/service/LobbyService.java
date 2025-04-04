@@ -45,8 +45,8 @@ public class LobbyService {
         return lobby.getMembers();
     }
 
-    public User inviteUserToLobby(User user, Long lobbyId) {
-        user.addLobbyInvitation(lobbyId);
+    public User inviteUserToLobby(User user, Lobby lobby) {
+        user.addLobbyInvitation(lobby);
 
         userRepository.save(user);
         userRepository.flush();

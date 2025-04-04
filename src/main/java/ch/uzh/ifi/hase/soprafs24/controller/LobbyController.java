@@ -72,8 +72,9 @@ public class LobbyController {
     @ResponseBody
     public UserGetDTO inviteUser(@PathVariable Long userId, @RequestBody Long lobbyId) {
         User user = userService.getUserById(userId);
+        Lobby lobby = lobbyService.getLobbyById(lobbyId);
 
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user,lobbyId));
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user,lobby));
     }
 
 

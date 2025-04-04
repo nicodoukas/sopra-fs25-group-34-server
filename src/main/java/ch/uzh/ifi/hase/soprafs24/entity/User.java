@@ -56,7 +56,7 @@ public class User implements Serializable {
 
   @Column
   @ElementCollection
-  private List<Long> openLobbyInvitations;
+  private List<Lobby> openLobbyInvitations;
 
   @Column
   private Long lobbyId=null;
@@ -65,7 +65,7 @@ public class User implements Serializable {
   public User() {
     this.friends = new ArrayList<Long>();
     this.friendrequests = new ArrayList<Long>();
-    this.openLobbyInvitations = new ArrayList<Long>();
+    this.openLobbyInvitations = new ArrayList<Lobby>();
   }
 
   public Long getId() {
@@ -136,11 +136,11 @@ public class User implements Serializable {
     this.lobbyId = lobbyId;
   }
 
-  public List<Long> getLobbyInvitations(){
+  public List<Lobby> getOpenLobbyInvitations(){
     return this.openLobbyInvitations;
   }
 
-  public void setOpenLobbyInvitations(List<Long> openLobbyInvitations) {
+  public void setOpenLobbyInvitations(List<Lobby> openLobbyInvitations) {
     this.openLobbyInvitations = openLobbyInvitations;
   }
 
@@ -166,17 +166,17 @@ public class User implements Serializable {
     this.friendrequests.remove(userid);
   }
 
-  public void addLobbyInvitation(Long lobbyid){
-    if (!this.openLobbyInvitations.contains(lobbyid) && this.lobbyId != lobbyid){
-      this.openLobbyInvitations.add(lobbyid);
+  public void addLobbyInvitation(Lobby lobby){
+    if (!this.openLobbyInvitations.contains(lobby) && this.lobbyId != lobby.getLobbyId()){
+      this.openLobbyInvitations.add(lobby);
     }
   }
-  public void acceptLobbyInvitation(Long lobbyid){
-    this.lobbyId=lobbyid;
-    this.openLobbyInvitations.remove(lobbyid);
+  public void acceptLobbyInvitation(Lobby lobby){
+    this.lobbyId=lobby.getLobbyId();
+    this.openLobbyInvitations.remove(lobby);
   }
-  public void declineLobbyInvitation(Long lobbyid){
-    this.openLobbyInvitations.remove(lobbyid);
+  public void declineLobbyInvitation(Lobby lobby){
+    this.openLobbyInvitations.remove(lobby);
   }
 
 
