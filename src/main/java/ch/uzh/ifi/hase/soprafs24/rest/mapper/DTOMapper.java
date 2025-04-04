@@ -44,6 +44,7 @@ public interface DTOMapper {
   @Mapping(source = "status", target = "status")
   @Mapping(source = "friends", target = "friends")
   @Mapping(source = "friendrequests", target = "friendrequests")
+  @Mapping(source = "openLobbyInvitations", target = "openLobbyInvitations")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
   @Mapping(source = "id", target = "id")
@@ -54,6 +55,7 @@ public interface DTOMapper {
   @Mapping(source = "status", target = "status")
   @Mapping(source = "friends", target = "friends", qualifiedByName = "MapListLong")
   @Mapping(source = "friendrequests", target = "friendrequests")
+  @Mapping(source = "openLobbyInvitations", target = "openLobbyInvitations")
   User convertUserGetDTOToEntity(UserGetDTO userGetDTO);
 
   @Mapping(source = "username", target = "username")
