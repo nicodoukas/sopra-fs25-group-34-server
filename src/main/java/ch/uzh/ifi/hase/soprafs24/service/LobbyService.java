@@ -47,11 +47,11 @@ public class LobbyService {
 
     public User inviteUserToLobby(User user, Long lobbyId) { // now saving lobbyId and not lobby object
         user.addLobbyInvitation(lobbyId);
-        System.out.println("lobbyService: addLobbyInvitation works");
+        // System.out.println("lobbyService: addLobbyInvitation works");
 
         userRepository.save(user);
         userRepository.flush();
-        System.out.println("userRepo fails");
+        // System.out.println("userRepo works");
         return user;
     }
 

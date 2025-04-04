@@ -169,7 +169,7 @@ public class User implements Serializable {
 
   public void addLobbyInvitation(Long lobbyId){ // now saving lobbyId and not lobby object
     if (!this.openLobbyInvitations.contains(lobbyId) && !lobbyId.equals(this.lobbyId)){
-      System.out.println("User addLobbyInvitation if loop");
+      // System.out.println("User addLobbyInvitation if loop");
       this.openLobbyInvitations.add(lobbyId);
     }
   }

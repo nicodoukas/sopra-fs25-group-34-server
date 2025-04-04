@@ -71,12 +71,12 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO inviteUser(@PathVariable Long userId, @RequestBody Long lobbyId) {
-        System.out.println("pvar userId: " + userId);
-        System.out.println("reqBody lobbyId: " + lobbyId);
+        // System.out.println("pvar userId: " + userId);
+        // System.out.println("reqBody lobbyId: " + lobbyId);
         User user = userService.getUserById(userId);
-        Lobby lobby = lobbyService.getLobbyById(lobbyId);
-        System.out.println("user is now: " + user);
-        System.out.println("lobby is now: " + lobby);
+        // Lobby lobby = lobbyService.getLobbyById(lobbyId);
+        // System.out.println("user is now: " + user);
+        // System.out.println("lobby is now: " + lobby);
 
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user,lobbyId));
     }
