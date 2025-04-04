@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Internal User Representation
@@ -56,7 +57,7 @@ public class User implements Serializable {
 
   @Column
   @ElementCollection
-  private List<Lobby> openLobbyInvitations;
+  private List<Long> openLobbyInvitations; // now saving lobbyId and not lobby object
 
   @Column
   private Long lobbyId=null;
@@ -65,7 +66,7 @@ public class User implements Serializable {
   public User() {
     this.friends = new ArrayList<Long>();
     this.friendrequests = new ArrayList<Long>();
-    this.openLobbyInvitations = new ArrayList<Lobby>();
+    this.openLobbyInvitations = new ArrayList<Long>(); // now saving lobbyId and not lobby object
   }
 
   public Long getId() {
@@ -136,11 +137,11 @@ public class User implements Serializable {
     this.lobbyId = lobbyId;
   }
 
-  public List<Lobby> getOpenLobbyInvitations(){
+  public List<Long> getOpenLobbyInvitations(){ // now saving lobbyId and not lobby object
     return this.openLobbyInvitations;
   }
 
-  public void setOpenLobbyInvitations(List<Lobby> openLobbyInvitations) {
+  public void setOpenLobbyInvitations(List<Long> openLobbyInvitations) { // now saving lobbyId and not lobby object
     this.openLobbyInvitations = openLobbyInvitations;
   }
 
@@ -166,23 +167,26 @@ public class User implements Serializable {
     this.friendrequests.remove(userid);
   }
 
-  public void addLobbyInvitation(Lobby lobby){
-    if (!this.openLobbyInvitations.contains(lobby) && this.lobbyId != lobby.getLobbyId()){
-      this.openLobbyInvitations.add(lobby);
+  public void addLobbyInvitation(Long lobbyId){ // now saving lobbyId and not lobby object
+    if (!this.openLobbyInvitations.contains(lobbyId) && !lobbyId.equals(this.lobbyId)){
+      System.out.println("User addLobbyInvitation if loop");
+      this.openLobbyInvitations.add(lobbyId);
     }
   }
-  public void acceptLobbyInvitation(Lobby lobby){
-    this.lobbyId=lobby.getLobbyId();
-    this.openLobbyInvitations.remove(lobby);
+  public void acceptLobbyInvitation(Long lobbyId){ // now saving lobbyId and not lobby object
+    this.lobbyId=lobbyId;
+    this.openLobbyInvitations.remove(lobbyId);
   }
-  public void declineLobbyInvitation(Lobby lobby){
-    this.openLobbyInvitations.remove(lobby);
+  public void declineLobbyInvitation(Long lobbyId){ // now saving lobbyId and not lobby object
+    this.openLobbyInvitations.remove(lobbyId);
   }
 
 
   @Override
   public String toString() {
-    return "User{id=" + id + ", username='" + username + "', password='" + password + "', status=" + status + ", creation_date=" + creation_date + "}";
+    return "User{id=" + id + ", username='" + username + "', password='" + password + "', status=" + status +
+            ", creation_date=" + creation_date + ", friends=" + friends + ", friendRequests=" + friendrequests +
+            ", openLobbyInvitations=" + openLobbyInvitations + ", lobbyId=" + lobbyId +"}";
   }
 
 }

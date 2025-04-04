@@ -16,7 +16,7 @@ public class UserGetDTO {
   private UserStatus status;
   private List<Long> friends;
   private List<Long> friendrequests;
-  private List<LobbyGetDTO> openLobbyInvitations;
+  private List<Long> openLobbyInvitations;
 
   public Long getId() {  return id; }
 
@@ -68,11 +68,11 @@ public class UserGetDTO {
     this.friendrequests = friendrequests;
   }
 
-  public List<LobbyGetDTO> getOpenLobbyInvitations(){
+  public List<Long> getOpenLobbyInvitations(){
     return openLobbyInvitations;
   }
 
-  public void setOpenLobbyInvitations(List<LobbyGetDTO> openLobbyInvitations){
+  public void setOpenLobbyInvitations(List<Long> openLobbyInvitations){
     this.openLobbyInvitations = openLobbyInvitations;
   }
   
