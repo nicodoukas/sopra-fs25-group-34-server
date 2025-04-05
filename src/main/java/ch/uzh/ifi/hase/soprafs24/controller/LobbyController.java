@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class LobbyController {
@@ -71,15 +72,21 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public UserGetDTO inviteUser(@PathVariable Long userId, @RequestBody Long lobbyId) {
-        // System.out.println("pvar userId: " + userId);
-        // System.out.println("reqBody lobbyId: " + lobbyId);
         User user = userService.getUserById(userId);
-        // Lobby lobby = lobbyService.getLobbyById(lobbyId);
-        // System.out.println("user is now: " + user);
-        // System.out.println("lobby is now: " + lobby);
+        Lobby lobby = lobbyService.getLobbyById(lobbyId);
 
         return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user,lobbyId));
     }
 
+    @PostMapping("/lobbies/{lobbyId}/users")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public LobbyGetDTO manageLobbyRequest(@PathVariable Long lobbyId, @RequestBody Map<String, Object> RequestBody){
+        Lobby lobby = lobbyService.getLobbyById(lobbyId);
+        Long userId = Long.parseLong(RequestBody.get("userId").toString());
+        Boolean accepted = (Boolean) RequestBody.get("accepted");
+
+    return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobbyService.manageLobbyRequest(lobby, userId, accepted));
+  }
 
 }

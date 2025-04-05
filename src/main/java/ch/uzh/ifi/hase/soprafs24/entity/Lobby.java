@@ -69,4 +69,9 @@ public class Lobby implements Serializable {
         members.add(user);
     }
 
+    @Override
+    public String toString() {
+        return "Lobby{id=" + lobbyId + ", lobbyname='" + lobbyName + "', members='" + members + "}";
+    }
+
 }
