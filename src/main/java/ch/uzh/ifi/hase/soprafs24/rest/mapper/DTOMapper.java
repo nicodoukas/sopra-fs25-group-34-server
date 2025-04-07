@@ -1,9 +1,10 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
+import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
+
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -40,10 +41,48 @@ public interface DTOMapper {
   @Mapping(source = "status", target = "status")
   @Mapping(source = "friends", target = "friends")
   @Mapping(source = "friendrequests", target = "friendrequests")
+  @Mapping(source = "openLobbyInvitations", target = "openLobbyInvitations")
   UserGetDTO convertEntityToUserGetDTO(User user);
+
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "username", target = "username")
+  @Mapping(source = "password", target = "password")
+  @Mapping(source = "creation_date", target = "creation_date")
+  @Mapping(source = "birthday", target = "birthday")
+  @Mapping(source = "status", target = "status")
+  @Mapping(source = "friends", target = "friends", qualifiedByName = "MapListLong")
+  @Mapping(source = "friendrequests", target = "friendrequests")
+  @Mapping(source = "openLobbyInvitations", target = "openLobbyInvitations")
+  User convertUserGetDTOToEntity(UserGetDTO userGetDTO);
 
   @Mapping(source = "username", target = "username")
   @Mapping(source = "birthday", target = "birthday")
   @Mapping(source = "id", target = "id")
   User convertUserPutDTOtoEntity(UserPutDTO userPutDTO);
+
+  @Mapping(source = "lobbyId", target = "lobbyId")
+  @Mapping(source = "lobbyName", target = "lobbyName")
+  @Mapping(source = "host", target = "host")
+  Lobby convertLobbyPostDTOtoEntity(LobbyPostDTO lobbyPostDTO);
+
+  @Mapping(source = "lobbyId", target = "lobbyId")
+  @Mapping(source = "lobbyName", target = "lobbyName")
+  @Mapping(source = "members", target = "members")
+  @Mapping(source = "host", target ="host")
+  LobbyGetDTO convertEntityToLobbyGetDTO(Lobby lobby);
+
+
+  @Mapping(source = "userId", target="userId")
+  @Mapping(source = "gameId", target="gameId")
+  @Mapping(source = "coinBalance", target="coinBalance")
+  @Mapping(source = "username", target="username")
+  Player convertPlayerGetDTOtoEntity(PlayerGetDTO playerGetDTO);
+
+  @Mapping(source = "userId", target = "userId")
+  @Mapping(source = "gameId", target = "gameId")
+  @Mapping(source = "coinBalance", target = "coinBalance")
+  @Mapping(source = "username", target = "username")
+  PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
+
+
 }

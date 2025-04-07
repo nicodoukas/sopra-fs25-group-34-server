@@ -2,11 +2,9 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Date;
@@ -28,8 +25,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,7 +56,7 @@ public class UserControllerPutTest {
     // when/then -> do the request + validate the result
     MockHttpServletRequestBuilder putRequest = put("/users/1")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJsonString(userPutDTO))
+            .content(ControllerTestUtils.asJsonString(userPutDTO))
             .header("token", "1")
             .header("id", "1");
 
@@ -79,22 +74,12 @@ public class UserControllerPutTest {
 
       doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User id was not found")).when(userService).updateUser(any());
 
-      MockHttpServletRequestBuilder putRequest = post("/edit/{userid}", 1L, userPutDTO)
+      MockHttpServletRequestBuilder putRequest = put("/users/1")
               .contentType(MediaType.APPLICATION_JSON)
-              .content(asJsonString(userPutDTO));
+              .content(ControllerTestUtils.asJsonString(userPutDTO));
 
       // then
       mockMvc.perform(putRequest).andExpect(status().is(404));
-  }
-
-  private String asJsonString(final Object object) {
-    try {
-      return new ObjectMapper().writeValueAsString(object);
-    }
-    catch (JsonProcessingException e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-      String.format("The request body could not be created.%s", e.toString()));
-    }
   }
 
 }
