@@ -1,9 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
-import ch.uzh.ifi.hase.soprafs24.entity.Player;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 
 import org.mapstruct.*;
@@ -85,6 +82,11 @@ public interface DTOMapper {
   @Mapping(source = "username", target = "username")
   PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 
+  @Mapping(source = "addCoin", target = "addCoin")
+  @Mapping(source = "position", target = "position")
+  @Mapping(source = "songCard", target = "songCard")
+  PlayerPutDTO convertPlayerPutDTOtoEntity(PlayerPutDTO playerPutDTO);
+
   @Mapping(source = "title", target = "title")
   @Mapping(source = "artist", target = "artist")
   @Mapping(source = "year", target = "year")
@@ -97,5 +99,14 @@ public interface DTOMapper {
   @Mapping(source = "songURL", target = "songURL")
   SongCardGetDTO convertEntityToSongCardGetDTO(SongCard songCard);
 
+  @Mapping(source = "turnCount", target = "turnCount")
+  Game convertGamePutDTOtoEntity(GamePutDTO gamePutDTO);
+
+  @Mapping(source = "players", target = "players")
+  @Mapping(source = "gameId", target = "gameId")
+  @Mapping(source = "turnCount", target = "turnCount")
+  @Mapping(source = "turnOrder", target = "turnOrder")
+  @Mapping(source = "host", target = "host")
+  GameGetDTO convertEntitytoGameGetDTO(Game game);
 
 }
