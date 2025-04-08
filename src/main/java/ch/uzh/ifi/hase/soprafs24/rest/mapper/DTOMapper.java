@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 
 import org.mapstruct.*;
@@ -83,6 +84,18 @@ public interface DTOMapper {
   @Mapping(source = "coinBalance", target = "coinBalance")
   @Mapping(source = "username", target = "username")
   PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
+
+  @Mapping(source = "title", target = "title")
+  @Mapping(source = "artist", target = "artist")
+  @Mapping(source = "year", target = "year")
+  @Mapping(source = "songURL", target = "songURL")
+  SongCard convertSongCardGetDTOtoEntity(SongCardGetDTO songCardGetDTO);
+
+  @Mapping(source = "title", target = "title")
+  @Mapping(source = "artist", target = "artist")
+  @Mapping(source = "year", target = "year")
+  @Mapping(source = "songURL", target = "songURL")
+  SongCardGetDTO convertEntityToSongCardGetDTO(SongCard songCard);
 
 
 }

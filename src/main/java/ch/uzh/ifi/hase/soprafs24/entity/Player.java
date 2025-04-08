@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player implements Serializable {
 
@@ -8,9 +10,11 @@ public class Player implements Serializable {
     private Long gameId;
     private int coinBalance;
     private String username;
+    private List<SongCard> timeline;
 
     public Player() {
         this.coinBalance = 2;
+        this.timeline = new ArrayList<SongCard>();
     }
 
     public void setUserId(Long userId) {this.userId = userId;}
@@ -24,6 +28,16 @@ public class Player implements Serializable {
 
     public void setUsername(String username) {this.username = username;}
     public String getUsername() {return this.username;}
+    
+    public void setTimeline(List<SongCard> timeline) {this.timeline = timeline;}
+    public List<SongCard> getTimeline() {return this.timeline;}
 
     public void addCoin() {this.coinBalance += 1;}
+    
+    public void updateTimeline(int placement, SongCard songCard) {
+        if (placement<0) {
+            throw new IllegalArgumentException("placement must be greater than zero");
+        }
+        this.timeline.add(placement, songCard); //IMPORTANT counting starts at 0 [0,1,2,3,...]
+    }
 }
