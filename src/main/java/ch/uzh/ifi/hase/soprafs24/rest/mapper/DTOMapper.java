@@ -99,9 +99,6 @@ public interface DTOMapper {
   @Mapping(source = "songURL", target = "songURL")
   SongCardGetDTO convertEntityToSongCardGetDTO(SongCard songCard);
 
-  @Mapping(source = "turnCount", target = "turnCount")
-  Game convertGamePutDTOtoEntity(GamePutDTO gamePutDTO);
-
   @Mapping(source = "players", target = "players")
   @Mapping(source = "gameId", target = "gameId")
   @Mapping(source = "turnCount", target = "turnCount")
