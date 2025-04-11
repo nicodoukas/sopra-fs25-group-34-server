@@ -36,7 +36,7 @@ public class Round implements Serializable {
     public Player getChallenger(){
         return challenger;
     }
-    public void setActivePlayer(Player player){
+    public void setChallenger(Player player){
         this.challenger = player;
     }
     public String getPreviewURL(){
