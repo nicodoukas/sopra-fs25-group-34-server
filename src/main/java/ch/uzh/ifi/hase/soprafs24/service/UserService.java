@@ -121,6 +121,14 @@ public class UserService {
     userRepository.flush();
   }
 
+  /* sets UserStatus to OFFLINE as logout*/
+  public void setStatusToPlaying(Long id){
+      User user = getUserById(id);
+      user.setStatus(UserStatus.PLAYING);
+      userRepository.save(user);
+      userRepository.flush();
+  }
+
   public User updateUser(User userToUpdate){
     User user = getUserById(userToUpdate.getId());
 

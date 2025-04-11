@@ -10,40 +10,40 @@ public class Round implements Serializable {
     private String previewURL;
 
     public Player getActivePlayer(){
-        return activePlayer;
+        return this.activePlayer;
     }
     public void setActivePlayer(Player player){
         this.activePlayer = player;
     }
     public SongCard getSongCard(){
-        return activePlayer;
+        return this.songCard;
     }
     public void setSongCard(Player player){
         this.activePlayer = player;
     }
     public int getActivePlayerPlacement(){
-        return activePlayerPlacement;
+        return this.activePlayerPlacement;
     }
     public void setActivePlayerPlacement(int placement){
         this.activePlayerPlacement = placement;
     }
     public int getChallengerPlacement(){
-        return challengerPlacement;
+        return this.challengerPlacement;
     }
-    public void setActivePlayerPlacement(int placement){
+    public void setChallengerPlacement(int placement){
         this.challengerPlacement = placement;
     }
     public Player getChallenger(){
-        return challenger;
+        return this.challenger;
     }
     public void setChallenger(Player player){
         this.challenger = player;
     }
     public String getPreviewURL(){
-        return previewURL;
+        return this.previewURL;
     }
     public void setPreviewURL(int placement){
         this.previewURL = placement;
-    }
+    } // phikell: what's going on here?
 
 }

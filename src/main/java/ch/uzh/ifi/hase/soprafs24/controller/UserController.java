@@ -105,6 +105,13 @@ public class UserController {
 
   }
 
+  @PutMapping("/playing")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void setStatusToPlaying(@RequestBody Long id){
+      userService.setStatusToPlaying(id);
+  }
+
   @PutMapping("/users/{userId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
