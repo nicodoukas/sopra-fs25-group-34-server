@@ -18,8 +18,14 @@ public class Round implements Serializable {
     public SongCard getSongCard(){
         return this.songCard;
     }
-    public void setSongCard(Player player){
-        this.activePlayer = player;
+    public void setSongCard(SongCard songCard){
+        this.songCard = songCard;
+    }
+    public int getRoundNr(){
+        return this.roundNr;
+    }
+    public void setRoundNr(int roundNr){
+        this.roundNr = roundNr;
     }
     public int getActivePlayerPlacement(){
         return this.activePlayerPlacement;
@@ -42,8 +48,8 @@ public class Round implements Serializable {
     public String getPreviewURL(){
         return this.previewURL;
     }
-    public void setPreviewURL(int placement){
-        this.previewURL = placement;
-    } // phikell: what's going on here?
+    public void setPreviewURL(String previewURL){
+        this.previewURL = previewURL;
+    }
 
 }
