@@ -1,5 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.service;
-
+import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.GameStorage;
 import org.slf4j.Logger;
@@ -21,5 +21,9 @@ public class GameService {
     public GameService(GameStorage gameStorage, UserRepository userRepository) {
         this.gameStorage = gameStorage;
         this.userRepository = userRepository;
+    }
+
+    public Game getGameById(Long gameId){
+        return gameStorage.getGameById(gameId);
     }
 }

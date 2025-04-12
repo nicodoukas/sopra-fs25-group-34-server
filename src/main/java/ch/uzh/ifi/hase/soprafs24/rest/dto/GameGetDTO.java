@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Player;
 
 import java.util.List;
 import java.util.Queue;
+import java.util.LinkedList;
 
 public class GameGetDTO {
 
@@ -21,6 +22,9 @@ public class GameGetDTO {
 
     public Long getTurnCount() {return this.turnCount;}
     public void setTurnCount(Long turnCount) {this.turnCount = turnCount;}
+
+    public Queue<Player> getTurnOrder() {return this.turnOrder;}
+    public void setTurnOrder(LinkedList<Player> turnOrder) {this.turnOrder = turnOrder;}
 
     public Player getHost() {return this.host;}
     public void setHost(Player host) {this.host = host;}
