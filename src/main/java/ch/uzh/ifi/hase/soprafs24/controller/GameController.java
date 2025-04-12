@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardGetDTO;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GameGetDTO;
@@ -28,6 +30,14 @@ public class GameController {
 
         Game game=gameService.getGameById(gameId);
         return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+    }
+
+    @GetMapping("games/{gameId}/song")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public SongCardGetDTO getSongCard(@PathVariable Long gameId) {
+        SongCard songCard = gameService.getSongCard(gameId);
+        return DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
     }
 
 }

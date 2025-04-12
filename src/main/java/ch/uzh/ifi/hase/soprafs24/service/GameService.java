@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
+import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.GameStorage;
 import org.slf4j.Logger;
@@ -25,5 +26,10 @@ public class GameService {
 
     public Game getGameById(Long gameId){
         return gameStorage.getGameById(gameId);
+    }
+
+    public SongCard getSongCard(Long gameId) {
+        Game game = getGameById(gameId);
+        return game.getCurrentRound().getSongCard(); //get SongCard from currentRound
     }
 }
