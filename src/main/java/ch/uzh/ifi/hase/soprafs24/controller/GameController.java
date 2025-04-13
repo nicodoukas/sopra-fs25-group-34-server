@@ -34,7 +34,7 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
     }
 
-    @GetMapping("/game/{gameId}/{userId}")
+    @GetMapping("/games/{gameId}/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public PlayerGetDTO getPlayerInGame(@PathVariable Long gameId, @PathVariable Long userId) {
@@ -42,12 +42,19 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
     }
 
-    @GetMapping("games/{gameId}/song")
+    @GetMapping("/games/{gameId}/song")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public SongCardGetDTO getSongCard(@PathVariable Long gameId) {
         SongCard songCard = gameService.getSongCard(gameId);
         return DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
+    }
+    @PostMapping("/games")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public GameGetDTO createGame(@RequestBody Long lobbyId){
+        Game game = gameService.createGame(lobbyId);
+        return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
     }
 
 }
