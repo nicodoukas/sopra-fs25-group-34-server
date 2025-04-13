@@ -64,6 +64,8 @@ public class GameService {
                 game.setHost(player);
             }
         }
+        game.startNewRound();
+        game = gameStorage.addGame(game);
 
         return game;
     }
