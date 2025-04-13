@@ -7,6 +7,8 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
+import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerGetDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,14 @@ public class GameController {
 
         Game game=gameService.getGameById(gameId);
         return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+    }
+
+    @GetMapping("/game/{gameId}/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public PlayerGetDTO getPlayerInGame(@PathVariable Long gameId, @PathVariable Long userId) {
+        Player player = gameService.getPlayerInGame(gameId, userId);
+        return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
     }
 
     @GetMapping("games/{gameId}/song")
