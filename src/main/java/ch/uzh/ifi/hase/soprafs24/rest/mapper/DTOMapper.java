@@ -106,6 +106,8 @@ public interface DTOMapper {
   @Mapping(source = "turnCount", target = "turnCount")
   @Mapping(source = "turnOrder", target = "turnOrder")
   @Mapping(source = "host", target = "host")
+  @Mapping(source = "currentRound", target = "currentRound")
+  @Mapping(source = "gameName", target = "gameName")
   GameGetDTO convertEntitytoGameGetDTO(Game game);
 
 }
