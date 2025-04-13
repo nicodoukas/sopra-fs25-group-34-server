@@ -74,12 +74,14 @@ public interface DTOMapper {
   @Mapping(source = "gameId", target="gameId")
   @Mapping(source = "coinBalance", target="coinBalance")
   @Mapping(source = "username", target="username")
+  @Mapping(source = "timeline", target="timeline")
   Player convertPlayerGetDTOtoEntity(PlayerGetDTO playerGetDTO);
 
   @Mapping(source = "userId", target = "userId")
   @Mapping(source = "gameId", target = "gameId")
   @Mapping(source = "coinBalance", target = "coinBalance")
   @Mapping(source = "username", target = "username")
+  @Mapping(source = "timeline", target = "timeline")
   PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 
   @Mapping(source = "addCoin", target = "addCoin")
