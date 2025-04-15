@@ -47,6 +47,8 @@ dependencies {
     }
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 bootJar {
@@ -78,7 +80,7 @@ if (secretPropsFile.exists()) {
     Properties p = new Properties()
     p.load(new FileInputStream(secretPropsFile))
     p.each { name, value ->
-        ext[name] = value
+        ext[(name as String)] = value
     }
 }
 
