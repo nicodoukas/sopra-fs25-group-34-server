@@ -61,14 +61,28 @@ public class Game implements Serializable {
         return this.turnOrder;
     }
 
-    public void startNewRound() {
-        this.currentRound = new Round();
-        final Player activePlayer = this.turnOrder.poll(); //get first player in the queue
-        this.turnOrder.add(activePlayer); //add the player at the back of the queue
-        this.currentRound.setActivePlayer(activePlayer);
-        this.currentRound.setSongCard(new SongCard()); //TODO figure out how this will work with Music API
-        this.turnCount += 1; //new Round => turnCount + 1
-        this.currentRound.setRoundNr(this.turnCount);
+    public void startNewRound(SongCard newSongCard) {
+        increaseTurnCount();
+        Player newActivePlayer = updateTurnOrder();
+        updateRound(newSongCard, newActivePlayer);
+    }
+
+    private void increaseTurnCount() {
+        turnCount +=1;
+    }
+
+    private Player updateTurnOrder() {
+        Player newActivePlayer = turnOrder.poll(); // removes the newActivePlayer from the queue
+        turnOrder.add(newActivePlayer); // then adds that player again at the end
+        return newActivePlayer;
+    }
+
+    private void updateRound(SongCard songCard, Player newActivePlayer) {
+        Round nextRound = new Round();
+        nextRound.setActivePlayer(newActivePlayer);
+        nextRound.setSongCard(songCard);
+        nextRound.setRoundNr(turnCount);
+        currentRound = nextRound;
     }
     
 }
