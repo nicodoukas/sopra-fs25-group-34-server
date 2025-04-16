@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +27,36 @@ public class APIService {
     @Autowired
     public APIService(WebClient.Builder webClientBuilder) {
         this.API_URL = "https://api.music.apple.com/v1";
-        this.DEVELOPER_TOKEN = System.getenv("DEVELOPER_TOKEN");
-        if (DEVELOPER_TOKEN == null) {
-            throw new RuntimeException("DEVELOPER_TOKEN is not set in environment");
-        }
+        this.DEVELOPER_TOKEN = getToken();
         this.webClient = webClientBuilder.baseUrl(this.API_URL).defaultHeader("Authorization", "Bearer " + this.DEVELOPER_TOKEN).build(); //DEVELOPER_TOKEN is by default the header.
 
     }
+
+    private String getToken() {
+        //Try with env variable (for locally running)
+        String envToken = System.getenv("DEVELOPER_TOKEN");
+        if (envToken != null && !envToken.isEmpty()) {return envToken;}
+        //Get Token from secret manager google cloud
+        try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
+            String resourceName = "projects/337244022712/secrets/DEVELOPER_TOKEN";
+            AccessSecretVersionResponse response = client.accessSecretVersion(resourceName);
+            /*
+            response = {
+                name: "projects/337244022712/secrets/DEVELOPER_TOKEN",
+                payload: {
+                    data: ByteString (token in bytes)
+                }
+            }
+             */
+
+
+            return response.getPayload().getData().toStringUtf8();
+        }
+        catch (Exception e) {
+            throw new RuntimeException("DEVELOPER_TOKEN not found in SecretManager ", e);
+        }
+    }
+
     //get catalog song detail
     //GET https://api.music.apple.com/v1/catalog/{storefront}/songs/{id}
     public SongCard getSongById(String id) {
