@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
+import ch.uzh.ifi.hase.soprafs24.service.APIHandler;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,13 +45,14 @@ public class Game implements Serializable {
     public void setCurrentRound(Round currentRound) {this.currentRound = currentRound;}
     public Round getCurrentRound() {return this.currentRound;}
 
-    public List<Player> createPlayers(List<User> users) {
+    public List<Player> createPlayers(List<User> users, APIHandler apiHandler) {
         for (User user : users) {
             Player player = new Player();
             player.setUserId(user.getId());
             player.setUsername(user.getUsername());
             player.setGameId(this.gameId);
-            player.updateTimeline(0, new SongCard());
+            player.updateTimeline(0, apiHandler.getNewSongCard());
+            player.updateTimeline(0, apiHandler.getNewSongCard());
 
             this.players.add(player);
         }

@@ -58,7 +58,7 @@ public class GameService {
     public Game createGame(Long lobbyId){
         Lobby lobby = lobbyService.getLobbyById(lobbyId);
         Game game = new Game();
-        List<Player> players = game.createPlayers(lobby.getMembers());
+        List<Player> players = game.createPlayers(lobby.getMembers(),apiHandler);
         game.createTurnOrder(players);
         game.setGameId(lobbyId);
         game.setGameName(lobby.getLobbyName());
@@ -68,7 +68,7 @@ public class GameService {
                 game.setHost(player);
             }
         }
-        startNewRound(game);
+        game = startNewRound(game);
         game = gameStorage.addGame(game);
 
         return game;
