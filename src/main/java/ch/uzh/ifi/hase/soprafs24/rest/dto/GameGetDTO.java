@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.entity.Round;
 
 import java.util.List;
 import java.util.Queue;
@@ -13,6 +14,8 @@ public class GameGetDTO {
     private Long turnCount;
     private Queue<Player> turnOrder;
     private Player host;
+    private Round currentRound;
+    private String gameName;
 
     public void setPlayers(List<Player> players) {this.players = players;}
     public List<Player> getPlayers() {return this.players;}
@@ -28,4 +31,10 @@ public class GameGetDTO {
 
     public Player getHost() {return this.host;}
     public void setHost(Player host) {this.host = host;}
+
+    public Round getCurrentRound() {return this.currentRound;}
+    public void setCurrentRound(Round currentRound) {this.currentRound = currentRound;}
+
+    public String getGameName() {return this.gameName;}
+    public void setGameName(String gameName) {this.gameName = gameName;}
 }

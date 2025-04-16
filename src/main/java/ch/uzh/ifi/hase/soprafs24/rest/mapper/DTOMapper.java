@@ -74,12 +74,14 @@ public interface DTOMapper {
   @Mapping(source = "gameId", target="gameId")
   @Mapping(source = "coinBalance", target="coinBalance")
   @Mapping(source = "username", target="username")
+  @Mapping(source = "timeline", target="timeline")
   Player convertPlayerGetDTOtoEntity(PlayerGetDTO playerGetDTO);
 
   @Mapping(source = "userId", target = "userId")
   @Mapping(source = "gameId", target = "gameId")
   @Mapping(source = "coinBalance", target = "coinBalance")
   @Mapping(source = "username", target = "username")
+  @Mapping(source = "timeline", target = "timeline")
   PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 
   @Mapping(source = "addCoin", target = "addCoin")
@@ -104,6 +106,8 @@ public interface DTOMapper {
   @Mapping(source = "turnCount", target = "turnCount")
   @Mapping(source = "turnOrder", target = "turnOrder")
   @Mapping(source = "host", target = "host")
+  @Mapping(source = "currentRound", target = "currentRound")
+  @Mapping(source = "gameName", target = "gameName")
   GameGetDTO convertEntitytoGameGetDTO(Game game);
 
 }

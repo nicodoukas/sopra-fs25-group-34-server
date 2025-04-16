@@ -7,6 +7,8 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
+import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerGetDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +34,27 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
     }
 
-    @GetMapping("games/{gameId}/song")
+    @GetMapping("/games/{gameId}/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public PlayerGetDTO getPlayerInGame(@PathVariable Long gameId, @PathVariable Long userId) {
+        Player player = gameService.getPlayerInGame(gameId, userId);
+        return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
+    }
+
+    @GetMapping("/games/{gameId}/song")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public SongCardGetDTO getSongCard(@PathVariable Long gameId) {
         SongCard songCard = gameService.getSongCard(gameId);
         return DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
+    }
+    @PostMapping("/games")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public GameGetDTO createGame(@RequestBody Long lobbyId){
+        Game game = gameService.createGame(lobbyId);
+        return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
     }
 
 }
