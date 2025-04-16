@@ -25,7 +25,10 @@ public class APIService {
     @Autowired
     public APIService(WebClient.Builder webClientBuilder) {
         this.API_URL = "https://api.music.apple.com/v1";
-        this.DEVELOPER_TOKEN = "DEVELOPER_TOKEN"; //TODO get DEVELOPER_TOKEN from environment
+        this.DEVELOPER_TOKEN = System.getenv("DEVELOPER_TOKEN");
+        if (DEVELOPER_TOKEN == null) {
+            throw new RuntimeException("DEVELOPER_TOKEN is not set in environment");
+        }
         this.webClient = webClientBuilder.baseUrl(this.API_URL).defaultHeader("Authorization", "Bearer " + this.DEVELOPER_TOKEN).build(); //DEVELOPER_TOKEN is by default the header.
 
     }
