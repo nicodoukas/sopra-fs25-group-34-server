@@ -96,7 +96,6 @@ public class APIService {
         songCard.setYear(Integer.parseInt(releaseDate.substring(0,4))); //only first 4 i.e the year
         songCard.setSongURL(previewURL);
 
-        System.out.println("SongCard: " + "{ 'title': "+ title + ", 'artist': " + artist + ", 'year': " + songCard.getYear() + ", previewURL: " + previewURL + " }");
         return songCard;
     }
 
@@ -134,7 +133,6 @@ public class APIService {
             songIds.add(song.get("id").asText());
          }
 
-         System.out.println("Playlist Song ID's: " + songIds);
          return songIds;
     }
 
