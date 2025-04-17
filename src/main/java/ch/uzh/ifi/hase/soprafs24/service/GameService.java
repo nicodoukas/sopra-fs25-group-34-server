@@ -58,9 +58,9 @@ public class GameService {
     public Game createGame(Long lobbyId){
         Lobby lobby = lobbyService.getLobbyById(lobbyId);
         Game game = new Game();
+        game.setGameId(lobbyId);
         List<Player> players = game.createPlayers(lobby.getMembers(),apiHandler);
         game.createTurnOrder(players);
-        game.setGameId(lobbyId);
         game.setGameName(lobby.getLobbyName());
         game.setTurnCount(0);
         for (Player player : players){
