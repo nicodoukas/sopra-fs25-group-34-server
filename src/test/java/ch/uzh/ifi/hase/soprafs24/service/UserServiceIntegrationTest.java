@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,6 +36,9 @@ public class UserServiceIntegrationTest {
   public void setup() {
     userRepository.deleteAll();
   }
+
+  @MockBean
+  private APIService apiService; //needed since in Test APIService doesn't have access to Token.
 
   @Test
   public void createUser_validInputs_success() {
