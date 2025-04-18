@@ -52,15 +52,8 @@ public class GameControllerGetTest {
 
         game = new Game();
         game.setGameId(1L);
-
-    }
-
-    // GET /games/{gameId} success
-    @Test
-    public void getGame_validId_success() throws Exception {
-        // add all attributes of game to test
         game.setGameName("testGame");
-        game.setTurnCount(3);
+        game.setTurnCount(10);
         game.setCurrentRound(new Round());
         game.setHost(new Player());
         Queue<Player> turnOrder = new LinkedList<>();
@@ -70,6 +63,12 @@ public class GameControllerGetTest {
         game.setTurnOrder(turnOrder);
         game.setPlayers(List.of(new Player(), new Player()));
 
+    }
+
+    // GET /games/{gameId} success
+    @Test
+    public void getGame_validId_success() throws Exception {
+
         given(gameService.getGameById(1L)).willReturn(game);
 
         MockHttpServletRequestBuilder getRequest = get("/games/1")
@@ -78,7 +77,7 @@ public class GameControllerGetTest {
         mockMvc.perform(getRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gameName", is("testGame")))
-                .andExpect(jsonPath("$.turnCount", is(3)))
+                .andExpect(jsonPath("$.turnCount", is(10)))
                 .andExpect(jsonPath("$.currentRound").exists())
                 .andExpect(jsonPath("$.host").exists())
                 .andExpect(jsonPath("$.turnOrder", hasSize(3)))
@@ -98,7 +97,36 @@ public class GameControllerGetTest {
                 .andExpect(status().isNotFound());
     }
 
-    // GET/games/{gameId}/song
+    // GET /games/{gameId}/{userId} success
+    @Test
+    public void getPlayerInGame_validUserId_success() throws Exception {
+        Player player = new Player();
+        player.setUserId(1L);
+
+        given(gameService.getPlayerInGame(game.getGameId(), 1L)).willReturn(player);
+
+        MockHttpServletRequestBuilder getRequest = get("/games/1/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId", is(1)));
+    }
+
+    // GET /games/{gameId}/{userId} error
+    @Test
+    public void getPlayerInGame_invalidUserId_throwsNotFound() throws Exception {
+        given(gameService.getPlayerInGame(1L, 123L))
+                .willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with userId 123 not found in gameId 1"));
+
+        MockHttpServletRequestBuilder getRequest = get("/games/1/123")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
+    }
+
+    // GET /games/{gameId}/song
     @Test
     public void getSongCard_success() throws Exception {
 
