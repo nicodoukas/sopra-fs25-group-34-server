@@ -120,4 +120,82 @@ public class UserControllerPostTest {
       .andExpect(status().isCreated());
   }
 
+  // POST /users/{userId}/friends accepting friendrequest
+  @Test
+  public void manageFriendRequest_acceptRequest_success() throws Exception {
+    // test setup, create users
+    User user = new User();
+    user.setId(1L);
+    user.setUsername("Username1");
+
+    User friend = new User();
+    friend.setId(2L);
+    friend.setUsername("Username2");
+
+    given(userService.getUserById(1L)).willReturn(user);
+    given(userService.manageFriendRequest(user, 2L, true)).willReturn(user);
+
+    String requestBody = """
+    {
+    "userId2": 2,
+    "accepted": true
+    }
+    """;
+
+    MockHttpServletRequestBuilder postRequest = post("/users/1/friends")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+    mockMvc.perform(postRequest)
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+            .andExpect(jsonPath("$.username", is(user.getUsername())));
+  }
+
+  // POST /users/{userId}/friends declining friendrequest
+  @Test
+  public void manageFriendRequest_declineRequest_success() throws Exception {
+
+    User user = new User();
+    user.setId(1L);
+    user.setUsername("Username1");
+
+    given(userService.getUserById(1L)).willReturn(user);
+    given(userService.manageFriendRequest(user, 2L, false)).willReturn(user);
+
+    String requestBody = """
+    {
+      "userId2": 2,
+      "accepted": false
+    }
+    """;
+
+    MockHttpServletRequestBuilder postRequest = post("/users/1/friends")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+    mockMvc.perform(postRequest)
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+            .andExpect(jsonPath("$.username", is(user.getUsername())));
+  }
+
+  // POST /users/{userId}/friends invalid userId
+  @Test
+  public void manageFriendRequest_nonexistentUser_throwsNotFound() throws Exception {
+
+    given(userService.getUserById(1L)).willReturn(new User());
+    given(userService.manageFriendRequest(Mockito.any(), Mockito.eq(123L), Mockito.anyBoolean()))
+            .willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+    String requestBody = """
+    {
+    "userId2": 123,
+    "accepted": true
+     }
+    """;
+    MockHttpServletRequestBuilder postRequest = post("/users/1/friends")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestBody);
+    mockMvc.perform(postRequest)
+            .andExpect(status().isNotFound());
+  }
 }
