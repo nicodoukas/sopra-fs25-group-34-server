@@ -2,6 +2,8 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.entity.Round;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,9 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
+
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,6 +53,49 @@ public class GameControllerGetTest {
         game = new Game();
         game.setGameId(1L);
 
+    }
+
+    // GET /games/{gameId} success
+    @Test
+    public void getGame_validId_success() throws Exception {
+        // add all attributes of game to test
+        game.setGameName("testGame");
+        game.setTurnCount(3);
+        game.setCurrentRound(new Round());
+        game.setHost(new Player());
+        Queue<Player> turnOrder = new LinkedList<>();
+        turnOrder.add(new Player());
+        turnOrder.add(new Player());
+        turnOrder.add(new Player());
+        game.setTurnOrder(turnOrder);
+        game.setPlayers(List.of(new Player(), new Player()));
+
+        given(gameService.getGameById(1L)).willReturn(game);
+
+        MockHttpServletRequestBuilder getRequest = get("/games/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gameName", is("testGame")))
+                .andExpect(jsonPath("$.turnCount", is(3)))
+                .andExpect(jsonPath("$.currentRound").exists())
+                .andExpect(jsonPath("$.host").exists())
+                .andExpect(jsonPath("$.turnOrder", hasSize(3)))
+                .andExpect(jsonPath("$.players", hasSize(2)));
+    }
+
+    // GET /games/{gameId} error
+    @Test
+    public void getGame_invalidId_throwsNotFound() throws Exception {
+        given(gameService.getGameById(123L))
+                .willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found"));
+
+        MockHttpServletRequestBuilder getRequest = get("/games/123")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
     }
 
     // GET/games/{gameId}/song
