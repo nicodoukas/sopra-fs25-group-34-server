@@ -45,14 +45,20 @@ public class UserServiceTest {
   @Test
   public void createUser_validInputs_success() {
     // when -> any object is being save in the userRepository -> return the dummy
+    User newUser = new User();
+    newUser.setId(2L);
+    newUser.setUsername("newUsername");
+    newUser.setPassword("newPassword");
+    Mockito.when(userRepository.save(Mockito.any())).thenReturn(newUser);
     // testUser
-    User createdUser = userService.createUser(testUser);
+    User createdUser = userService.createUser(newUser);
 
     // then
     Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
 
-    assertEquals(testUser.getId(), createdUser.getId());
-    assertEquals(testUser.getUsername(), createdUser.getUsername());
+    assertEquals(2, createdUser.getId()); // second user to be created
+    assertEquals(newUser.getUsername(), createdUser.getUsername());
+    assertEquals(newUser.getPassword(), createdUser.getPassword());
     assertNotNull(createdUser.getToken());
     assertEquals(UserStatus.ONLINE, createdUser.getStatus());
   }
@@ -60,14 +66,6 @@ public class UserServiceTest {
 
   @Test
   public void createUser_duplicateInputs_throwsException() {
-    // given -> a first user has already been created
-    userService.createUser(testUser);
-
-    // when -> setup additional mocks for UserRepository
-    Mockito.when(userRepository.findByUsername(Mockito.any())).thenReturn(testUser);
-
-    // then -> attempt to create second user with same user -> check that an error
-    // is thrown
     assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
   }
 
