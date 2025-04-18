@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+// import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyPostDTO;
@@ -16,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
+// import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
@@ -98,6 +100,86 @@ public class LobbyControllerPostTest {
         mockMvc.perform(postRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(user.getId().intValue())));
+    }
+
+
+    // POST /lobbies/{lobbyId}/users accept success
+    @Test
+    public void manageLobbyRequest_accept_success() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+
+        given(lobbyService.getLobbyById(2L)).willReturn(lobby);
+        given(userService.getUserById(1L)).willReturn(user);
+        given(lobbyService.manageLobbyRequest(Mockito.eq(lobby), Mockito.eq(1L), Mockito.eq(true))).willReturn(lobby);
+
+        String requestBody = """
+        {
+        "userId": 1,
+        "accepted": true
+         }
+        """;
+
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/2/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.lobbyId", is(lobby.getLobbyId().intValue())))
+                .andExpect(jsonPath("$.lobbyName", is(lobby.getLobbyName())));
+    }
+
+
+    // POST /lobbies/{lobbyId}/users decline success
+    @Test
+    public void manageLobbyRequest_decline_success() throws Exception {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testUsername");
+
+        given(lobbyService.getLobbyById(2L)).willReturn(lobby);
+        given(userService.getUserById(1L)).willReturn(user);
+        given(lobbyService.manageLobbyRequest(Mockito.eq(lobby), Mockito.eq(1L), Mockito.eq(false))).willReturn(lobby);
+
+        String requestBody = """
+        {
+        "userId": 1,
+        "accepted": false
+         }
+        """;
+
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/2/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.lobbyId", is(lobby.getLobbyId().intValue())))
+                .andExpect(jsonPath("$.lobbyName", is(lobby.getLobbyName())));
+    }
+
+
+    // POST /lobbies/{lobbyId}/users lobby does not exist throws error
+    @Test
+    public void manageLobbyRequest_nonExistingLobby_throwsNotFound() throws Exception {
+        String requestBody = """
+        {
+        "userId": 1,
+        "accepted": true
+         }
+        """;
+
+        given(lobbyService.getLobbyById(123L))
+                .willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby not found"));
+
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/123/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody);
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
     }
 
 }

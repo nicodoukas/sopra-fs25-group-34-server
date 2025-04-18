@@ -75,7 +75,6 @@ public class LobbyService {
         userRepository.flush();
         System.out.println(lobby);
         return lobby;
-      }
-
+    }
 
 }
