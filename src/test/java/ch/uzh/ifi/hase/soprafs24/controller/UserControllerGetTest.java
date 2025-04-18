@@ -155,4 +155,35 @@ public class UserControllerGetTest {
       .andExpect(jsonPath("$[0]", is(2)));
   }
 
+  // GET /usersByUsername/{username} success
+  @Test
+  public void getUserByUsername_validInput_returnsUser() throws Exception {
+
+    given(userService.getUserByUsername("firstname@lastname")).willReturn(user);
+    MockHttpServletRequestBuilder getRequest = get("/usersByUsername/firstname@lastname")
+            .contentType(MediaType.APPLICATION_JSON);
+
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+    mockMvc.perform(getRequest)
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+            .andExpect(jsonPath("$.username", is(user.getUsername())))
+            .andExpect(jsonPath("$.password", is(user.getPassword())))
+            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) // danke Julia
+            .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+  }
+
+  // GET /usersByUsername/{username} error
+  @Test
+  public void getUserByUsername_invalidInput_throwsNotFound() throws Exception {
+
+    given(userService.getUserByUsername("nonexistent")).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
+    MockHttpServletRequestBuilder getRequest = get("/usersByUsername/nonexistent")
+            .contentType(MediaType.APPLICATION_JSON);
+
+    mockMvc.perform(getRequest)
+            .andExpect(status().isNotFound());
+  }
 }
