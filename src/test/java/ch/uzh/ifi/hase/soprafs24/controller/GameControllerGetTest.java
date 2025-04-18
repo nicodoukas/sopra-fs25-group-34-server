@@ -42,6 +42,9 @@ public class GameControllerGetTest {
     private GameService gameService;
 
     @MockBean
+    private ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger webSocketMessenger;
+
+    @MockBean
     private UserService userService;
 
     private Game game;
