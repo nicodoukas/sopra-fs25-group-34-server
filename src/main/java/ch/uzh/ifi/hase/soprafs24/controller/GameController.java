@@ -9,9 +9,11 @@ import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerGetDTO;
+import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 
 @RestController
 public class GameController {
@@ -20,9 +22,12 @@ public class GameController {
 
     private final UserService userService;
 
-    GameController(GameService gameService, UserService userService) {
+    private final WebSocketMessenger webSocketMessenger;
+
+    GameController(GameService gameService, UserService userService, WebSocketMessenger webSocketMessenger) {
         this.gameService = gameService;
         this.userService = userService;
+        this.webSocketMessenger = webSocketMessenger;
     }
 
     @GetMapping("/games/{gameId}")
@@ -49,12 +54,12 @@ public class GameController {
         SongCard songCard = gameService.getSongCard(gameId);
         return DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
     }
-    @PostMapping("/games")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public GameGetDTO createGame(@RequestBody Long lobbyId){
+    @MessageMapping("/createGame")
+    public GameGetDTO createGame(Long lobbyId){
         Game game = gameService.createGame(lobbyId);
-        return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+        webSocketMessenger.sendMessage("/games/"+ lobbyId, "game-created", gameGetDTO);
+        return gameGetDTO;
     }
 
 }
