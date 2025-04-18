@@ -82,4 +82,43 @@ public class UserControllerPutTest {
       mockMvc.perform(putRequest).andExpect(status().is(404));
   }
 
+  // Sorry, I am adding the user DELETE test here because they are probably the only two DELETE tests necessary
+  // and I don't want to make a new file just for these two
+
+  // DELETE /users/{userId}/friends/{userId2} success
+  @Test
+  public void deleteFriend_existingUser_success() throws Exception {
+    User user = new User();
+    user.setId(1L);
+    user.setUsername("Username1");
+    User friend = new User();
+    friend.setId(2L);
+    friend.setUsername("Username2");
+
+    given(userService.getUserById(1L)).willReturn(user);
+    MockHttpServletRequestBuilder deleteRequest =
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                    .delete("/users/1/friends/2");
+
+    mockMvc.perform(deleteRequest)
+            .andExpect(status().isNoContent());
+  }
+
+  // DELETE /users/{userId}/friends/{userId2} error, friend does not exist
+  @Test
+  public void deleteFriend_nonExistingFriend_throwsNotFound() throws Exception {
+    User user = new User();
+    user.setId(1L);
+    user.setUsername("Username1");
+
+    given(userService.getUserById(1L)).willReturn(user);
+    Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Friend not found"))
+            .when(userService).deleteFriend(Mockito.eq(user), Mockito.eq(2L));
+
+    MockHttpServletRequestBuilder deleteRequest =
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                    .delete("/users/1/friends/2");
+    mockMvc.perform(deleteRequest)
+            .andExpect(status().isNotFound());
+  }
 }
