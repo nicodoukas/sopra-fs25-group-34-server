@@ -32,7 +32,15 @@ public class APIService {
 
     }
 
-    private String getToken() {
+    //for test
+    public APIService(WebClient.Builder webClientBuilder, String token) {
+        this.API_URL = "https://api.music.apple.com/v1";
+        this.DEVELOPER_TOKEN = token;
+        this.webClient = webClientBuilder.baseUrl(this.API_URL).defaultHeader("Authorization", "Bearer " + this.DEVELOPER_TOKEN).build(); //DEVELOPER_TOKEN is by default the header.
+
+    }
+
+    String getToken() {
         //Try with env variable (for locally running)
         String envToken = System.getenv("DEVELOPER_TOKEN");
         if (envToken != null && !envToken.isEmpty()) {return envToken;}
