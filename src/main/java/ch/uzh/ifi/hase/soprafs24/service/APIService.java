@@ -61,7 +61,8 @@ public class APIService {
             return response.getPayload().getData().toStringUtf8();
         }
         catch (Exception e) {
-            throw new RuntimeException("DEVELOPER_TOKEN not found in SecretManager ", e);
+            System.err.println("Error fetching DEVELOPER_TOKEN using Secret Manager: " + e.getMessage());
+            return null;
         }
     }
 
