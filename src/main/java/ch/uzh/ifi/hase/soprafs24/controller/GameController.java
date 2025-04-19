@@ -54,6 +54,15 @@ public class GameController {
         SongCard songCard = gameService.getSongCard(gameId);
         return DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
     }
+
+    @PostMapping("/games")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public GameGetDTO createGamehttp(@RequestBody Long lobbyId) {
+        Game game = gameService.createGame(lobbyId);
+        return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+    }
+
     @MessageMapping("/createGame")
     public GameGetDTO createGame(Long lobbyId){
         Game game = gameService.createGame(lobbyId);
