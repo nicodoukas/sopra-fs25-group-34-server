@@ -46,7 +46,7 @@ public class APIService {
         if (envToken != null && !envToken.isEmpty()) {return envToken;}
         //Get Token from secret manager google cloud
         try (SecretManagerServiceClient client = SecretManagerServiceClient.create()) {
-            String resourceName = "projects/337244022712/secrets/DEVELOPER_TOKEN";
+            String resourceName = "projects/337244022712/secrets/DEVELOPER_TOKEN/versions/latest";
             AccessSecretVersionResponse response = client.accessSecretVersion(resourceName);
             /*
             response = {
