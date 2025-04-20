@@ -5,7 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardGetDTO;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GameGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardInsertDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
@@ -59,11 +59,21 @@ public class GameController {
     @PutMapping("/games/{gameId}/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void insertSongCardIntoTimeline(@PathVariable Long gameId,
-                                           @PathVariable Long userId,
-                                           @RequestBody SongCardInsertDTO insertDTO) {
-        gameService.insertSongCardIntoTimeline(gameId, userId, insertDTO.getSongCard(), insertDTO.getPosition());
-    }
+    public PlayerGetDTO updatePlayer(@PathVariable Long gameId,
+                                     @PathVariable Long userId,
+                                     @RequestBody PlayerPutDTO playerPutDTO) {
+        Player updatedPlayer;
+        // You call this function from the client either to add a coin, or to update the timeline
+        if (playerPutDTO.getAddCoin()) {
+            updatedPlayer = gameService.addCoinToPlayer(gameId, userId);
+        } else {
+            updatedPlayer = gameService.insertSongCardIntoTimeline(
+                    gameId,
+                    userId,
+                    playerPutDTO.getSongCard(),
+                    playerPutDTO.getPosition()
+            );
+        }
 
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)

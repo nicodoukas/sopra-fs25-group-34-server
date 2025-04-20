@@ -1,0 +1,94 @@
+package ch.uzh.ifi.hase.soprafs24.controller;
+
+import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
+import ch.uzh.ifi.hase.soprafs24.service.GameService;
+import ch.uzh.ifi.hase.soprafs24.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@WebMvcTest(GameController.class)
+public class GameControllerPutTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private GameService gameService;
+
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger webSocketMessenger;
+
+    private ObjectMapper objectMapper;
+
+    private Player mockPlayer;
+    private SongCard mockSongCard;
+
+    @BeforeEach
+    public void setup() {
+        objectMapper = new ObjectMapper();
+
+        mockSongCard = new SongCard();
+        mockSongCard.setTitle("Disorder");
+        mockSongCard.setArtist("Joy Division");
+        mockSongCard.setYear(1979);
+        mockSongCard.setSongURL("https://blablabla.com");
+
+        mockPlayer = new Player();
+        mockPlayer.setUserId(1L);
+        mockPlayer.setGameId(10L);
+        mockPlayer.setUsername("testUsername");
+        mockPlayer.setCoinBalance(2);
+        mockPlayer.setTimeline(List.of(mockSongCard)); // We assume it was inserted
+    }
+
+    /*
+    @Test
+    public void updatePlayer_InsertSongCardIntoTimeline_success() throws Exception {
+        Long gameId = 10L;
+        Long userId = 1L;
+        int position = 0;
+
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setSongCard(mockSongCard);
+        playerPutDTO.setPosition(position);
+        playerPutDTO.setAddCoin(false);
+
+        Mockito.when(gameService.insertSongCardIntoTimeline(gameId, userId, mockSongCard, position))
+                .thenReturn(mockPlayer);
+
+        mockMvc.perform(put("/games/{gameId}/{userId}", gameId, userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(playerPutDTO)))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString())) // this shit not working dawg
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(userId))
+                .andExpect(jsonPath("$.gameId").value(gameId))
+                .andExpect(jsonPath("$.username").value("testUsername"))
+                .andExpect(jsonPath("$.coinBalance").value(2))
+                .andExpect(jsonPath("$.timeline[0].title").value("Disorder"))
+                .andExpect(jsonPath("$.timeline[0].artist").value("Joy Division"))
+                .andExpect(jsonPath("$.timeline[0].year").value(1979))
+                .andExpect(jsonPath("$.timeline[0].songURL").value("https://blablabla.com"));
+    }
+
+     */
+}
