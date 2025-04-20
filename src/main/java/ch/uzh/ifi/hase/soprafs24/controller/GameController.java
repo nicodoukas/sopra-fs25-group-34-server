@@ -65,14 +65,26 @@ public class GameController {
         gameService.insertSongCardIntoTimeline(gameId, userId, insertDTO.getSongCard(), insertDTO.getPosition());
     }
 
+    @PostMapping("/games")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public GameGetDTO createGame(@RequestBody Long lobbyId) {
+        Game game = gameService.createGame(lobbyId);
+        return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+    }
 
 
-    @MessageMapping("/createGame")
+    /*@MessageMapping("/createGame")
     public GameGetDTO createGame(Long lobbyId){
         Game game = gameService.createGame(lobbyId);
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
         webSocketMessenger.sendMessage("/games/"+ lobbyId, "game-created", gameGetDTO);
         return gameGetDTO;
+    }*/
+
+    @MessageMapping("/play")
+    public void playSong(String gameId){
+        webSocketMessenger.sendMessage("/games/"+gameId, "play-song", null);
     }
 
 }
