@@ -55,7 +55,7 @@ public class GameService {
         return game.getCurrentRound().getSongCard(); //get SongCard from currentRound
     }
 
-    public void insertSongCardIntoTimeline(Long gameId, Long userId, SongCard songCard, int position) {
+    public Player insertSongCardIntoTimeline(Long gameId, Long userId, SongCard songCard, int position) {
         Game game = getGameById(gameId);
 
         Player player = game.getPlayers()
@@ -66,6 +66,20 @@ public class GameService {
 
         // Player already has updateTimeline function
         player.updateTimeline(position, songCard);
+        return player;
+    }
+
+    public Player addCoinToPlayer(Long gameId, Long userId) {
+        Game game = getGameById(gameId);
+
+        Player player = game.getPlayers()
+                .stream()
+                .filter(p -> p.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player " + userId + " not found in game " + gameId));
+
+        player.addCoin();
+        return player;
     }
 
     public Game createGame(Long lobbyId){
