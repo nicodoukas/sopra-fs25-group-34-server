@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Player implements Serializable {
@@ -40,6 +39,5 @@ public class Player implements Serializable {
             throw new IllegalArgumentException("placement must be greater than zero");
         }
         this.timeline.add(placement, songCard); //IMPORTANT counting starts at 0 [0,1,2,3,...]
-        this.timeline.sort(Comparator.comparing(SongCard::getYear)); //needed for initiating the timeline when the game starts.
     }
 }
