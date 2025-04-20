@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardGetDTO;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GameGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardInsertDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
@@ -54,6 +55,18 @@ public class GameController {
         SongCard songCard = gameService.getSongCard(gameId);
         return DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
     }
+
+    @PutMapping("/games/{gameId}/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void insertSongCardIntoTimeline(@PathVariable Long gameId,
+                                           @PathVariable Long userId,
+                                           @RequestBody SongCardInsertDTO insertDTO) {
+        gameService.insertSongCardIntoTimeline(gameId, userId, insertDTO.getSongCard(), insertDTO.getPosition());
+    }
+
+
+
     @MessageMapping("/createGame")
     public GameGetDTO createGame(Long lobbyId){
         Game game = gameService.createGame(lobbyId);

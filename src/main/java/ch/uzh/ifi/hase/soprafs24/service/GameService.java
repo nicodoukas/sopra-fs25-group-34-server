@@ -47,12 +47,25 @@ public class GameService {
                 .stream()
                 .filter(player -> player.getUserId().equals(userId))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with userId xyz not found in this game"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player " + userId + " not found in game " + gameId));
     }
 
     public SongCard getSongCard(Long gameId) {
         Game game = getGameById(gameId);
         return game.getCurrentRound().getSongCard(); //get SongCard from currentRound
+    }
+
+    public void insertSongCardIntoTimeline(Long gameId, Long userId, SongCard songCard, int position) {
+        Game game = getGameById(gameId);
+
+        Player player = game.getPlayers()
+                .stream()
+                .filter(p -> p.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player " + userId + " not found in game " + gameId));
+
+        // Player already has updateTimeline function
+        player.updateTimeline(position, songCard);
     }
 
     public Game createGame(Long lobbyId){
