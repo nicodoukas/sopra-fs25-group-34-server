@@ -33,7 +33,7 @@ public class Player implements Serializable {
     public List<SongCard> getTimeline() {return this.timeline;}
 
     public void addCoin() {
-        if (this.coinBalance < 4) {this.coinBalance += 1;}
+        if (this.coinBalance < 5) {this.coinBalance += 1;}
     }
     
     public void updateTimeline(int placement, SongCard songCard) {
