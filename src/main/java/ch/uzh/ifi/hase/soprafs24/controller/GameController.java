@@ -74,6 +74,8 @@ public class GameController {
                     playerPutDTO.getPosition()
             );
         }
+        return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
+    }
 
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
