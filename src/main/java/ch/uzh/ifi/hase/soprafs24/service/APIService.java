@@ -99,6 +99,7 @@ public class APIService {
         String artist = APISong.get("data").get(0).get("attributes").get("artistName").asText();
         String releaseDate = APISong.get("data").get(0).get("attributes").get("releaseDate").asText(); //"YYYY-MM-DD
         String previewURL = APISong.get("data").get(0).get("attributes").get("previews").get(0).get("url").asText();
+        title = title.split("\\(")[0];
         songCard.setTitle(title);
         songCard.setArtist(artist);
         songCard.setYear(Integer.parseInt(releaseDate.substring(0,4))); //only first 4 i.e the year
