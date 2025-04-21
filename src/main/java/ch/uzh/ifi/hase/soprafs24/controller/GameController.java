@@ -1,15 +1,13 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Guess;
 import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.GameGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerGetDTO;
 import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 
 import org.springframework.http.HttpStatus;
@@ -99,4 +97,12 @@ public class GameController {
         webSocketMessenger.sendMessage("/games/"+gameId, "play-song", null);
     }
 
+    @PostMapping("/games/{gameId}/{userId}/guess")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public boolean checkGuess(@PathVariable Long gameId, @PathVariable Long userId, @RequestBody GuessPostDTO guessPostDTO) {
+       Game game = gameService.getGameById(gameId);
+       Guess guess = DTOMapper.INSTANCE.convertGuessPostDTOtoEntity(guessPostDTO);
+       return gameService.checkGuess(game, guess, userId);
+    }
 }

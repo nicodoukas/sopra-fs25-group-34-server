@@ -1,8 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.service;
-import ch.uzh.ifi.hase.soprafs24.entity.Game;
-import ch.uzh.ifi.hase.soprafs24.entity.Player;
-import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
-import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.GameStorage;
 import org.slf4j.Logger;
@@ -106,5 +103,13 @@ public class GameService {
         SongCard newSongCard = apiHandler.getNewSongCard();
         game.startNewRound(newSongCard);
         return game;
+    }
+
+    public boolean checkGuess(Game game, Guess guess, Long userId) {
+        boolean correct = guess.checkGuess(game);
+        if (correct) {
+            addCoinToPlayer(game.getGameId(),userId);
+        }
+        return correct;
     }
 }
