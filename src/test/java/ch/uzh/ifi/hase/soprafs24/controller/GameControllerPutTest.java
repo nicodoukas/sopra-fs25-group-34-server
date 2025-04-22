@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -60,7 +62,7 @@ public class GameControllerPutTest {
         mockPlayer.setTimeline(List.of(mockSongCard)); // We assume it was inserted
     }
 
-    /*
+
     @Test
     public void updatePlayer_InsertSongCardIntoTimeline_success() throws Exception {
         Long gameId = 10L;
@@ -72,13 +74,13 @@ public class GameControllerPutTest {
         playerPutDTO.setPosition(position);
         playerPutDTO.setAddCoin(false);
 
-        Mockito.when(gameService.insertSongCardIntoTimeline(gameId, userId, mockSongCard, position))
+        Mockito.when(gameService.insertSongCardIntoTimeline(eq(gameId), eq(userId), any(SongCard.class), eq(position)))
                 .thenReturn(mockPlayer);
 
         mockMvc.perform(put("/games/{gameId}/{userId}", gameId, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(playerPutDTO)))
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString())) // this shit not working dawg
+                .andDo(result -> System.out.println("RESPONSE: " + result.getResponse().getContentAsString())) // this shit not working dawg
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.gameId").value(gameId))
@@ -89,6 +91,4 @@ public class GameControllerPutTest {
                 .andExpect(jsonPath("$.timeline[0].year").value(1979))
                 .andExpect(jsonPath("$.timeline[0].songURL").value("https://blablabla.com"));
     }
-
-     */
 }
