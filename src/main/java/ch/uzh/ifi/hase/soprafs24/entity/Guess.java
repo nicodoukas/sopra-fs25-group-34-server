@@ -25,8 +25,7 @@ public class Guess implements Serializable {
 
     public boolean checkGuess(Game game) {
         SongCard songCard = game.getCurrentRound().getSongCard();
-        if (songCard.getArtist().equals(this.guessedArtist)) {return true;}
-        else if (songCard.getTitle().equals(this.guessedTitle)) {return true;}
-        else {return false;}
+        return songCard.getArtist().equalsIgnoreCase(this.guessedArtist) &&
+                songCard.getTitle().equalsIgnoreCase(this.guessedTitle);
     }
 }
