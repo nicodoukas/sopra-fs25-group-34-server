@@ -97,6 +97,11 @@ public class GameController {
         webSocketMessenger.sendMessage("/games/"+gameId, "play-song", null);
     }
 
+    @MessageMapping("/start")
+    public void startNotification(String lobbyId){
+        webSocketMessenger.sendMessage("/games/"+lobbyId, "start-game", null);
+    }
+
     @PostMapping("/games/{gameId}/{userId}/guess")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
