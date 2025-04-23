@@ -14,11 +14,8 @@ import java.util.Random;
 public class APIHandler {
 
     private final APIService apiService;
-    
-    private final String MockPlaylistId = "pl.f4d106fed2bd41149aaacabb233eb5eb";
 
-    // TODO: find the actual IDs of playlists we want to include
-    private static final List<String> PLAYLIST_IDS = List.of("playlist1ID", "playlist2ID", "playlist3ID");
+    private static final List<String> PLAYLIST_IDS = List.of("pl.4c4185db922342f1bc36e0817eec213a", "pl.405e6f67264a4a44ba1b0c3a787c78b8", "pl.1745c21b5f084936ad637b4cd5cbd99a", "pl.af4d982795c6472ea48579eb147cd726", "pl.0d70b7c9be8e4e0b95ebbf5578aaf7a2", "pl.e50ccee7318043eaaf8e8e28a2a55114", "pl.6b1b5dfda067443481265436811002f1", "pl.adc231109c184fc691d8b78bf28217de" );
 
     @Autowired
     public APIHandler(APIService apiService) {
@@ -27,7 +24,7 @@ public class APIHandler {
 
     public SongCard getNewSongCard() {
         String playlistId = getRandomElement(PLAYLIST_IDS);
-        List<String> songIds = apiService.getSongsOfPlaylist(MockPlaylistId);
+        List<String> songIds = apiService.getSongsOfPlaylist(playlistId);
         String songId = getRandomElement(songIds);
         return apiService.getSongById(songId);
     }

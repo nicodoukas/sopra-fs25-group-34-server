@@ -112,4 +112,117 @@ public class GameServiceTest {
         assertEquals(songCard, game.getCurrentRound().getSongCard());
         Mockito.verify(apiHandler, Mockito.times(1)).getNewSongCard();
     }
+
+    @Test
+    public void addCoinToPlayer_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(2);
+
+        testGame.setPlayers(List.of(player));
+
+        Player result = gameService.addCoinToPlayer(testGame.getGameId(), player.getUserId());
+
+        assertEquals(3, result.getCoinBalance());
+    }
+
+    @Test
+    public void addCoinToPlayer_coinBalance5_doesNotAddCoin() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(5); // 5 is the maximum amount of coins a player can have
+
+        testGame.setPlayers(List.of(player));
+
+        Player result = gameService.addCoinToPlayer(testGame.getGameId(), player.getUserId());
+
+        assertEquals(5, result.getCoinBalance());
+    }
+
+    @Test
+    public void insertSongCardIntoTimeline_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setTimeline(new ArrayList<>());
+
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Disorder");
+        songCard.setArtist("Joy Division");
+        songCard.setYear(1979);
+        songCard.setSongURL("https://blablabla.com");
+
+        testGame.setPlayers(List.of(player));
+
+        int position = 0;
+
+        Player result = gameService.insertSongCardIntoTimeline(testGame.getGameId(), player.getUserId(), songCard, position);
+
+        assertEquals(1, result.getTimeline().size());
+        assertEquals("Disorder", result.getTimeline().get(position).getTitle());
+        assertEquals("Joy Division", result.getTimeline().get(position).getArtist());
+        assertEquals(1979, result.getTimeline().get(position).getYear());
+        assertEquals("https://blablabla.com", result.getTimeline().get(position).getSongURL());
+    }
+
+    @Test
+    public void checkGuess_correctGuess_addsCoin() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(2);
+
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Disorder");
+        songCard.setArtist("Joy Division");
+        songCard.setYear(1979);
+        songCard.setSongURL("https://blablabla.com");
+
+        Round round = new Round();
+        round.setSongCard(songCard);
+
+        testGame.setCurrentRound(round);
+        testGame.setPlayers(List.of(player));
+
+        // Note that the guess is correct
+        Guess guess = new Guess();
+        guess.setGuessedTitle("Disorder");
+        guess.setGuessedArtist("Joy Division");
+
+        // Therefore checkGuess should return True and a coin should be added
+        boolean result = gameService.checkGuess(testGame, guess, player.getUserId());
+
+        assertTrue(result);
+        assertEquals(3, player.getCoinBalance());
+    }
+
+    @Test
+    public void checkGuess_wrongGuess_doesNotAddCoin() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(2);
+
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Disorder");
+        songCard.setArtist("Joy Division");
+        songCard.setYear(1979);
+        songCard.setSongURL("https://blablabla.com");
+
+        Round round = new Round();
+        round.setSongCard(songCard);
+
+        testGame.setCurrentRound(round);
+        testGame.setPlayers(List.of(player));
+
+        // Here the player guessed the correct band, but the wrong song
+        Guess guess = new Guess();
+        guess.setGuessedTitle("Transmission");
+        guess.setGuessedArtist("Joy Division");
+
+        // Therefore, the entire guess is false, so checkGuess should return false and no coin is added
+        boolean result = gameService.checkGuess(testGame, guess, player.getUserId());
+
+        assertFalse(result);
+        assertEquals(2, player.getCoinBalance());
+    }
+
+
 }

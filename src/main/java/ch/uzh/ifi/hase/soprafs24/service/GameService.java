@@ -1,8 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.service;
-import ch.uzh.ifi.hase.soprafs24.entity.Game;
-import ch.uzh.ifi.hase.soprafs24.entity.Player;
-import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
-import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.GameStorage;
 import org.slf4j.Logger;
@@ -47,12 +44,39 @@ public class GameService {
                 .stream()
                 .filter(player -> player.getUserId().equals(userId))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player with userId xyz not found in this game"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player " + userId + " not found in game " + gameId));
     }
 
     public SongCard getSongCard(Long gameId) {
         Game game = getGameById(gameId);
         return game.getCurrentRound().getSongCard(); //get SongCard from currentRound
+    }
+
+    public Player insertSongCardIntoTimeline(Long gameId, Long userId, SongCard songCard, int position) {
+        Game game = getGameById(gameId);
+
+        Player player = game.getPlayers()
+                .stream()
+                .filter(p -> p.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player " + userId + " not found in game " + gameId));
+
+        // Player already has updateTimeline function
+        player.updateTimeline(position, songCard);
+        return player;
+    }
+
+    public Player addCoinToPlayer(Long gameId, Long userId) {
+        Game game = getGameById(gameId);
+
+        Player player = game.getPlayers()
+                .stream()
+                .filter(p -> p.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player " + userId + " not found in game " + gameId));
+
+        player.addCoin();
+        return player;
     }
 
     public Game createGame(Long lobbyId){
@@ -79,5 +103,13 @@ public class GameService {
         SongCard newSongCard = apiHandler.getNewSongCard();
         game.startNewRound(newSongCard);
         return game;
+    }
+
+    public boolean checkGuess(Game game, Guess guess, Long userId) {
+        boolean correct = guess.checkGuess(game);
+        if (correct) {
+            addCoinToPlayer(game.getGameId(),userId);
+        }
+        return correct;
     }
 }

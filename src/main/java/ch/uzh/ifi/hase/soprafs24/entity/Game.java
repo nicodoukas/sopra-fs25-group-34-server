@@ -51,9 +51,11 @@ public class Game implements Serializable {
             player.setUserId(user.getId());
             player.setUsername(user.getUsername());
             player.setGameId(this.gameId);
-            player.updateTimeline(0, apiHandler.getNewSongCard());
-            player.updateTimeline(0, apiHandler.getNewSongCard());
-
+            SongCard songCard1 = apiHandler.getNewSongCard();
+            player.updateTimeline(0, songCard1);
+            SongCard songCard2 = apiHandler.getNewSongCard();
+            if (songCard2.getYear() < songCard1.getYear()) {player.updateTimeline(0, songCard2);}
+            else {player.updateTimeline(1, songCard2);}
             this.players.add(player);
         }
         return this.players;

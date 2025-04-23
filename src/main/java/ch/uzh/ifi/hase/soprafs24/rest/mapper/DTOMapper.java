@@ -110,4 +110,9 @@ public interface DTOMapper {
   @Mapping(source = "gameName", target = "gameName")
   GameGetDTO convertEntitytoGameGetDTO(Game game);
 
+  @Mapping(source = "guessedTitle", target = "guessedTitle")
+  @Mapping(source = "guessedArtist", target = "guessedArtist")
+  @Mapping(source = "player", target = "player")
+  Guess convertGuessPostDTOtoEntity(GuessPostDTO guessPostDTO);
+
 }
