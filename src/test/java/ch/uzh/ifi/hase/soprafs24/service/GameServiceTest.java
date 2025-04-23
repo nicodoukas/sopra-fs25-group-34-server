@@ -164,5 +164,65 @@ public class GameServiceTest {
         assertEquals("https://blablabla.com", result.getTimeline().get(position).getSongURL());
     }
 
+    @Test
+    public void checkGuess_correctGuess_addsCoin() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(2);
+
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Disorder");
+        songCard.setArtist("Joy Division");
+        songCard.setYear(1979);
+        songCard.setSongURL("https://blablabla.com");
+
+        Round round = new Round();
+        round.setSongCard(songCard);
+
+        testGame.setCurrentRound(round);
+        testGame.setPlayers(List.of(player));
+
+        // Note that the guess is correct
+        Guess guess = new Guess();
+        guess.setGuessedTitle("Disorder");
+        guess.setGuessedArtist("Joy Division");
+
+        // Therefore checkGuess should return True and a coin should be added
+        boolean result = gameService.checkGuess(testGame, guess, player.getUserId());
+
+        assertTrue(result);
+        assertEquals(3, player.getCoinBalance());
+    }
+
+    @Test
+    public void checkGuess_wrongGuess_doesNotAddCoin() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(2);
+
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Disorder");
+        songCard.setArtist("Joy Division");
+        songCard.setYear(1979);
+        songCard.setSongURL("https://blablabla.com");
+
+        Round round = new Round();
+        round.setSongCard(songCard);
+
+        testGame.setCurrentRound(round);
+        testGame.setPlayers(List.of(player));
+
+        // Here the player guessed the correct band, but the wrong song
+        Guess guess = new Guess();
+        guess.setGuessedTitle("Transmission");
+        guess.setGuessedArtist("Joy Division");
+
+        // Therefore, the entire guess is false, so checkGuess should return false and no coin is added
+        boolean result = gameService.checkGuess(testGame, guess, player.getUserId());
+
+        assertFalse(result);
+        assertEquals(2, player.getCoinBalance());
+    }
+
 
 }
