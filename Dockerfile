@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-jdk
 WORKDIR /app
 
 # Copy the built Spring Boot JAR into the container
-COPY build/libs/soprafs24.jar app.jar
+COPY /app/build/libs/soprafs24.jar app.jar
 
 # Expose port 8080 — required by App Engine
 EXPOSE 8080
