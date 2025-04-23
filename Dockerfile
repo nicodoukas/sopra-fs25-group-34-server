@@ -22,6 +22,8 @@ WORKDIR /app
 # Copy the generated JAR from the builder step
 COPY --from=builder /app/build/libs/soprafs24.jar app.jar
 
+VOLUME /app/data
+
 # Expose port 8080 — required by App Engine
 EXPOSE 8080
 
