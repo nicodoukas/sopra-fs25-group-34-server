@@ -2,4 +2,10 @@
 # https://cloud.google.com/appengine/docs/standard
 
 runtime: java17
-instance_class: F2
+env: flex
+
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
+    redirect_http_response_code: 301
