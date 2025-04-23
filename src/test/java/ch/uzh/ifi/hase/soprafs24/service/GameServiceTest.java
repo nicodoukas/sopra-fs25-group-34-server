@@ -112,4 +112,44 @@ public class GameServiceTest {
         assertEquals(songCard, game.getCurrentRound().getSongCard());
         Mockito.verify(apiHandler, Mockito.times(1)).getNewSongCard();
     }
+
+    @Test
+    public void addCoinToPlayer_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(2);
+
+        testGame.setPlayers(List.of(player));
+
+        Player result = gameService.addCoinToPlayer(testGame.getGameId(), player.getUserId());
+
+        assertEquals(3, result.getCoinBalance());
+    }
+
+    @Test
+    public void insertSongCardIntoTimeline_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setTimeline(new ArrayList<>());
+
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Disorder");
+        songCard.setArtist("Joy Division");
+        songCard.setYear(1979);
+        songCard.setSongURL("https://blablabla.com");
+
+        testGame.setPlayers(List.of(player));
+
+        int position = 0;
+
+        Player result = gameService.insertSongCardIntoTimeline(testGame.getGameId(), player.getUserId(), songCard, position);
+
+        assertEquals(1, result.getTimeline().size());
+        assertEquals("Disorder", result.getTimeline().get(position).getTitle());
+        assertEquals("Joy Division", result.getTimeline().get(position).getArtist());
+        assertEquals(1979, result.getTimeline().get(position).getYear());
+        assertEquals("https://blablabla.com", result.getTimeline().get(position).getSongURL());
+    }
+
+
 }
