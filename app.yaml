@@ -4,8 +4,8 @@ service: backendv2
 runtime: custom
 env: flex
 
-handlers:
-  - url: /.*
-    script: auto
-    secure: always
-    redirect_http_response_code: 301
+resources:
+  cpu: 4
+  memory_gb: 8
+  disk_size_gb: 10
+
