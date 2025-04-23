@@ -80,7 +80,6 @@ public class GameControllerPutTest {
         mockMvc.perform(put("/games/{gameId}/{userId}", gameId, userId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(playerPutDTO)))
-                .andDo(result -> System.out.println("RESPONSE: " + result.getResponse().getContentAsString())) // this shit not working dawg
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.gameId").value(gameId))
@@ -91,4 +90,34 @@ public class GameControllerPutTest {
                 .andExpect(jsonPath("$.timeline[0].year").value(1979))
                 .andExpect(jsonPath("$.timeline[0].songURL").value("https://blablabla.com"));
     }
+
+    @Test
+    public void updatePlayer_AddCoin_success() throws Exception {
+        Long gameId = 10L;
+        Long userId = 1L;
+
+        // The player starts with 2 coins, with addCoin = True he should have 3 after calling endpoint
+        Player updatedPlayer = new Player();
+        updatedPlayer.setUserId(userId);
+        updatedPlayer.setGameId(gameId);
+        updatedPlayer.setUsername("testUsername");
+        updatedPlayer.setCoinBalance(3);  // Now set to 3 to simulate GameService adding one
+        updatedPlayer.setTimeline(List.of(mockSongCard));
+
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setAddCoin(true);
+
+        Mockito.when(gameService.addCoinToPlayer(gameId, userId)).thenReturn(updatedPlayer);
+
+        mockMvc.perform(put("/games/{gameId}/{userId}", gameId, userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(playerPutDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(userId))
+                .andExpect(jsonPath("$.gameId").value(gameId))
+                .andExpect(jsonPath("$.username").value("testUsername"))
+                .andExpect(jsonPath("$.coinBalance").value(3))
+                .andExpect(jsonPath("$.timeline[0].title").value("Disorder"));
+    }
+
 }
