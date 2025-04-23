@@ -127,6 +127,19 @@ public class GameServiceTest {
     }
 
     @Test
+    public void addCoinToPlayer_coinBalance5_doesNotAddCoin() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(5); // 5 is the maximum amount of coins a player can have
+
+        testGame.setPlayers(List.of(player));
+
+        Player result = gameService.addCoinToPlayer(testGame.getGameId(), player.getUserId());
+
+        assertEquals(5, result.getCoinBalance());
+    }
+
+    @Test
     public void insertSongCardIntoTimeline_success() {
         Player player = new Player();
         player.setUserId(1L);
