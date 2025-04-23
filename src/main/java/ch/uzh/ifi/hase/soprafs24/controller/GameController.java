@@ -110,4 +110,11 @@ public class GameController {
        Guess guess = DTOMapper.INSTANCE.convertGuessPostDTOtoEntity(guessPostDTO);
        return gameService.checkGuess(game, guess, userId);
     }
+
+    @MessageMapping("/startNewRound")
+    public void startNewRound(String gameId){
+        Game game = gameService.getGameById(Long.valueOf(gameId));
+        gameService.startNewRound(game);
+        webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
+    }
 }
