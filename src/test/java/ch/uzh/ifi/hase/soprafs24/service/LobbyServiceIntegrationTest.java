@@ -48,7 +48,7 @@ public class LobbyServiceIntegrationTest {
         // Create and store test lobby
         testLobby = new Lobby();
         testLobby.setLobbyName("testLobby");
-        testLobby.createLobbyId(); // auto generates ID
+        testLobby.createLobbyId();
         lobbyStorage.addLobby(testLobby);
 
         // Add lobby invite to user
@@ -59,28 +59,27 @@ public class LobbyServiceIntegrationTest {
 
     @Test
     public void userJoinsLobby_correctlyUpdatesUserAndLobby() {
-        // Sanity check
+        // Just a quick setup check
         assertTrue(testUser.getOpenLobbyInvitations().contains(testLobby.getLobbyId()));
         assertNull(testUser.getLobbyId());
 
-        // Action: accept invite and join lobby
+        // user accepts invite and joins lobby
         Lobby updatedLobby = lobbyService.manageLobbyRequest(testLobby, testUser.getId(), true);
 
-        // Reload user from DB
+        // get user from DB
         User updatedUser = userRepository.findById(testUser.getId()).orElseThrow();
 
-        // Check user has correct lobbyId and invitation removed
+        // Check if user was updated; i.e. has correct lobbyId and invitation removed
         assertEquals(testLobby.getLobbyId(), updatedUser.getLobbyId());
         assertFalse(updatedUser.getOpenLobbyInvitations().contains(testLobby.getLobbyId()));
 
-        // Check user is in the lobby’s member list
+        // Check if lobby contains user as a member
         assertTrue(updatedLobby.getMembers().stream()
                 .anyMatch(member -> member.getId().equals(updatedUser.getId())));
     }
 
     @AfterEach
     public void teardown() {
-        // Clean up database and storage
         userRepository.deleteById(testUser.getId());
         lobbyStorage.removeLobby(testLobby.getLobbyId());
     }

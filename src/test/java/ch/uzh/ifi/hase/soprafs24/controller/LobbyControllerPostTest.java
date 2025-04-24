@@ -79,7 +79,9 @@ public class LobbyControllerPostTest {
 
         mockMvc.perform(postRequest)
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.lobbyName", is(lobby.getLobbyName())));
+            .andExpect(jsonPath("$.lobbyName", is(lobby.getLobbyName())))
+            .andExpect(jsonPath("$.lobbyId").value(lobby.getLobbyId()))
+            .andExpect(jsonPath("$.host.id").value(lobby.getHost().getId()));
     }
 
     // POST/lobbies/invite/{userId}
