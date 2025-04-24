@@ -56,7 +56,7 @@ public class User implements Serializable {
   private List<Long> friendrequests;
 
   @Column
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   private List<Long> openLobbyInvitations; // now saving lobbyId and not lobby object
 
   @Column

@@ -22,6 +22,14 @@ public class LobbyStorage {
         return lobby;
     }
 
+    public void removeLobby(Long lobbyId) {
+        if (!lobbies.containsKey(lobbyId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot remove: Lobby with ID " + lobbyId + " not found");
+        }
+        lobbies.remove(lobbyId);
+    }
+
+
     public Lobby getLobbyById(Long lobbyId) {
         if (!lobbies.containsKey(lobbyId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby with ID " + lobbyId + " not found");
