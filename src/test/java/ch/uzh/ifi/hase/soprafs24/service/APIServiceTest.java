@@ -44,6 +44,7 @@ public class APIServiceTest {
         Mockito.when(webClientBuilder.baseUrl("https://api.music.apple.com/v1")).thenReturn(webClientBuilder);
         Mockito.when(webClientBuilder.defaultHeader("Authorization", "Bearer " + mockToken)).thenReturn(webClientBuilder);
         Mockito.when(webClientBuilder.build()).thenReturn(webClientMock);
+        Mockito.when(responseSpecMock.onStatus(Mockito.any(), Mockito.any())).thenReturn(responseSpecMock);
 
         //URI & responseSpecMock
         Mockito.when(webClientMock.get()).thenReturn(requestHeadersUriSpecMock);
