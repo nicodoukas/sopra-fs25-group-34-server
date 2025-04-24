@@ -72,11 +72,12 @@ public class APIService {
         JsonNode APISong = webClient.get()
                 .uri("/catalog/" + this.storefront + "/songs/" + id)
                 .retrieve()
-                /*.onStatus(HttpStatus::isError, response -> switch (response.rawStatusCode()){
-                    case 401 -> Mono.error(new Exception("Unauthorized Apple Music API call"));
-                    case 500 -> Mono.error(new Exception("Internal Server Error (Apple Music API call)"));
-                    default ->  Mono.error(new Exception("Something went wrong during Apple Music API call"));
-                }*/
+                .onStatus(HttpStatus::isError, response -> {
+                    HttpStatus status = response.statusCode();
+                    if (status == HttpStatus.UNAUTHORIZED) {return Mono.error(new Exception("Unauthorized Apple Music API call"));}
+                    else if (status == HttpStatus.INTERNAL_SERVER_ERROR) {return Mono.error(new Exception("Internal Server Error (Apple Music API call)"));}
+                    else {return Mono.error(new Exception("Something went wrong during Apple Music API call"));}
+                })
                 .bodyToMono(JsonNode.class)
                 .block();
         /*
@@ -115,11 +116,12 @@ public class APIService {
         JsonNode APIPlaylists = webClient.get()
                 .uri("/catalog/" + this.storefront + "/playlists/" + id)
                 .retrieve()
-                /*.onStatus(HttpStatus::isError, response -> switch (response.rawStatusCode()) {
-                    case 401 -> Mono.error(new Exception("Unauthorized Apple Music API call"));
-                    case 500 -> Mono.error(new Exception("Internal Server Error (Apple Music API call)"));
-                    default -> Mono.error(new Exception("Something went wrong during Apple Music API call"));
-                }*/
+                .onStatus(HttpStatus::isError, response -> {
+                    HttpStatus status = response.statusCode();
+                    if (status == HttpStatus.UNAUTHORIZED) {return Mono.error(new Exception("Unauthorized Apple Music API call"));}
+                    else if (status == HttpStatus.INTERNAL_SERVER_ERROR) {return Mono.error(new Exception("Internal Server Error (Apple Music API call)"));}
+                    else {return Mono.error(new Exception("Something went wrong during Apple Music API call"));}
+                })
                 .bodyToMono(JsonNode.class)
                 .block();
         List<String> songIds = new ArrayList<>();
