@@ -3,6 +3,8 @@ package ch.uzh.ifi.hase.soprafs24.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Comparator;
 
 public class Player implements Serializable {
 
@@ -41,5 +43,23 @@ public class Player implements Serializable {
             throw new IllegalArgumentException("placement must be greater than zero");
         }
         this.timeline.add(placement, songCard); //IMPORTANT counting starts at 0 [0,1,2,3,...]
+    }
+
+    public void buySongCard() {
+        if (this.coinBalance < 3) {
+            throw new IllegalStateException("Not enough coins to buy a song card");
+        }
+        this.coinBalance -= 3;
+
+        SongCard defaultSongCard = new SongCard();
+        defaultSongCard.setTitle("default");
+        defaultSongCard.setArtist("default");
+        defaultSongCard.setSongURL("default");
+
+        int randomYear = new Random().nextInt(2025 - 1950 + 1) + 1950;
+        defaultSongCard.setYear(randomYear);
+
+        this.timeline.add(defaultSongCard);
+        this.timeline.sort(Comparator.comparingInt(SongCard::getYear));
     }
 }

@@ -79,6 +79,20 @@ public class GameService {
         return player;
     }
 
+    public Player buySongCard(Long gameId, Long userId) {
+        Game game = getGameById(gameId);
+
+        Player player = game.getPlayers()
+                .stream()
+                .filter(p -> p.getUserId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player " + userId + " not found in game " + gameId));
+
+        player.buySongCard();
+
+        return player;
+    }
+
     public Game createGame(Long lobbyId){
         Lobby lobby = lobbyService.getLobbyById(lobbyId);
         Game game = new Game();

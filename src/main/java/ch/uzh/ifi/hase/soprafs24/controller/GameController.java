@@ -75,6 +75,14 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
     }
 
+    @PutMapping("/games/{gameId}/{userId}/buy")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public PlayerGetDTO buySongCard(@PathVariable Long gameId, @PathVariable Long userId) {
+        Player updatedPlayer = gameService.buySongCard(gameId, userId);
+        return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
+    }
+
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
