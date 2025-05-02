@@ -120,4 +120,36 @@ public class GameControllerPutTest {
                 .andExpect(jsonPath("$.timeline[0].title").value("Disorder"));
     }
 
+    @Test
+    public void buySongCard_success() throws Exception {
+        Long gameId = 10L;
+        Long userId = 1L;
+
+        SongCard boughtCard = new SongCard();
+        boughtCard.setTitle("default");
+        boughtCard.setArtist("default");
+        boughtCard.setSongURL("default");
+        boughtCard.setYear(2000);  // Fixed the year for predictability, other than using Random()
+
+        Player updatedPlayer = new Player();
+        updatedPlayer.setUserId(userId);
+        updatedPlayer.setGameId(gameId);
+        updatedPlayer.setUsername("testUsername");
+        updatedPlayer.setCoinBalance(0); // let's assume the player had 3 coins at the start
+        updatedPlayer.setTimeline(List.of(mockSongCard, boughtCard));
+
+        Mockito.when(gameService.buySongCard(gameId, userId)).thenReturn(updatedPlayer);
+
+        mockMvc.perform(put("/games/{gameId}/{userId}/buy", gameId, userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(userId))
+                .andExpect(jsonPath("$.coinBalance").value(0))
+                .andExpect(jsonPath("$.timeline.length()").value(2))
+                .andExpect(jsonPath("$.timeline[1].title").value("default"))
+                .andExpect(jsonPath("$.timeline[1].artist").value("default"))
+                .andExpect(jsonPath("$.timeline[1].songURL").value("default"))
+                .andExpect(jsonPath("$.timeline[1].year").value(2000));
+    }
+
 }
