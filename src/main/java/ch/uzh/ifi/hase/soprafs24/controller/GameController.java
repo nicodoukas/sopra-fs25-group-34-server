@@ -130,6 +130,6 @@ public class GameController {
     @MessageMapping("/delete")
     public void deleteLobby(String lobbyId) {
         System.out.println("Backend: Deleting lobby with ID " + lobbyId);
-        webSocketMessenger.sendMessage("/games/" + lobbyId, "delete-lobby", null);
+        webSocketMessenger.sendMessage("/games/"+lobbyId, "delete-lobby", null);
     }
 }
