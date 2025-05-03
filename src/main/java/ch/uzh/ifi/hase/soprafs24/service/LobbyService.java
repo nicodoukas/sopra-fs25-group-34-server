@@ -7,12 +7,14 @@ import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.LobbyStorage;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
+import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
@@ -25,12 +27,14 @@ public class LobbyService {
     private final LobbyStorage lobbyStorage;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final WebSocketMessenger webSocketMessenger;
 
     @Autowired
-    public LobbyService(@Qualifier("lobbyStorage") LobbyStorage lobbyStorage, UserRepository userRepository, UserService userService) {
+    public LobbyService(@Qualifier("lobbyStorage") LobbyStorage lobbyStorage, UserRepository userRepository, UserService userService, WebSocketMessenger webSocketMessenger) {
         this.lobbyStorage = lobbyStorage;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.webSocketMessenger = webSocketMessenger;
     }
 
     public Lobby createLobby(Lobby newLobby) {
@@ -69,6 +73,7 @@ public class LobbyService {
         if (accepted){
             user.acceptLobbyInvitation(lobby.getLobbyId());
             lobby.joinLobby(user);
+            webSocketMessenger.sendMessage("/games/"+lobby.getLobbyId(), "update-lobby", null);
         }
         // if declined remove openLobbyInvitation with lobbyId
         else{

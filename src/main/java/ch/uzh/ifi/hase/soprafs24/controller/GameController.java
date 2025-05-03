@@ -132,4 +132,8 @@ public class GameController {
         System.out.println("Backend: Deleting lobby with ID " + lobbyId);
         webSocketMessenger.sendMessage("/games/"+lobbyId, "delete-lobby", null);
     }
+    @MessageMapping("/updatelobby")
+    public void updateLobby(String lobbyId){
+        webSocketMessenger.sendMessage("/games/"+lobbyId, "update-lobby", null);
+    }
 }
