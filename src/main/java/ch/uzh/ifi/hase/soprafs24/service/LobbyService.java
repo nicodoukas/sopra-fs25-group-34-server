@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
@@ -37,6 +38,10 @@ public class LobbyService {
 
         newLobby = lobbyStorage.addLobby(newLobby); //stores the Lobby in the LobbyStorage
         log.debug("Created Information for User: {}", newLobby);
+        User host = userService.getUserById(newLobby.getHost().getId());
+        host.setLobbyId(newLobby.getLobbyId());
+        userRepository.save(host);
+        userRepository.flush();
         return newLobby;
     }
 
@@ -75,6 +80,36 @@ public class LobbyService {
         userRepository.flush();
         System.out.println(lobby);
         return lobby;
+    }
+
+    //If userId is hostId then delete whole lobby, otherwise user leaves lobby
+    public void leaveOrDeleteLobby(Long lobbyId, Long userId) {
+        Lobby lobby = getLobbyById(lobbyId);
+        User user = userService.getUserById(userId);
+
+        if (user.getId().equals(lobby.getHost().getId())) {
+
+            for (User member : lobby.getMembers()) {
+                User memberUser = userService.getUserById(member.getId());
+                //set all members status to ONLINE
+                memberUser.setStatus(UserStatus.ONLINE);
+                //set all members lobbyId to null
+                memberUser.setLobbyId(null);
+                userRepository.save(memberUser);
+            }
+            //delete Lobby
+            lobbyStorage.deleteLobby(lobbyId);
+        }
+        else {
+            //remove user from lobby
+            lobby.leaveLobby(user);
+            //set user status to ONLINE
+            user.setStatus(UserStatus.ONLINE);
+            //set user lobbyID to null
+            user.setLobbyId(null);
+            userRepository.save(user);
+        }
+        userRepository.flush();
     }
 
 }

@@ -126,4 +126,10 @@ public class GameController {
         gameService.startNewRound(game);
         webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
     }
+
+    @MessageMapping("/delete")
+    public void deleteLobby(String lobbyId) {
+        System.out.println("Backend: Deleting lobby with ID " + lobbyId);
+        webSocketMessenger.sendMessage("/games/" + lobbyId, "delete-lobby", null);
+    }
 }

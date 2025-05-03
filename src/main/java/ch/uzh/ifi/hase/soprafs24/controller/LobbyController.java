@@ -10,7 +10,9 @@ import ch.uzh.ifi.hase.soprafs24.service.LobbyService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
 
+import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,9 +26,12 @@ public class LobbyController {
 
     private final UserService userService;
 
-    LobbyController(LobbyService lobbyService, UserService userService) {
+    private final WebSocketMessenger webSocketMessenger;
+
+    LobbyController(LobbyService lobbyService, UserService userService, WebSocketMessenger webSocketMessenger) {
         this.lobbyService = lobbyService;
         this.userService = userService;
+        this.webSocketMessenger = webSocketMessenger;
     }
 
     @PostMapping("/lobbies")
@@ -75,18 +80,30 @@ public class LobbyController {
         User user = userService.getUserById(userId);
         Lobby lobby = lobbyService.getLobbyById(lobbyId);
 
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user,lobbyId));
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user, lobbyId));
     }
 
     @PostMapping("/lobbies/{lobbyId}/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public LobbyGetDTO manageLobbyRequest(@PathVariable Long lobbyId, @RequestBody Map<String, Object> RequestBody){
+    public LobbyGetDTO manageLobbyRequest(@PathVariable Long lobbyId, @RequestBody Map<String, Object> RequestBody) {
         Lobby lobby = lobbyService.getLobbyById(lobbyId);
         Long userId = Long.parseLong(RequestBody.get("userId").toString());
         Boolean accepted = (Boolean) RequestBody.get("accepted");
 
-    return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobbyService.manageLobbyRequest(lobby, userId, accepted));
-  }
+        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobbyService.manageLobbyRequest(lobby, userId, accepted));
+    }
 
+    @DeleteMapping("/lobbies/{lobbyId}/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLobby(@PathVariable Long lobbyId, @PathVariable Long userId) {
+        lobbyService.leaveOrDeleteLobby(lobbyId, userId);
+    }
+    /*
+    @MessageMapping("/delete")
+    public void deleteLobby(String lobbyId) {
+        System.out.println("Backend: Deleting lobby with ID " + lobbyId);
+        webSocketMessenger.sendMessage("/games/" + lobbyId, "delete-lobby", null);
+    }
+    */
 }
