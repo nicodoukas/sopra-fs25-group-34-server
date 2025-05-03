@@ -17,6 +17,7 @@ public class UserGetDTO {
   private List<Long> friends;
   private List<Long> friendrequests;
   private List<Long> openLobbyInvitations;
+  private Long lobbyId;
 
   public Long getId() {  return id; }
 
@@ -75,5 +76,8 @@ public class UserGetDTO {
   public void setOpenLobbyInvitations(List<Long> openLobbyInvitations){
     this.openLobbyInvitations = openLobbyInvitations;
   }
+
+  public Long getLobbyId() {return this.lobbyId;}
+  public void setLobbyId(Long lobbyId) {this.lobbyId = lobbyId;}
   
 }
