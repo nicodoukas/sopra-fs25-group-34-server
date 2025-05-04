@@ -120,6 +120,12 @@ public class GameController {
        return gameService.checkGuess(game, guess, userId);
     }
 
+    @DeleteMapping("/games/{gameId}/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGame(@PathVariable Long gameId, @PathVariable Long userId) {
+        gameService.leaveOrDeleteGame(gameId, userId);
+    }
+
     @MessageMapping("/startNewRound")
     public void startNewRound(String gameId){
         Game game = gameService.getGameById(Long.valueOf(gameId));
@@ -140,4 +146,14 @@ public class GameController {
     public void startChallenge(String gameId){
         webSocketMessenger.sendMessage("/games/"+gameId, "start-challenge", null);
     }
+    @MessageMapping("/deleteGame")
+    public void deleteGame(String gameId) {
+        webSocketMessenger.sendMessage("/games/" + gameId, "delete-game", null);
+    }
+
+    @MessageMapping("/updategame")
+    public void updateGame(String gameId) {
+        webSocketMessenger.sendMessage("/games/" + gameId, "update-game", null);
+    }
+
 }

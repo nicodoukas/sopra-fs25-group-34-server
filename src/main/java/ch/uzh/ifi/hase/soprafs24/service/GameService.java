@@ -1,4 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.service;
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.GameStorage;
@@ -23,14 +24,16 @@ public class GameService {
     private final UserRepository userRepository;
     private final APIHandler apiHandler;
     private final LobbyService lobbyService;
+    private final UserService userService;
 
 
     @Autowired
-    public GameService(GameStorage gameStorage, UserRepository userRepository, LobbyService lobbyService, APIHandler apiHandler) {
+    public GameService(GameStorage gameStorage, UserRepository userRepository, LobbyService lobbyService, APIHandler apiHandler, UserService userService) {
         this.gameStorage = gameStorage;
         this.userRepository = userRepository;
         this.apiHandler = apiHandler;
         this.lobbyService = lobbyService;
+        this.userService = userService;
     }
 
     public Game getGameById(Long gameId){
@@ -125,5 +128,34 @@ public class GameService {
             addCoinToPlayer(game.getGameId(),userId);
         }
         return correct;
+    }
+
+    public void leaveOrDeleteGame(Long gameId, Long userId) {
+        Game game = getGameById(gameId);
+        User user = userService.getUserById(userId);
+        if (user.getId().equals(game.getHost().getUserId())) {
+
+            for (Player player : game.getPlayers()) {
+                User playerUser = userService.getUserById(player.getUserId());
+                playerUser.setStatus(UserStatus.ONLINE);
+                userRepository.save(playerUser);
+            }
+            //delete Game
+            gameStorage.deleteGame(gameId);
+        }
+        else {
+            game.leaveGame(user);
+
+            //if the leaving player was the active player -> new round with next player as active player
+            if (game.getCurrentRound().getActivePlayer().getUserId().equals(userId)) {
+                startNewRound(game);
+            }
+
+            user.setStatus(UserStatus.ONLINE);
+            user.setLobbyId(null);
+            userRepository.save(user);
+
+        }
+        userRepository.flush();
     }
 }

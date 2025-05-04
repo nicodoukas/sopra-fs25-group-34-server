@@ -1,12 +1,10 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 
-import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.LobbyStorage;
-import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,8 +94,6 @@ public class LobbyService {
 
             for (User member : lobby.getMembers()) {
                 User memberUser = userService.getUserById(member.getId());
-                //set all members status to ONLINE
-                memberUser.setStatus(UserStatus.ONLINE);
                 //set all members lobbyId to null
                 memberUser.setLobbyId(null);
                 userRepository.save(memberUser);
@@ -108,8 +104,6 @@ public class LobbyService {
         else {
             //remove user from lobby
             lobby.leaveLobby(user);
-            //set user status to ONLINE
-            user.setStatus(UserStatus.ONLINE);
             //set user lobbyID to null
             user.setLobbyId(null);
             userRepository.save(user);

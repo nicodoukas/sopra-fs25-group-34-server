@@ -89,5 +89,18 @@ public class Game implements Serializable {
         nextRound.setRoundNr(turnCount);
         currentRound = nextRound;
     }
+
+    public void leaveGame(User user) {
+        players.removeIf(player -> player.getUserId().equals(user.getId()));
+
+        Queue<Player> tempQueue = new LinkedList<>();
+        while (!turnOrder.isEmpty()) {
+            Player nextPlayer = turnOrder.poll();
+            if (!nextPlayer.getUserId().equals(user.getId())) {
+                tempQueue.add(nextPlayer);
+            }
+        }
+        setTurnOrder(tempQueue);
+    }
     
 }
