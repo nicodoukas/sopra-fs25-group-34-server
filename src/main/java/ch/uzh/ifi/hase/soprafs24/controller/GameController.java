@@ -8,11 +8,15 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.entity.Round;
 import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+
+import java.util.Map;
 
 @RestController
 public class GameController {
@@ -154,6 +158,23 @@ public class GameController {
     @MessageMapping("/updategame")
     public void updateGame(String gameId) {
         webSocketMessenger.sendMessage("/games/" + gameId, "update-game", null);
+    }
+    @MessageMapping("/challenge/accept")
+    public void handleChallengeAccepted(@Payload Map<String, String> body){
+        Long gameId = Long.parseLong(body.get("gameId"));
+        Long userId = Long.parseLong(body.get("userId"));
+        Game game = gameService.getGameById(gameId);
+        Round round = game.getCurrentRound();
+        Player challenger = gameService.getPlayerInGame(gameId, userId);
+
+        if (round.getChallenger()==null){
+            round.setChallenger(challenger);
+            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-accepted", userId);
+        }
+        else{
+            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-denied", userId);
+        }
+
     }
 
 }
