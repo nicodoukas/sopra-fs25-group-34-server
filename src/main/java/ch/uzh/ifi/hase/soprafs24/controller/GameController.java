@@ -136,4 +136,8 @@ public class GameController {
     public void updateLobby(String lobbyId){
         webSocketMessenger.sendMessage("/games/"+lobbyId, "update-lobby", null);
     }
+    @MessageMapping("/startchallenge")
+    public void startChallenge(String gameId){
+        webSocketMessenger.sendMessage("/games/"+gameId, "start-challenge", null);
+    }
 }
