@@ -49,6 +49,8 @@ public class APIServiceTest {
         Mockito.when(webClientMock.get()).thenReturn(requestHeadersUriSpecMock);
         Mockito.when(requestHeadersUriSpecMock.uri(Mockito.anyString(), Mockito.<Object[]>any())).thenReturn(requestHeadersMock);
         Mockito.when(requestHeadersMock.retrieve()).thenReturn(responseSpecMock);
+        Mockito.when(responseSpecMock.onStatus(Mockito.any(), Mockito.any())).thenReturn(responseSpecMock);
+
 
         apiService = new APIService(webClientBuilder, mockToken);
     }
@@ -134,7 +136,6 @@ public class APIServiceTest {
         catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        Mockito.when(requestHeadersUriSpecMock.uri("/console/songs/{id}", songId)).thenReturn(requestHeadersUriSpecMock);
         Mockito.when(responseSpecMock.bodyToMono(JsonNode.class)).thenReturn(Mono.just(response));
 
         SongCard songCard = apiService.getSongById(songId);
@@ -295,7 +296,6 @@ public class APIServiceTest {
         catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        Mockito.when(requestHeadersUriSpecMock.uri("/console/playlists/{id}", playlistId)).thenReturn(requestHeadersUriSpecMock);
         Mockito.when(responseSpecMock.bodyToMono(JsonNode.class)).thenReturn(Mono.just(response));
 
         List<String> songs = apiService.getSongsOfPlaylist(playlistId);

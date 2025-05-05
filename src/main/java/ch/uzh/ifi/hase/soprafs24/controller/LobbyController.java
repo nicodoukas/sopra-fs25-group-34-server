@@ -10,9 +10,7 @@ import ch.uzh.ifi.hase.soprafs24.service.LobbyService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
 
-import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -26,12 +24,10 @@ public class LobbyController {
 
     private final UserService userService;
 
-    private final WebSocketMessenger webSocketMessenger;
 
-    LobbyController(LobbyService lobbyService, UserService userService, WebSocketMessenger webSocketMessenger) {
+    LobbyController(LobbyService lobbyService, UserService userService) {
         this.lobbyService = lobbyService;
         this.userService = userService;
-        this.webSocketMessenger = webSocketMessenger;
     }
 
     @PostMapping("/lobbies")

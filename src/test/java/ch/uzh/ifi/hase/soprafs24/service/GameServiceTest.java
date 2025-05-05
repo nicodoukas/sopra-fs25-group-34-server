@@ -25,6 +25,8 @@ public class GameServiceTest {
     private LobbyService lobbyService;
     @Mock
     private APIHandler apiHandler;
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private GameService gameService;
@@ -52,7 +54,7 @@ public class GameServiceTest {
     @Test
     public void getGameById_fail() {
         gameStorage = new GameStorage();
-        gameService = new GameService(gameStorage, userRepository, lobbyService, apiHandler);
+        gameService = new GameService(gameStorage, userRepository, lobbyService, apiHandler, userService);
         assertThrows(ResponseStatusException.class, () -> gameService.getGameById(2L));
     }
 

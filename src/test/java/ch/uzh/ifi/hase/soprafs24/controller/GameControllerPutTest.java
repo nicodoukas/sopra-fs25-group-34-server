@@ -4,7 +4,6 @@ import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
-import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,9 +31,6 @@ public class GameControllerPutTest {
 
     @MockBean
     private GameService gameService;
-
-    @MockBean
-    private UserService userService;
 
     @MockBean
     private ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger webSocketMessenger;
@@ -140,9 +136,10 @@ public class GameControllerPutTest {
 
         Mockito.when(gameService.buySongCard(gameId, userId)).thenReturn(updatedPlayer);
 
-        mockMvc.perform(put("/games/{gameId}/{userId}/buy", gameId, userId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+        mockMvc.perform(put("/games/{gameId}/buy", gameId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userId)))
+                .andExpect(status( ).isOk())
                 .andExpect(jsonPath("$.userId").value(userId))
                 .andExpect(jsonPath("$.coinBalance").value(0))
                 .andExpect(jsonPath("$.timeline.length()").value(2))

@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 
 public class LobbyServiceTest {
     @Mock
@@ -28,15 +29,25 @@ public class LobbyServiceTest {
 
     private Lobby testLobby;
 
+    private User testUser;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
+        testUser = new User();
+        testUser.setUsername("testUser");
+        testUser.setId(1L);
+
         testLobby = new Lobby();
         testLobby.setLobbyName("testLobby");
         testLobby.setLobbyId(1L);
+        testLobby.setHost(testUser);
 
         Mockito.when(lobbyStorage.addLobby(Mockito.any())).thenReturn(testLobby);
+        Mockito.when(userService.getUserById(testUser.getId())).thenReturn(testUser);
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(testUser);
+        doNothing().when(userRepository).flush();
 
     }
 
@@ -80,7 +91,7 @@ public class LobbyServiceTest {
         Mockito.verify(userRepository, Mockito.times(1)).save(user);
         Mockito.verify(userRepository, Mockito.times(1)).flush();
         assertEquals(testLobby.getLobbyId(), lobby.getLobbyId());
-        assertTrue(lobby.getMembers().isEmpty());
+        assertTrue(lobby.getMembers().contains(testUser));
         assertTrue(user.getOpenLobbyInvitations().isEmpty());
     }
 
