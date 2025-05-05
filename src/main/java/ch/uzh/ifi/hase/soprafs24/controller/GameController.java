@@ -177,4 +177,9 @@ public class GameController {
 
     }
 
+    @MessageMapping("/backToLobby")
+    public void backToLobby(String gameId) {
+        webSocketMessenger.sendMessage("/games/" + gameId, "back-to-lobby", null);
+    }
+
 }
