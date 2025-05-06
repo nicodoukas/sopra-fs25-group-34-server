@@ -41,6 +41,8 @@ public interface DTOMapper {
   @Mapping(source = "friendrequests", target = "friendrequests")
   @Mapping(source = "openLobbyInvitations", target = "openLobbyInvitations")
   @Mapping(source = "lobbyId", target = "lobbyId")
+  @Mapping(source = "profilePicture", target = "profilePicture")
+  @Mapping(source = "description", target = "description")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
   @Mapping(source = "id", target = "id")

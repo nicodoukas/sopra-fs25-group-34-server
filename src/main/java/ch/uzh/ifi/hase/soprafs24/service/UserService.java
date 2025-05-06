@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,9 +34,12 @@ public class UserService {
 
   private final UserRepository userRepository;
 
+  private final PictureRepository pictureRepository;
+
   @Autowired
-  public UserService(@Qualifier("userRepository") UserRepository userRepository) {
+  public UserService(@Qualifier("userRepository") UserRepository userRepository, PictureRepository pictureRepository) {
     this.userRepository = userRepository;
+    this.pictureRepository = pictureRepository;
   }
 
   public List<User> getUsers() {
@@ -52,6 +54,10 @@ public class UserService {
     // flush() is called
 
     newUser.setCreation_date(new Date());
+
+    Optional<ProfilePicture> profilePicture = pictureRepository.findById(1L); //set default profile picture
+    if (profilePicture.isPresent()) {newUser.setProfilePicture(profilePicture.get());}
+
     newUser = userRepository.save(newUser);
     userRepository.flush();
 

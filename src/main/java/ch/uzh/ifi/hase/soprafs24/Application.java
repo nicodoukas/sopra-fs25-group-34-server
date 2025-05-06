@@ -43,6 +43,7 @@ public class Application {
         return args -> {
             //Only if DB is empty
             if (pictureRepository.count() == 0) {
+                pictureRepository.save(new ProfilePicture("https://img.freepik.com/premium-vector/profile-icon_838328-1033.jpg"));
                 pictureRepository.save(new ProfilePicture("https://img.freepik.com/free-vector/cute-sloth-yoga-cartoon-icon-illustration_138676-2250.jpg?t=st=1746434375~exp=1746437975~hmac=0f3d9b5ab5c5488457dbdcdf49ef0951b46f5753eb55fa381153e380f6c4c139&w=900"));
                 pictureRepository.save(new ProfilePicture("https://img.freepik.com/free-vector/cute-happy-penguin-cartoon-icon-illustration-animal-nature-icon-concept-isolated-flat-cartoon-style_138676-2095.jpg?t=st=1746434349~exp=1746437949~hmac=2dc45e3beb1d11bcf2ce1698a5d012cffce8a485cae3eeb580b05a2bf7b86951&w=900"));
                 pictureRepository.save(new ProfilePicture("https://img.freepik.com/free-vector/cute-blue-tyrannosaurus-rex_138676-2073.jpg?t=st=1746434394~exp=1746437994~hmac=620da4fb943e5d339cd9ec9bae6ef3723d16d4dcc12ec4b3637f7604634eba69&w=900"));
