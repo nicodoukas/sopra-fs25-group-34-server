@@ -60,6 +60,8 @@ public interface DTOMapper {
   @Mapping(source = "username", target = "username")
   @Mapping(source = "birthday", target = "birthday")
   @Mapping(source = "id", target = "id")
+  @Mapping(source = "profilePicture", target = "profilePicture")
+  @Mapping(source = "description", target = "description")
   User convertUserPutDTOtoEntity(UserPutDTO userPutDTO);
 
   @Mapping(source = "lobbyId", target = "lobbyId")

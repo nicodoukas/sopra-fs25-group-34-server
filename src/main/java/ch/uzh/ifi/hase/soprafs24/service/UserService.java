@@ -152,6 +152,15 @@ public class UserService {
     if (userToUpdate.getBirthday() != null) {
       user.setBirthday(userToUpdate.getBirthday());
     }
+
+    if (userToUpdate.getProfilePicture() != null) {
+        user.setProfilePicture(pictureRepository.findById(userToUpdate.getProfilePicture().getId()).orElse(null));
+    }
+
+    if (userToUpdate.getDescription() != null) {
+        user.setDescription(userToUpdate.getDescription());
+    }
+
     return userRepository.save(user);
   }
 
