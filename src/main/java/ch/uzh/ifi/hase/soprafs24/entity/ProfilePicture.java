@@ -6,7 +6,8 @@ import javax.persistence.*;
 public class ProfilePicture {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "picture_seq")
+    @SequenceGenerator(name = "picture_seq", sequenceName = "picture_sequence", allocationSize = 1)
     private Long id;
 
     @Column(length = 512)
