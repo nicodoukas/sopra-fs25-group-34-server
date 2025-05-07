@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.entity.Round;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,9 @@ public class GameControllerGetTest {
     private static final Logger log = LoggerFactory.getLogger(GameControllerGetTest.class);
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private PictureRepository pictureRepository;
 
     @MockBean
     private GameService gameService;

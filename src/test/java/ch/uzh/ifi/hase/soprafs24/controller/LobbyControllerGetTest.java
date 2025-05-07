@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.service.LobbyService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
@@ -36,6 +37,9 @@ public class LobbyControllerGetTest {
     private static final Logger log = LoggerFactory.getLogger(LobbyControllerGetTest.class);
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private PictureRepository pictureRepository;
 
     @MockBean
     private LobbyService lobbyService;

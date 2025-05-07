@@ -2,14 +2,17 @@ package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.LobbyStorage;
+import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
@@ -23,6 +26,12 @@ public class LobbyServiceTest {
 
     @Mock
     private UserService userService;
+
+    @MockBean
+    private PictureRepository pictureRepository;
+
+    @Mock
+    private WebSocketMessenger webSocketMessenger;
 
     @InjectMocks
     private LobbyService lobbyService;

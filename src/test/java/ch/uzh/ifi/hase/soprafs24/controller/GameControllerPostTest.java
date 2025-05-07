@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.GuessPostDTO;
@@ -30,6 +31,9 @@ public class GameControllerPostTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private PictureRepository pictureRepository;
 
     @MockBean
     private GameService gameService;
