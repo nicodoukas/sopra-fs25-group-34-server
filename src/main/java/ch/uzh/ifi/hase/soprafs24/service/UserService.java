@@ -227,4 +227,6 @@ public class UserService {
     return user.getFriendrequests();
   }
 
+  public List<ProfilePicture> getAllPictures() {return pictureRepository.findAll();}
+
 }

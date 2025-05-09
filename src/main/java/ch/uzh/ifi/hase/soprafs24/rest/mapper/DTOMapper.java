@@ -88,6 +88,7 @@ public interface DTOMapper {
   @Mapping(source = "coinBalance", target = "coinBalance")
   @Mapping(source = "username", target = "username")
   @Mapping(source = "timeline", target = "timeline")
+  @Mapping(source = "profilePicture", target = "profilePicture")
   PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 
   @Mapping(source = "addCoin", target = "addCoin")

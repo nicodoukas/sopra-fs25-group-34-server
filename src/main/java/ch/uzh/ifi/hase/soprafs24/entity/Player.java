@@ -13,6 +13,7 @@ public class Player implements Serializable {
     private int coinBalance;
     private String username;
     private List<SongCard> timeline;
+    private ProfilePicture profilePicture;
 
     public Player() {
         this.coinBalance = 2;
@@ -33,6 +34,9 @@ public class Player implements Serializable {
     
     public void setTimeline(List<SongCard> timeline) {this.timeline = timeline;}
     public List<SongCard> getTimeline() {return this.timeline;}
+
+    public void setProfilePicture(ProfilePicture profilePicture) {this.profilePicture = profilePicture;}
+    public ProfilePicture getProfilePicture() {return this.profilePicture;}
 
     public void addCoin() {
         if (this.coinBalance < 5) {this.coinBalance += 1;}

@@ -51,6 +51,7 @@ public class Game implements Serializable {
             player.setUserId(user.getId());
             player.setUsername(user.getUsername());
             player.setGameId(this.gameId);
+            player.setProfilePicture(user.getProfilePicture());
             SongCard songCard1 = apiHandler.getNewSongCard();
             player.updateTimeline(0, songCard1);
             this.players.add(player);

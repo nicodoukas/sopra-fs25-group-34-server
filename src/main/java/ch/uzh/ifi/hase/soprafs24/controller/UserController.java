@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
@@ -7,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -159,5 +161,14 @@ public class UserController {
     List<Long> openFriendRequests = userService.getOpenFriendRequests(user);
     return openFriendRequests;
   }
+
+  @GetMapping("/profilePictures")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public ResponseEntity<List<ProfilePicture>> getAllPictures() {
+      List<ProfilePicture> pictures = userService.getAllPictures();
+      return ResponseEntity.ok(pictures);
+  }
+
 
 }
