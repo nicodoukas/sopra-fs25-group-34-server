@@ -30,6 +30,17 @@ public class LobbyStorageTest {
         assertEquals(lobby.getLobbyId(), addedLobby.getLobbyId());
     }
 
+    @Test
+    public void addLobby_nullLobbyId_throwsException() {
+        Lobby lobby = new Lobby();
+
+        // No lobbyId
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            lobbyStorage.addLobby(lobby);
+        });
+        assertEquals("Lobby or lobbyId cannot be null", exception.getMessage());
+    }
+
     // Not sure if this test makes sense even, since we never should have a lobby without host, but anyway
     @Test
     public void getLobbyById_success() {
@@ -72,10 +83,11 @@ public class LobbyStorageTest {
 
 
     @Test
-    public void getLobbyById_notFound() {
-        assertThrows(ResponseStatusException.class, () -> {
+    public void getLobbyById_notFound_throwsException() {
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
             lobbyStorage.getLobbyById(123L);
         });
+        assertEquals("404 NOT_FOUND \"Lobby with ID 123 not found\"", exception.getMessage());
     }
 
     @Test
@@ -87,15 +99,17 @@ public class LobbyStorageTest {
         lobbyStorage.addLobby(lobby);
         lobbyStorage.deleteLobby(lobby.getLobbyId());
 
-        assertThrows(ResponseStatusException.class, () -> {
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
             lobbyStorage.getLobbyById(lobby.getLobbyId());
         });
+        assertEquals("404 NOT_FOUND \"Lobby with ID " + lobby.getLobbyId() + " not found\"", exception.getMessage());
     }
 
     @Test
-    public void deleteLobby_notFound() {
-        assertThrows(ResponseStatusException.class, () -> {
+    public void deleteLobby_notFound_throwsException() {
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
             lobbyStorage.deleteLobby(123L);
         });
+        assertEquals("404 NOT_FOUND \"Lobby with ID 123 not found\"", exception.getMessage());
     }
 }
