@@ -86,6 +86,21 @@ public class UserControllerPutTest {
       mockMvc.perform(putRequest).andExpect(status().is(404));
   }
 
+    @Test
+    public void setStatusToPlaying_success() throws Exception {
+        Long userId = 1L;
+
+        Mockito.doNothing().when(userService).setStatusToPlaying(userId);
+
+        mockMvc.perform(
+                put("/playing")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userId.toString())
+        ).andExpect(status().isNoContent());
+
+        Mockito.verify(userService, Mockito.times(1)).setStatusToPlaying(userId);
+    }
+
   // Sorry, I am adding the user DELETE test here because they are probably the only two DELETE tests necessary
   // and I don't want to make a new file just for these two
 

@@ -198,4 +198,19 @@ public class UserServiceTest {
     Mockito.verify(userRepository, Mockito.times(1)).flush();
     assertTrue(testUser.getFriendrequests().contains(friend.getId()));
   }
+
+  @Test
+  public void setStatusToPlaying_success() {
+
+      testUser.setStatus(UserStatus.ONLINE);
+      Long userId = testUser.getId();
+
+      userService.setStatusToPlaying(userId);
+
+      Mockito.verify(userRepository, Mockito.times(1)).findById(userId);
+      Mockito.verify(userRepository, Mockito.times(1)).save(testUser);
+      Mockito.verify(userRepository, Mockito.times(1)).flush();
+      assertEquals(UserStatus.PLAYING, testUser.getStatus());
+  }
+
 }
