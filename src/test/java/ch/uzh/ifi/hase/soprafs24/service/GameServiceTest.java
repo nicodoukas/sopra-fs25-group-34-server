@@ -25,6 +25,8 @@ public class GameServiceTest {
     private LobbyService lobbyService;
     @Mock
     private APIHandler apiHandler;
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private GameService gameService;
@@ -52,7 +54,7 @@ public class GameServiceTest {
     @Test
     public void getGameById_fail() {
         gameStorage = new GameStorage();
-        gameService = new GameService(gameStorage, userRepository, lobbyService, apiHandler);
+        gameService = new GameService(gameStorage, userRepository, lobbyService, apiHandler, userService);
         assertThrows(ResponseStatusException.class, () -> gameService.getGameById(2L));
     }
 
@@ -222,6 +224,45 @@ public class GameServiceTest {
 
         assertFalse(result);
         assertEquals(2, player.getCoinBalance());
+    }
+
+    @Test
+    public void buySongCard_enoughCoins_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(3); // 3 coins, so player is able to buy a card
+        player.setTimeline(new ArrayList<>());
+
+        testGame.setPlayers(List.of(player));
+
+        Player result = gameService.buySongCard(testGame.getGameId(), player.getUserId());
+
+        // Assert: Coin balance decreased and one default song added
+        assertEquals(0, result.getCoinBalance(), "Expected player to have spent 3 coins");
+
+        assertEquals(1, result.getTimeline().size(), "Expected timeline to have 1 song");
+        SongCard card = result.getTimeline().get(0);
+        assertEquals("default", card.getTitle(), "Expected default song title");
+        assertTrue(card.getYear() >= 1950 && card.getYear() <= 2025, "Expected year between 1950 and 2025");
+    }
+
+    @Test
+    public void buySongCard_notEnoughCoins_throwsException() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setCoinBalance(2); // not enough coins to buy a songCard
+        player.setTimeline(new ArrayList<>());
+
+        testGame.setPlayers(List.of(player));
+
+        // Assert that an exception is thrown when trying to buy a song card (from Player.java, line 50)
+        Exception exception = assertThrows(IllegalStateException.class, () -> {
+            gameService.buySongCard(testGame.getGameId(), player.getUserId());
+        });
+
+        assertEquals("Not enough coins to buy a song card", exception.getMessage());
+        assertEquals(2, player.getCoinBalance(), "Coin balance should remain unchanged");
+        assertEquals(0, player.getTimeline().size(), "Timeline should remain empty");
     }
 
 

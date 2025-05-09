@@ -8,11 +8,15 @@ import ch.uzh.ifi.hase.soprafs24.service.UserService;
 import ch.uzh.ifi.hase.soprafs24.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.entity.Round;
 import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+
+import java.util.Map;
 
 @RestController
 public class GameController {
@@ -75,6 +79,15 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
     }
 
+    @PutMapping("/games/{gameId}/buy")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public PlayerGetDTO buySongCard(@PathVariable Long gameId, @RequestBody String userId) {
+        Long userIdLong = Long.valueOf(userId);
+        Player updatedPlayer = gameService.buySongCard(gameId, userIdLong);
+        return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
+    }
+
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -111,10 +124,62 @@ public class GameController {
        return gameService.checkGuess(game, guess, userId);
     }
 
+    @DeleteMapping("/games/{gameId}/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGame(@PathVariable Long gameId, @PathVariable Long userId) {
+        gameService.leaveOrDeleteGame(gameId, userId);
+    }
+
     @MessageMapping("/startNewRound")
     public void startNewRound(String gameId){
         Game game = gameService.getGameById(Long.valueOf(gameId));
         gameService.startNewRound(game);
         webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
     }
+
+    @MessageMapping("/delete")
+    public void deleteLobby(String lobbyId) {
+        System.out.println("Backend: Deleting lobby with ID " + lobbyId);
+        webSocketMessenger.sendMessage("/games/"+lobbyId, "delete-lobby", null);
+    }
+    @MessageMapping("/updatelobby")
+    public void updateLobby(String lobbyId){
+        webSocketMessenger.sendMessage("/games/"+lobbyId, "update-lobby", null);
+    }
+    @MessageMapping("/startchallenge")
+    public void startChallenge(String gameId){
+        webSocketMessenger.sendMessage("/games/"+gameId, "start-challenge", null);
+    }
+    @MessageMapping("/deleteGame")
+    public void deleteGame(String gameId) {
+        webSocketMessenger.sendMessage("/games/" + gameId, "delete-game", null);
+    }
+
+    @MessageMapping("/updategame")
+    public void updateGame(String gameId) {
+        webSocketMessenger.sendMessage("/games/" + gameId, "update-game", null);
+    }
+    @MessageMapping("/challenge/accept")
+    public void handleChallengeAccepted(@Payload Map<String, String> body){
+        Long gameId = Long.parseLong(body.get("gameId"));
+        Long userId = Long.parseLong(body.get("userId"));
+        Game game = gameService.getGameById(gameId);
+        Round round = game.getCurrentRound();
+        Player challenger = gameService.getPlayerInGame(gameId, userId);
+
+        if (round.getChallenger()==null){
+            round.setChallenger(challenger);
+            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-accepted", userId);
+        }
+        else{
+            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-denied", userId);
+        }
+
+    }
+
+    @MessageMapping("/backToLobby")
+    public void backToLobby(String gameId) {
+        webSocketMessenger.sendMessage("/games/" + gameId, "back-to-lobby", null);
+    }
+
 }

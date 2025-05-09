@@ -24,6 +24,7 @@ public class LobbyController {
 
     private final UserService userService;
 
+
     LobbyController(LobbyService lobbyService, UserService userService) {
         this.lobbyService = lobbyService;
         this.userService = userService;
@@ -75,18 +76,30 @@ public class LobbyController {
         User user = userService.getUserById(userId);
         Lobby lobby = lobbyService.getLobbyById(lobbyId);
 
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user,lobbyId));
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(lobbyService.inviteUserToLobby(user, lobbyId));
     }
 
     @PostMapping("/lobbies/{lobbyId}/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public LobbyGetDTO manageLobbyRequest(@PathVariable Long lobbyId, @RequestBody Map<String, Object> RequestBody){
+    public LobbyGetDTO manageLobbyRequest(@PathVariable Long lobbyId, @RequestBody Map<String, Object> RequestBody) {
         Lobby lobby = lobbyService.getLobbyById(lobbyId);
         Long userId = Long.parseLong(RequestBody.get("userId").toString());
         Boolean accepted = (Boolean) RequestBody.get("accepted");
 
-    return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobbyService.manageLobbyRequest(lobby, userId, accepted));
-  }
+        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobbyService.manageLobbyRequest(lobby, userId, accepted));
+    }
 
+    @DeleteMapping("/lobbies/{lobbyId}/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteLobby(@PathVariable Long lobbyId, @PathVariable Long userId) {
+        lobbyService.leaveOrDeleteLobby(lobbyId, userId);
+    }
+    /*
+    @MessageMapping("/delete")
+    public void deleteLobby(String lobbyId) {
+        System.out.println("Backend: Deleting lobby with ID " + lobbyId);
+        webSocketMessenger.sendMessage("/games/" + lobbyId, "delete-lobby", null);
+    }
+    */
 }

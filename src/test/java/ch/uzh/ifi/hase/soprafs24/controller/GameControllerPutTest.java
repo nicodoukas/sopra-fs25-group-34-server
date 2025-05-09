@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
@@ -31,10 +32,13 @@ public class GameControllerPutTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private GameService gameService;
+    private UserService userService;
 
     @MockBean
-    private UserService userService;
+    private PictureRepository pictureRepository;
+
+    @MockBean
+    private GameService gameService;
 
     @MockBean
     private ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger webSocketMessenger;
@@ -118,6 +122,39 @@ public class GameControllerPutTest {
                 .andExpect(jsonPath("$.username").value("testUsername"))
                 .andExpect(jsonPath("$.coinBalance").value(3))
                 .andExpect(jsonPath("$.timeline[0].title").value("Disorder"));
+    }
+
+    @Test
+    public void buySongCard_success() throws Exception {
+        Long gameId = 10L;
+        Long userId = 1L;
+
+        SongCard boughtCard = new SongCard();
+        boughtCard.setTitle("default");
+        boughtCard.setArtist("default");
+        boughtCard.setSongURL("default");
+        boughtCard.setYear(2000);  // Fixed the year for predictability, other than using Random()
+
+        Player updatedPlayer = new Player();
+        updatedPlayer.setUserId(userId);
+        updatedPlayer.setGameId(gameId);
+        updatedPlayer.setUsername("testUsername");
+        updatedPlayer.setCoinBalance(0); // let's assume the player had 3 coins at the start
+        updatedPlayer.setTimeline(List.of(mockSongCard, boughtCard));
+
+        Mockito.when(gameService.buySongCard(gameId, userId)).thenReturn(updatedPlayer);
+
+        mockMvc.perform(put("/games/{gameId}/buy", gameId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userId)))
+                .andExpect(status( ).isOk())
+                .andExpect(jsonPath("$.userId").value(userId))
+                .andExpect(jsonPath("$.coinBalance").value(0))
+                .andExpect(jsonPath("$.timeline.length()").value(2))
+                .andExpect(jsonPath("$.timeline[1].title").value("default"))
+                .andExpect(jsonPath("$.timeline[1].artist").value("default"))
+                .andExpect(jsonPath("$.timeline[1].songURL").value("default"))
+                .andExpect(jsonPath("$.timeline[1].year").value(2000));
     }
 
 }

@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs24.entity.ProfilePicture;
+
 import java.util.List;
 
 public class PlayerGetDTO {
@@ -9,6 +11,7 @@ public class PlayerGetDTO {
     private int coinBalance;
     private String username;
     private List<SongCardGetDTO> timeline;
+    private ProfilePicture profilePicture;
 
     public void setUserId(Long userId) {this.userId = userId;}
     public Long getUserId() {return userId;}
@@ -24,4 +27,7 @@ public class PlayerGetDTO {
 
     public void setTimeline(List<SongCardGetDTO> timeline) {this.timeline = timeline;}
     public List<SongCardGetDTO> getTimeline() {return timeline;}
+
+    public void setProfilePicture(ProfilePicture profilePicture) {this.profilePicture = profilePicture;}
+    public ProfilePicture getProfilePicture() {return profilePicture;}
 }

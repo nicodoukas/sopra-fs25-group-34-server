@@ -28,5 +28,12 @@ public class GameStorage {
         }
         return games.get(gameId);
     }
+
+    public void deleteGame(Long gameId) {
+        if (!games.containsKey(gameId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Game with ID " + gameId + " not found");
+        }
+        games.remove(gameId);
+    }
 }
 

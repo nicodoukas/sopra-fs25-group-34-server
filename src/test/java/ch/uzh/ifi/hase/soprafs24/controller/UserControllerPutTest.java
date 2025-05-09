@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs24.controller;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
 
@@ -34,6 +35,9 @@ public class UserControllerPutTest {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @MockBean
+  private PictureRepository pictureRepository;
 
   @MockBean UserService userService;
 

@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Internal User Representation
@@ -26,7 +25,8 @@ public class User implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+  @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
   private Long id;
 
   @Column(nullable = false, unique = true)
@@ -62,6 +62,11 @@ public class User implements Serializable {
   @Column
   private Long lobbyId=null;
 
+  @ManyToOne
+  private ProfilePicture profilePicture;
+
+  @Column String description;
+
 
   public User() {
     this.friends = new ArrayList<Long>();
@@ -72,7 +77,6 @@ public class User implements Serializable {
   public Long getId() {
     return id;
   }
-
   public void setId(Long id) {
     this.id = id;
   }
@@ -80,27 +84,22 @@ public class User implements Serializable {
   public String getUsername() {
     return username;
   }
-
   public void setUsername(String username) {
     this.username = username;
   }
 
   public void setPassword(String password) { this.password = password;}
-
   public String getPassword() { return password;}
 
   public void setCreation_date(Date creation_date) {this.creation_date = creation_date;}
-
   public Date getCreation_date() { return creation_date;}
 
   public void setBirthday(Date birthday) {this.birthday = birthday;}
-
   public Date getBirthday() { return birthday;}
 
   public String getToken() {
     return token;
   }
-
   public void setToken(String token) {
     this.token = token;
   }
@@ -108,7 +107,6 @@ public class User implements Serializable {
   public UserStatus getStatus() {
     return status;
   }
-
   public void setStatus(UserStatus status) {
     this.status = status;
   }
@@ -116,7 +114,6 @@ public class User implements Serializable {
   public List<Long> getFriends(){
     return friends;
   }
-
   public void setFriends(List<Long> friends){
     this.friends = friends;
   }
@@ -124,7 +121,6 @@ public class User implements Serializable {
   public List<Long> getFriendrequests(){
     return friendrequests;
   }
-
   public void setFriendrequests(List<Long> friendrequests){
     this.friendrequests = friendrequests;
   }
@@ -132,7 +128,6 @@ public class User implements Serializable {
   public Long getLobbyId(){
     return this.lobbyId;
   }
-
   public void setLobbyId(Long lobbyId) {
     this.lobbyId = lobbyId;
   }
@@ -140,6 +135,12 @@ public class User implements Serializable {
   public List<Long> getOpenLobbyInvitations(){ // now saving lobbyId and not lobby object
     return this.openLobbyInvitations;
   }
+
+  public ProfilePicture getProfilePicture() {return this.profilePicture;}
+  public void setProfilePicture(ProfilePicture profilePicture) {this.profilePicture = profilePicture;}
+
+  public String getDescription() {return this.description;}
+  public void setDescription(String description) {this.description = description;}
 
   public void setOpenLobbyInvitations(List<Long> openLobbyInvitations) { // now saving lobbyId and not lobby object
     this.openLobbyInvitations = openLobbyInvitations;

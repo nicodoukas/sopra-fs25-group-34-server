@@ -66,12 +66,14 @@ public class Lobby implements Serializable {
 
 
     public void joinLobby(User user) {
-        members.add(user);
+        members.add(user);user.setLobbyId(this.lobbyId);
     }
 
     @Override
     public String toString() {
         return "Lobby{id=" + lobbyId + ", lobbyname='" + lobbyName + "', members='" + members + "}";
     }
+
+    public void leaveLobby(User user) {members.removeIf(member -> member.getId().equals(user.getId()));} //makes sure also is removed if something in user changes
 
 }

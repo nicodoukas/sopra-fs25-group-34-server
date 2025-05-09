@@ -37,4 +37,9 @@ public class LobbyStorage {
         return lobbies.get(lobbyId);
     }
 
+    public void deleteLobby(Long lobbyId) {
+        if (!lobbies.containsKey(lobbyId)) {throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby with ID " + lobbyId + " not found");}
+        lobbies.remove(lobbyId);
+    }
+
 }

@@ -40,6 +40,9 @@ public interface DTOMapper {
   @Mapping(source = "friends", target = "friends")
   @Mapping(source = "friendrequests", target = "friendrequests")
   @Mapping(source = "openLobbyInvitations", target = "openLobbyInvitations")
+  @Mapping(source = "lobbyId", target = "lobbyId")
+  @Mapping(source = "profilePicture", target = "profilePicture")
+  @Mapping(source = "description", target = "description")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
   @Mapping(source = "id", target = "id")
@@ -51,11 +54,14 @@ public interface DTOMapper {
   @Mapping(source = "friends", target = "friends", qualifiedByName = "MapListLong")
   @Mapping(source = "friendrequests", target = "friendrequests")
   @Mapping(source = "openLobbyInvitations", target = "openLobbyInvitations")
+  @Mapping(source = "lobbyId", target = "lobbyId")
   User convertUserGetDTOToEntity(UserGetDTO userGetDTO);
 
   @Mapping(source = "username", target = "username")
   @Mapping(source = "birthday", target = "birthday")
   @Mapping(source = "id", target = "id")
+  @Mapping(source = "profilePicture", target = "profilePicture")
+  @Mapping(source = "description", target = "description")
   User convertUserPutDTOtoEntity(UserPutDTO userPutDTO);
 
   @Mapping(source = "lobbyId", target = "lobbyId")
@@ -82,6 +88,7 @@ public interface DTOMapper {
   @Mapping(source = "coinBalance", target = "coinBalance")
   @Mapping(source = "username", target = "username")
   @Mapping(source = "timeline", target = "timeline")
+  @Mapping(source = "profilePicture", target = "profilePicture")
   PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 
   @Mapping(source = "addCoin", target = "addCoin")

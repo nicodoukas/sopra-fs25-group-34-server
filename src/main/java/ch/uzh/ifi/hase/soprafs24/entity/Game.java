@@ -51,11 +51,9 @@ public class Game implements Serializable {
             player.setUserId(user.getId());
             player.setUsername(user.getUsername());
             player.setGameId(this.gameId);
+            player.setProfilePicture(user.getProfilePicture());
             SongCard songCard1 = apiHandler.getNewSongCard();
             player.updateTimeline(0, songCard1);
-            SongCard songCard2 = apiHandler.getNewSongCard();
-            if (songCard2.getYear() < songCard1.getYear()) {player.updateTimeline(0, songCard2);}
-            else {player.updateTimeline(1, songCard2);}
             this.players.add(player);
         }
         return this.players;
@@ -88,6 +86,19 @@ public class Game implements Serializable {
         nextRound.setSongCard(songCard);
         nextRound.setRoundNr(turnCount);
         currentRound = nextRound;
+    }
+
+    public void leaveGame(User user) {
+        players.removeIf(player -> player.getUserId().equals(user.getId()));
+
+        Queue<Player> tempQueue = new LinkedList<>();
+        while (!turnOrder.isEmpty()) {
+            Player nextPlayer = turnOrder.poll();
+            if (!nextPlayer.getUserId().equals(user.getId())) {
+                tempQueue.add(nextPlayer);
+            }
+        }
+        setTurnOrder(tempQueue);
     }
     
 }
