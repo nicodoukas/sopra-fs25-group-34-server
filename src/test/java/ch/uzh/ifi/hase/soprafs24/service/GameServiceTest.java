@@ -142,7 +142,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void insertSongCardIntoTimeline_success() {
+    public void insertSongCardIntoTimeline_whenTimelineEmpty_success() {
         Player player = new Player();
         player.setUserId(1L);
         player.setTimeline(new ArrayList<>());
@@ -165,6 +165,47 @@ public class GameServiceTest {
         assertEquals(1979, result.getTimeline().get(position).getYear());
         assertEquals("https://blablabla.com", result.getTimeline().get(position).getSongURL());
     }
+
+    @Test
+    public void insertSongCardIntoTimeline_whenTimelinePopulated_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+
+        SongCard firstSongCard = new SongCard();
+        firstSongCard.setTitle("Song 1");
+        firstSongCard.setArtist("Artist 1");
+        firstSongCard.setYear(1970);
+        firstSongCard.setSongURL("https://song1.com");
+
+        SongCard secondSongCard = new SongCard();
+        secondSongCard.setTitle("Song 2");
+        secondSongCard.setArtist("Blur");
+        secondSongCard.setYear(1994);
+        secondSongCard.setSongURL("https://song2.com");
+
+        player.setTimeline(new ArrayList<>(List.of(firstSongCard, secondSongCard)));
+        testGame.setPlayers(List.of(player));
+
+        SongCard newSongCard = new SongCard();
+        newSongCard.setTitle("SongInsert");
+        newSongCard.setArtist("ArtistInsert");
+        newSongCard.setYear(1979);
+        newSongCard.setSongURL("https://songinsert.com");
+
+        int position = 1; // Insert between firstSongCard and secondSongCard
+
+        Player result = gameService.insertSongCardIntoTimeline(testGame.getGameId(), player.getUserId(), newSongCard, position);
+
+        assertEquals(3, result.getTimeline().size());
+        assertEquals("Song 1", result.getTimeline().get(0).getTitle());
+        assertEquals("SongInsert", result.getTimeline().get(1).getTitle());
+        assertEquals("Song 2", result.getTimeline().get(2).getTitle());
+
+        assertEquals(1970, result.getTimeline().get(0).getYear());
+        assertEquals(1979, result.getTimeline().get(1).getYear());
+        assertEquals(1994, result.getTimeline().get(2).getYear());
+    }
+
 
     @Test
     public void checkGuess_correctGuess_addsCoin() {
