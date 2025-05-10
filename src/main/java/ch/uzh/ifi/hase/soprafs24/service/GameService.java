@@ -158,4 +158,14 @@ public class GameService {
         }
         userRepository.flush();
     }
+
+    public Game updateAcivePlayerPlacement(Game game, Integer placement) {
+        game.getCurrentRound().setActivePlayerPlacement(placement);
+        return game;
+    }
+
+    public Game updateChallengerPlacement(Game game, Integer placement) {
+        game.getCurrentRound().setChallengerPlacement(placement);
+        return game;
+    }
 }
