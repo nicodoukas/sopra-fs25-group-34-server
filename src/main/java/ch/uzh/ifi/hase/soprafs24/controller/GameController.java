@@ -13,7 +13,6 @@ import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 
@@ -89,25 +88,6 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
     }
 
-    @PutMapping("/games/{gameId}/placement")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public GameGetDTO setPlacement(@PathVariable Long gameId, @RequestBody PlacementPutDTO placementPutDTO) {
-        Game game = gameService.getGameById(gameId);
-        if (placementPutDTO.getPlacement() != null) {
-            if (placementPutDTO.getPlayer().equals("activePlayer")) {
-                game = gameService.updateAcivePlayerPlacement(game, placementPutDTO.getPlacement());
-            } else if (placementPutDTO.getPlayer().equals("challenger")) {
-                game = gameService.updateChallengerPlacement(game, placementPutDTO.getPlacement());
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "must specify Player as 'activePlayer' or 'challenger'");
-            }
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "must specify placement");
-        }
-        return DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
-    }
-
     @PostMapping("/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -167,9 +147,12 @@ public class GameController {
         webSocketMessenger.sendMessage("/games/"+lobbyId, "update-lobby", null);
     }
     @MessageMapping("/startchallenge")
-    public void startChallenge(String gameId){
-        webSocketMessenger.sendMessage("/games/"+gameId, "start-challenge", null);
+    public void startChallenge(PlacementMessage placementMessage){
+        Game game = gameService.getGameById(Long.valueOf(placementMessage.getGameId()));
+        game = gameService.updateAcivePlayerPlacement(game, placementMessage.getPlacement());
+        webSocketMessenger.sendMessage("/games/"+placementMessage.getGameId(), "start-challenge", game);
     }
+
     @MessageMapping("/deleteGame")
     public void deleteGame(String gameId) {
         webSocketMessenger.sendMessage("/games/" + gameId, "delete-game", null);

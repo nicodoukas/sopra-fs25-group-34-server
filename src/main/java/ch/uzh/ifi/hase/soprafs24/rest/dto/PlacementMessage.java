@@ -1,8 +1,16 @@
 package ch.uzh.ifi.hase.soprafs24.rest.dto;
 
-public class PlacementPutDTO {
+public class PlacementMessage {
+    private String gameId;
     private Integer placement;
-    private String player;
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
 
     public void setPlacement(Integer placement) {
         this.placement = placement;
@@ -12,11 +20,4 @@ public class PlacementPutDTO {
         return placement;
     }
 
-    public void setPlayer(String player) {
-        this.player = player;
-    }
-
-    public String getPlayer() {
-        return player;
-    }
 }
