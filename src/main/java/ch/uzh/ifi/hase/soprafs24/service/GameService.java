@@ -160,7 +160,7 @@ public class GameService {
         userRepository.flush();
     }
 
-    public Game updateAcivePlayerPlacement(Game game, Integer placement) {
+    public Game updateActivePlayerPlacement(Game game, Integer placement) {
         game.getCurrentRound().setActivePlayerPlacement(placement);
         return game;
     }

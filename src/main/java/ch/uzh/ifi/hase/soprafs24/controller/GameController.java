@@ -149,7 +149,7 @@ public class GameController {
     @MessageMapping("/startchallenge")
     public void startChallenge(PlacementMessage placementMessage){
         Game game = gameService.getGameById(Long.valueOf(placementMessage.getGameId()));
-        game = gameService.updateAcivePlayerPlacement(game, placementMessage.getPlacement());
+        game = gameService.updateActivePlayerPlacement(game, placementMessage.getPlacement());
         webSocketMessenger.sendMessage("/games/"+placementMessage.getGameId(), "start-challenge", game);
     }
 
@@ -191,8 +191,13 @@ public class GameController {
         Long userId = Long.parseLong(body.get("userId"));
         boolean declined = gameService.declinesChallenge(gameId, userId);
         if (declined){
-            gameService.startNewRound(gameService.getGameById(gameId));
-            webSocketMessenger.sendMessage("/games/" + gameId, "start-new-round", null);
+            webSocketMessenger.sendMessage("/games/" + gameId, "end-round", null);
         }
+    }
+    @MessageMapping("/userAcceptsChallenge")
+    public void userAcceptsChallenge(Map<String, String> body){
+
+
+        webSocketMessenger.sendMessage("/games/" + gameId, "end-round", null)
     }
 }
