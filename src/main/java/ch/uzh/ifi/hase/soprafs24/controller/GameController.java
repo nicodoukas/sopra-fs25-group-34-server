@@ -196,8 +196,7 @@ public class GameController {
     }
     @MessageMapping("/userAcceptsChallenge")
     public void userAcceptsChallenge(Map<String, String> body){
-
-
-        webSocketMessenger.sendMessage("/games/" + gameId, "end-round", null)
+        Long gameId = Long.parseLong(body.get("gameId"));
+        webSocketMessenger.sendMessage("/games/" + gameId, "end-round", null);
     }
 }
