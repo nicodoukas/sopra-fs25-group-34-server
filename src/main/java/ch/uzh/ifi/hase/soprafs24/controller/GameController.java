@@ -172,7 +172,7 @@ public class GameController {
 
         if (round.getChallenger()==null){
             round.setChallenger(challenger);
-            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-accepted", userId);
+            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-accepted", game);
         }
         else{
             webSocketMessenger.sendMessage("/games/"+gameId, "challenge-denied", userId);
