@@ -185,4 +185,14 @@ public class GameController {
         webSocketMessenger.sendMessage("/games/" + gameId, "back-to-lobby", null);
     }
 
+    @MessageMapping("/userDeclinesChallenge")
+    public void userDeclinesChallenge(Map<String,String> body) {
+        Long gameId = Long.parseLong(body.get("gameId"));
+        Long userId = Long.parseLong(body.get("userId"));
+        boolean declined = gameService.declinesChallenge(gameId, userId);
+        if (declined){
+            gameService.startNewRound(gameService.getGameById(gameId));
+            webSocketMessenger.sendMessage("/games/" + gameId, "start-new-round", null);
+        }
+    }
 }
