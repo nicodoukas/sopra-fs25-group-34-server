@@ -1,5 +1,8 @@
+package ch.uzh.ifi.hase.soprafs24.websocket;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.stereotype.Component;
+
 
 @Component
 public class RoundLockManager {
