@@ -27,10 +27,13 @@ public class GameController {
 
     private final WebSocketMessenger webSocketMessenger;
 
-    GameController(GameService gameService, UserService userService, WebSocketMessenger webSocketMessenger) {
+    private final RoundLockManager roundLockManager;
+
+    GameController(GameService gameService, UserService userService, WebSocketMessenger webSocketMessenger, RoundLockManager roundLockManager) {
         this.gameService = gameService;
         this.userService = userService;
         this.webSocketMessenger = webSocketMessenger;
+        this.roundLockManager = roundLockManager;
     }
 
     @GetMapping("/games/{gameId}")
@@ -132,9 +135,17 @@ public class GameController {
 
     @MessageMapping("/startNewRound")
     public void startNewRound(String gameId){
-        Game game = gameService.getGameById(Long.valueOf(gameId));
-        gameService.startNewRound(game);
-        webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
+        Long id = Long.valueOf(gameId);
+        if (!roundLockManager.tryLock(id)) {
+            return;
+        }   
+        try {
+            Game game = gameService.getGameById(id);
+            gameService.startNewRound(game);
+            webSocketMessenger.sendMessage("/games/" + gameId, "start-new-round", null);
+        } finally {
+            roundLockManager.unlock(id);
+        }
     }
 
     @MessageMapping("/delete")
