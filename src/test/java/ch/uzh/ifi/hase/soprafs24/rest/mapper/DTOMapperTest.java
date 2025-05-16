@@ -475,5 +475,71 @@ public class DTOMapperTest {
         assertNull(res.getSongCard());
     }
 
+    @Test
+    public void test_convertSongCardGetDTOtoEntity_success() {
+        SongCardGetDTO songCardGetDTO = new SongCardGetDTO();
+        songCardGetDTO.setTitle("Theresa's Sound-World");
+        songCardGetDTO.setArtist("Sonic Youth");
+        songCardGetDTO.setYear(1992);
+        songCardGetDTO.setSongURL("https://example.com");
+
+        SongCard songCard = DTOMapper.INSTANCE.convertSongCardGetDTOtoEntity(songCardGetDTO);
+
+        assertEquals(songCardGetDTO.getTitle(), songCard.getTitle());
+        assertEquals(songCardGetDTO.getArtist(), songCard.getArtist());
+        assertEquals(songCardGetDTO.getYear(), songCard.getYear());
+        assertEquals(songCardGetDTO.getSongURL(), songCard.getSongURL());
+    }
+
+    @Test
+    public void test_convertSongCardGetDTOtoEntity_failure() {
+        SongCardGetDTO songCardGetDTO = new SongCardGetDTO();
+        songCardGetDTO.setTitle(null);
+        songCardGetDTO.setArtist(null);
+        songCardGetDTO.setYear(0);
+        songCardGetDTO.setSongURL(null);
+
+        SongCard songCard = DTOMapper.INSTANCE.convertSongCardGetDTOtoEntity(songCardGetDTO);
+
+        assertNotNull(songCard);
+        assertNull(songCard.getTitle());
+        assertNull(songCard.getArtist());
+        assertEquals(0, songCard.getYear());
+        assertNull(songCard.getSongURL());
+    }
+
+    @Test
+    public void test_convertEntityToSongCardGetDTO_success() {
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Tom Violence");
+        songCard.setArtist("Sonic Youth");
+        songCard.setYear(1986);
+        songCard.setSongURL("https://example.com");
+
+        SongCardGetDTO songCardGetDTO = DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
+
+        assertEquals(songCard.getTitle(), songCardGetDTO.getTitle());
+        assertEquals(songCard.getArtist(), songCardGetDTO.getArtist());
+        assertEquals(songCard.getYear(), songCardGetDTO.getYear());
+        assertEquals(songCard.getSongURL(), songCardGetDTO.getSongURL());
+    }
+
+    @Test
+    public void test_convertEntityToSongCardGetDTO_failure() {
+        SongCard songCard = new SongCard();
+        songCard.setTitle(null);
+        songCard.setArtist(null);
+        songCard.setYear(0);
+        songCard.setSongURL(null);
+
+        SongCardGetDTO songCardGetDTO = DTOMapper.INSTANCE.convertEntityToSongCardGetDTO(songCard);
+
+        assertNotNull(songCardGetDTO);
+        assertNull(songCardGetDTO.getTitle());
+        assertNull(songCardGetDTO.getArtist());
+        assertEquals(0, songCardGetDTO.getYear());
+        assertNull(songCardGetDTO.getSongURL());
+    }
+
 
 }
