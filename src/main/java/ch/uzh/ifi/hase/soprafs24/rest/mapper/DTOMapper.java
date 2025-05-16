@@ -75,7 +75,6 @@ public interface DTOMapper {
   @Mapping(source = "host", target ="host")
   LobbyGetDTO convertEntityToLobbyGetDTO(Lobby lobby);
 
-
   @Mapping(source = "userId", target="userId")
   @Mapping(source = "gameId", target="gameId")
   @Mapping(source = "coinBalance", target="coinBalance")
