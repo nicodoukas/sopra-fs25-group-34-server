@@ -48,7 +48,6 @@ public class UserControllerPostTest {
   // POST /users
   @Test
   public void createUser_validInput_userCreated() throws Exception {
-    // given
     User user = new User();
     user.setId(1L);
     user.setUsername("testUsername");
@@ -64,20 +63,19 @@ public class UserControllerPostTest {
 
     given(userService.createUser(Mockito.any())).willReturn(user);
 
-    // when/then -> do the request + validate the result
     MockHttpServletRequestBuilder postRequest = post("/users")
         .contentType(MediaType.APPLICATION_JSON)
         .content(ControllerTestUtils.asJsonString(userPostDTO));
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"); //make sure date has correct format
-    formatter.setTimeZone(TimeZone.getTimeZone("UTC")); //both are using UTC +00:00 timezone
-    // then
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
     mockMvc.perform(postRequest)
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id", is(user.getId().intValue())))
             .andExpect(jsonPath("$.username", is(user.getUsername())))
             .andExpect(jsonPath("$.password", is(user.getPassword())))
-            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
+            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00"))))
             .andExpect(jsonPath("$.birthday", is(formatter.format(user.getBirthday()).replace("Z", "+00:00"))))
             .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
 
@@ -87,16 +85,14 @@ public class UserControllerPostTest {
   @Test
   public void createUser_InvalidUsername_throwsError() throws Exception {
     UserPostDTO userPostDTO = new UserPostDTO();
-    userPostDTO.setUsername("testUsername"); //Take existing Username
+    userPostDTO.setUsername("testUsername");
 
     given(userService.createUser(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Username not unique"));
 
-    //when
     MockHttpServletRequestBuilder postRequest = post("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(ControllerTestUtils.asJsonString(userPostDTO));
 
-    //then
     mockMvc.perform(postRequest).andExpect(status().is(409));
   }
 

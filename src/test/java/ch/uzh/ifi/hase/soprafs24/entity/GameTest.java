@@ -35,7 +35,7 @@ public class GameTest {
     @Test
     public void testSetGameHost() {
         Game game = new Game();
-        Player host = new Player(); // in game, host is a player, as opposed to user in lobby
+        Player host = new Player();
         host.setUserId(1L);
         host.setUsername("HostPlayer");
 
@@ -86,7 +86,7 @@ public class GameTest {
         game.setTurnOrder(turnOrder);
 
         assertEquals(2, game.getTurnOrder().size());
-        assertEquals("Player1", game.getTurnOrder().peek().getUsername()); // get head of TurnOrder
+        assertEquals("Player1", game.getTurnOrder().peek().getUsername()); // get head of TurnOrder queue
     }
 
     @Test

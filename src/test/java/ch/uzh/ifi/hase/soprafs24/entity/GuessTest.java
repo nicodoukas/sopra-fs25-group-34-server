@@ -14,7 +14,7 @@ public class GuessTest {
     }
 
     @Test
-    public void testSetGuessedTitleNull() { // adding these null tests since setters have if-statements -> branches
+    public void testSetGuessedTitleNull() {
         Guess guess = new Guess();
         guess.setGuessedTitle(null);
         assertNull(guess.getGuessedTitle());
@@ -23,12 +23,12 @@ public class GuessTest {
     @Test
     public void testSetGuessedArtist() {
         Guess guess = new Guess();
-        guess.setGuessedArtist(" Joy Division "); // adding extra spaces to check trim method
+        guess.setGuessedArtist(" Joy Division ");
         assertEquals("Joy Division", guess.getGuessedArtist());
     }
 
     @Test
-    public void testSetGuessedArtistNull() { // adding these null tests since setters have if-statements -> branches
+    public void testSetGuessedArtistNull() {
         Guess guess = new Guess();
         guess.setGuessedArtist(null);
         assertNull(guess.getGuessedArtist());

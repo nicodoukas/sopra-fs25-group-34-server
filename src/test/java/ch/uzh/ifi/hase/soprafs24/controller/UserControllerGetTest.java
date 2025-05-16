@@ -62,21 +62,21 @@ public class UserControllerGetTest {
   // GET /users/{userId}
   @Test
   public void getUserById_validInput_getcorrectUser() throws Exception {
-    //accessing an existing user
+
     given(userService.getUserById(1L)).willReturn(user);
 
     MockHttpServletRequestBuilder getRequest = get("/users/1").contentType(MediaType.APPLICATION_JSON);
     getRequest.header("token", "1");
     getRequest.header("id", "1");
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"); //make sure date has correct format
-    formatter.setTimeZone(TimeZone.getTimeZone("UTC")); //both are using UTC +00:00 timezone
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
     mockMvc.perform(getRequest).andExpect(status().is(200))
             .andExpect(jsonPath("$.id", is(user.getId().intValue())))
             .andExpect(jsonPath("$.username", is(user.getUsername())))
             .andExpect(jsonPath("$.password", is(user.getPassword())))
-            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) //replace Z because after adjusting Timezone instead of +00:00 it is Z
+            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00"))))
             .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
   }
 
@@ -86,13 +86,11 @@ public class UserControllerGetTest {
 
     given(userService.getUserById(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found"));
 
-    //when
     MockHttpServletRequestBuilder getRequest = get("/users/2")
       .contentType(MediaType.APPLICATION_JSON);
     getRequest.header("token", "1");
     getRequest.header("id", "1");
 
-    //then
     mockMvc.perform(getRequest).andExpect(status().is(404));
   }
 
@@ -100,17 +98,14 @@ public class UserControllerGetTest {
   @Test
   public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
     List<User> allUsers = Collections.singletonList(user);
-    // this mocks the UserService -> we define above what the userService should
-    // return when getUsers() is called
+
     given(userService.getUsers()).willReturn(allUsers);
 
-    // when
     MockHttpServletRequestBuilder getRequest = get("/users").contentType(MediaType.APPLICATION_JSON);
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"); //make sure date has correct format
-    formatter.setTimeZone(TimeZone.getTimeZone("UTC")); //both are using UTC +00:00 timezone
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-    // then
     mockMvc.perform(getRequest).andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].id", is(user.getId().intValue())))
@@ -175,7 +170,7 @@ public class UserControllerGetTest {
             .andExpect(jsonPath("$.id", is(user.getId().intValue())))
             .andExpect(jsonPath("$.username", is(user.getUsername())))
             .andExpect(jsonPath("$.password", is(user.getPassword())))
-            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00")))) // danke Julia
+            .andExpect(jsonPath("$.creation_date", is(formatter.format(user.getCreation_date()).replace("Z", "+00:00"))))
             .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
   }
 

@@ -34,30 +34,24 @@ public class UserServiceTest {
   public void setup() {
     MockitoAnnotations.openMocks(this);
 
-    // given
     testUser = new User();
     testUser.setId(1L);
     testUser.setUsername("testUsername");
 
-    // when -> any object is being save in the userRepository -> return the dummy
-    // testUser
     Mockito.when(userRepository.save(Mockito.any())).thenReturn(testUser);
     Mockito.when(userRepository.findByUsername(testUser.getUsername())).thenReturn(testUser);
-    Mockito.when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser)); //findById returns Optional<User>
+    Mockito.when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));
   }
 
   @Test
   public void createUser_validInputs_success() {
-    // when -> any object is being save in the userRepository -> return the dummy
     User newUser = new User();
     newUser.setId(2L);
     newUser.setUsername("newUsername");
     newUser.setPassword("newPassword");
     Mockito.when(userRepository.save(Mockito.any())).thenReturn(newUser);
-    // testUser
     User createdUser = userService.createUser(newUser);
 
-    // then
     Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
 
     assertEquals(2, createdUser.getId()); // second user to be created
@@ -201,7 +195,6 @@ public class UserServiceTest {
 
   @Test
   public void setStatusToPlaying_success() {
-
       testUser.setStatus(UserStatus.ONLINE);
       Long userId = testUser.getId();
 

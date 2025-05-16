@@ -124,7 +124,7 @@ public class GameControllerPostTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(guessPostDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true")); // Boolean true as raw string
+                .andExpect(content().string("true"));
     }
 
     @Test
@@ -145,9 +145,8 @@ public class GameControllerPostTest {
         game.setGameId(gameId);
         game.setCurrentRound(currentRound);
 
-        // Wrong guess
         GuessPostDTO guessPostDTO = new GuessPostDTO();
-        guessPostDTO.setGuessedTitle("Ceremony");
+        guessPostDTO.setGuessedTitle("Ceremony"); // Wrong guess
         guessPostDTO.setGuessedArtist("New Order");
         guessPostDTO.setPlayer(mockPlayer);
 
@@ -158,7 +157,7 @@ public class GameControllerPostTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(guessPostDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("false")); // Boolean false as raw string
+                .andExpect(content().string("false"));
     }
 
 

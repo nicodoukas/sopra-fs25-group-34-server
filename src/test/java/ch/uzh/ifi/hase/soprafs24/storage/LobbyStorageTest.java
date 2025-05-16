@@ -41,7 +41,6 @@ public class LobbyStorageTest {
         assertEquals("Lobby or lobbyId cannot be null", exception.getMessage());
     }
 
-    // Not sure if this test makes sense even, since we never should have a lobby without host, but anyway
     @Test
     public void getLobbyById_success() {
         Lobby lobby = new Lobby();

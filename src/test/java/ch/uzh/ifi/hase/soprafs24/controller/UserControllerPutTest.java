@@ -52,19 +52,16 @@ public class UserControllerPutTest {
     user.setToken("1");
     user.setPassword("1234");
 
-
     UserPutDTO userPutDTO = new UserPutDTO();
     userPutDTO.setBirthday(new Date());
     userPutDTO.setUsername("testUsername");
 
-    // when/then -> do the request + validate the result
     MockHttpServletRequestBuilder putRequest = put("/users/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content(ControllerTestUtils.asJsonString(userPutDTO))
             .header("token", "1")
             .header("id", "1");
 
-    // then
     mockMvc.perform(putRequest).andExpect(status().is(204));
   }
 
@@ -82,7 +79,6 @@ public class UserControllerPutTest {
               .contentType(MediaType.APPLICATION_JSON)
               .content(ControllerTestUtils.asJsonString(userPutDTO));
 
-      // then
       mockMvc.perform(putRequest).andExpect(status().is(404));
   }
 
@@ -101,8 +97,6 @@ public class UserControllerPutTest {
         Mockito.verify(userService, Mockito.times(1)).setStatusToPlaying(userId);
     }
 
-  // Sorry, I am adding the user DELETE test here because they are probably the only two DELETE tests necessary
-  // and I don't want to make a new file just for these two
 
   // DELETE /users/{userId}/friends/{userId2} success
   @Test

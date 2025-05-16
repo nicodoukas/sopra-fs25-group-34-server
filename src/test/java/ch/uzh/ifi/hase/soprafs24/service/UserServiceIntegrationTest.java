@@ -38,11 +38,10 @@ public class UserServiceIntegrationTest {
   }
 
   @MockBean
-  private APIService apiService; //needed since in Test APIService doesn't have access to Token.
+  private APIService apiService;
 
   @Test
   public void createUser_validInputs_success() {
-    // given
     assertNull(userRepository.findByUsername("testUsername"));
 
     User testUser = new User();
@@ -50,10 +49,8 @@ public class UserServiceIntegrationTest {
     testUser.setCreation_date(new Date());
     testUser.setPassword("1234");
 
-    // when
     User createdUser = userService.createUser(testUser);
 
-    // then
     assertEquals(testUser.getId(), createdUser.getId());
     assertEquals(testUser.getUsername(), createdUser.getUsername());
     assertNotNull(createdUser.getToken());
@@ -68,15 +65,11 @@ public class UserServiceIntegrationTest {
     testUser.setUsername("testUsername");
     testUser.setPassword("1234");
     testUser.setCreation_date(new Date());
-    User createdUser = userService.createUser(testUser);
+    userService.createUser(testUser);
 
-    // attempt to create second user with same username
     User testUser2 = new User();
-
-    // change the name but forget about the username
     testUser2.setUsername("testUsername");
 
-    // check that an error is thrown
     assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
   }
 }

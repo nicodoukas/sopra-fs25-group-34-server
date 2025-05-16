@@ -98,7 +98,7 @@ public class LobbyControllerPostTest {
         given(lobbyService.inviteUserToLobby(user, 2L)).willReturn(user);
 
         MockHttpServletRequestBuilder postRequest = post("/lobbies/invite/1")
-                .content("2") //lobbyId
+                .content("2")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(postRequest)
