@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

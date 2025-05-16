@@ -3,12 +3,17 @@ package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
 import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
+import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
 import ch.uzh.ifi.hase.soprafs24.entity.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerGetDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardGetDTO;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,6 +23,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * DTOMapperTest
@@ -195,7 +201,7 @@ public class DTOMapperTest {
         assertNull(user.getCreation_date());
         assertNull(user.getBirthday());
         assertNull(user.getStatus());
-        assertEquals(new ArrayList<>(), user.getFriends());
+        assertEquals(new ArrayList<>(), user.getFriends()); // if null, friends is initialized as empty list
         assertEquals(new ArrayList<>(),user.getFriendrequests());
         assertEquals(new ArrayList<>(),user.getOpenLobbyInvitations());
         assertNull(user.getLobbyId());
@@ -323,5 +329,151 @@ public class DTOMapperTest {
         assertNull(lobbyGetDTO.getHost());
         assertNull(lobbyGetDTO.getMembers());
     }
+
+    @Test
+    public void test_convertPlayerGetDTOtoEntity_success() {
+        PlayerGetDTO playerGetDTO = new PlayerGetDTO();
+        playerGetDTO.setUserId(1L);
+        playerGetDTO.setGameId(10L);
+        playerGetDTO.setCoinBalance(3);
+        playerGetDTO.setUsername("testPlayer");
+
+        SongCardGetDTO song1 = new SongCardGetDTO();
+        song1.setTitle("Teen Age Riot");
+        song1.setYear(1988);
+        song1.setArtist("Sonic Youth");
+
+        SongCardGetDTO song2 = new SongCardGetDTO();
+        song2.setTitle("The Diamond Sea");
+        song2.setYear(1995);
+        song1.setArtist("Sonic Youth");
+
+        playerGetDTO.setTimeline(Arrays.asList(song1, song2));
+
+        Player player = DTOMapper.INSTANCE.convertPlayerGetDTOtoEntity(playerGetDTO);
+
+        assertEquals(playerGetDTO.getUserId(), player.getUserId());
+        assertEquals(playerGetDTO.getGameId(), player.getGameId());
+        assertEquals(playerGetDTO.getCoinBalance(), player.getCoinBalance());
+        assertEquals(playerGetDTO.getUsername(), player.getUsername());
+        assertNotNull(player.getTimeline());
+        assertEquals(2, player.getTimeline().size());
+        assertEquals("Teen Age Riot", player.getTimeline().get(0).getTitle());
+        assertEquals("The Diamond Sea", player.getTimeline().get(1).getTitle());
+    }
+
+    @Test
+    public void test_convertPlayerGetDTOtoEntity_failure() {
+        PlayerGetDTO playerGetDTO = new PlayerGetDTO();
+        playerGetDTO.setUserId(null);
+        playerGetDTO.setGameId(null);
+        playerGetDTO.setCoinBalance(0);
+        playerGetDTO.setUsername(null);
+        playerGetDTO.setTimeline(null);
+
+        Player player = DTOMapper.INSTANCE.convertPlayerGetDTOtoEntity(playerGetDTO);
+
+        assertNotNull(player);
+        assertNull(player.getUserId());
+        assertNull(player.getGameId());
+        assertEquals(0, player.getCoinBalance());
+        assertNull(player.getUsername());
+        assertNull(player.getTimeline());
+    }
+
+    @Test
+    public void test_convertEntityToPlayerGetDTO_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setGameId(10L);
+        player.setCoinBalance(3);
+        player.setUsername("testPlayer");
+
+        SongCard song1 = new SongCard();
+        song1.setTitle("Teen Age Riot");
+        song1.setYear(1988);
+        song1.setArtist("Sonic Youth");
+
+        SongCard song2 = new SongCard();
+        song2.setTitle("The Diamond Sea");
+        song2.setYear(1995);
+        song1.setArtist("Sonic Youth");
+
+        player.setTimeline(Arrays.asList(song1, song2));
+
+        ProfilePicture profilePicture = new ProfilePicture();
+        player.setProfilePicture(profilePicture);
+
+        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
+
+        assertEquals(player.getUserId(), playerGetDTO.getUserId());
+        assertEquals(player.getGameId(), playerGetDTO.getGameId());
+        assertEquals(player.getCoinBalance(), playerGetDTO.getCoinBalance());
+        assertEquals(player.getUsername(), playerGetDTO.getUsername());
+        assertNotNull(playerGetDTO.getTimeline());
+        assertEquals(2, playerGetDTO.getTimeline().size());
+        assertEquals("Teen Age Riot", playerGetDTO.getTimeline().get(0).getTitle());
+        assertEquals("The Diamond Sea", playerGetDTO.getTimeline().get(1).getTitle());
+        assertEquals(player.getProfilePicture(), playerGetDTO.getProfilePicture());
+    }
+
+    @Test
+    public void test_convertEntityToPlayerGetDTO_failure() {
+        Player player = new Player();
+        player.setUserId(null);
+        player.setGameId(null);
+        player.setCoinBalance(0);
+        player.setUsername(null);
+        player.setTimeline(null);
+        player.setProfilePicture(null);
+
+        PlayerGetDTO playerGetDTO = DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
+
+        assertNotNull(playerGetDTO);
+        assertNull(playerGetDTO.getUserId());
+        assertNull(playerGetDTO.getGameId());
+        assertEquals(0, playerGetDTO.getCoinBalance());
+        assertNull(playerGetDTO.getUsername());
+        assertNull(playerGetDTO.getTimeline());
+        assertNull(playerGetDTO.getProfilePicture());
+    }
+
+    @Test
+    public void test_convertPlayerPutDTOtoEntity_success() {
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setAddCoin(true);
+        playerPutDTO.setPosition(2);
+
+        SongCard songCard = new SongCard();
+        songCard.setTitle("Kool Thing");
+        songCard.setArtist("Sonic Youth");
+        songCard.setYear(1990);
+        playerPutDTO.setSongCard(songCard);
+
+        PlayerPutDTO res = DTOMapper.INSTANCE.convertPlayerPutDTOtoEntity(playerPutDTO);
+
+        assertEquals(playerPutDTO.getAddCoin(), res.getAddCoin());
+        assertEquals(playerPutDTO.getPosition(), res.getPosition());
+        assertEquals(playerPutDTO.getSongCard(), res.getSongCard());
+        assertEquals("Kool Thing", res.getSongCard().getTitle());
+        assertEquals("Sonic Youth", res.getSongCard().getArtist());
+        assertEquals(1990, res.getSongCard().getYear());
+    }
+
+    @Test
+    public void test_convertPlayerPutDTOtoEntity_failure() {
+        PlayerPutDTO playerPutDTO = new PlayerPutDTO();
+        playerPutDTO.setAddCoin(false);
+        playerPutDTO.setPosition(0);
+        playerPutDTO.setSongCard(null);
+
+        PlayerPutDTO res = DTOMapper.INSTANCE.convertPlayerPutDTOtoEntity(playerPutDTO);
+
+        assertNotNull(res);
+        assertFalse(res.getAddCoin());
+        assertEquals(0, res.getPosition());
+        assertNull(res.getSongCard());
+    }
+
 
 }
