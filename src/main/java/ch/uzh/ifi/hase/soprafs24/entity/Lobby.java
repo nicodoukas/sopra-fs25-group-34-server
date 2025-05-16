@@ -60,6 +60,9 @@ public class Lobby implements Serializable {
     }
 
     public void setHost(User host) {
+        if (host == null) {
+            return;
+        }
         this.host = host;
         joinLobby(host);
     }

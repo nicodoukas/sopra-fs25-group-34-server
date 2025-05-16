@@ -2,10 +2,13 @@ package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs24.entity.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyPostDTO;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyGetDTO;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -234,6 +237,91 @@ public class DTOMapperTest {
         assertNull(user.getId());
         assertNull(user.getProfilePicture());
         assertNull(user.getDescription());
+    }
+
+    @Test
+    public void test_convertLobbyPostDTOtoEntity_success() {
+        LobbyPostDTO lobbyPostDTO = new LobbyPostDTO();
+        lobbyPostDTO.setLobbyId(1L);
+        lobbyPostDTO.setLobbyName("testLobby");
+
+        UserGetDTO hostDTO = new UserGetDTO();
+        hostDTO.setId(1L);
+        hostDTO.setUsername("testHost");
+        lobbyPostDTO.setHost(hostDTO);
+
+        Lobby lobby = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(lobbyPostDTO);
+
+        assertEquals(lobbyPostDTO.getLobbyId(), lobby.getLobbyId());
+        assertEquals(lobbyPostDTO.getLobbyName(), lobby.getLobbyName());
+        assertNotNull(lobby.getHost());
+        assertEquals(lobbyPostDTO.getHost().getId(), lobby.getHost().getId());
+        assertEquals(lobbyPostDTO.getHost().getUsername(), lobby.getHost().getUsername());
+    }
+
+    @Test
+    public void test_convertLobbyPostDTOtoEntity_failure() {
+        LobbyPostDTO lobbyPostDTO = new LobbyPostDTO();
+        lobbyPostDTO.setLobbyId(null);
+        lobbyPostDTO.setLobbyName(null);
+        lobbyPostDTO.setHost(null);
+
+        Lobby lobby = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(lobbyPostDTO);
+
+        assertNotNull(lobby);
+        assertNull(lobby.getLobbyId());
+        assertNull(lobby.getLobbyName());
+        assertNull(lobby.getHost());
+    }
+
+    @Test
+    public void test_convertEntityToLobbyGetDTO_success() {
+        Lobby lobby = new Lobby();
+        lobby.setLobbyId(1L);
+        lobby.setLobbyName("testLobby");
+
+        User host = new User();
+        host.setId(1L);
+        host.setUsername("testHost");
+
+        User member1 = new User();
+        member1.setId(2L);
+        member1.setUsername("testMember1");
+
+        User member2 = new User();
+        member2.setId(3L);
+        member2.setUsername("testMember2");
+
+        lobby.setHost(host);
+        lobby.setMembers(Arrays.asList(host, member1, member2));
+
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
+
+        assertEquals(lobby.getLobbyId(), lobbyGetDTO.getLobbyId());
+        assertEquals(lobby.getLobbyName(), lobbyGetDTO.getLobbyName());
+        assertNotNull(lobbyGetDTO.getHost());
+        assertEquals(lobby.getHost().getId(), lobbyGetDTO.getHost().getId());
+        assertEquals(lobby.getHost().getUsername(), lobbyGetDTO.getHost().getUsername());
+        assertEquals(3, lobbyGetDTO.getMembers().size());
+        assertEquals(lobby.getMembers().get(0).getId(), lobbyGetDTO.getMembers().get(0).getId());
+        assertEquals(lobby.getMembers().get(1).getId(), lobbyGetDTO.getMembers().get(1).getId());
+    }
+
+    @Test
+    public void test_convertEntityToLobbyGetDTO_failure() {
+        Lobby lobby = new Lobby();
+        lobby.setLobbyId(null);
+        lobby.setLobbyName(null);
+        lobby.setHost(null);
+        lobby.setMembers(null);
+
+        LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
+
+        assertNotNull(lobbyGetDTO);
+        assertNull(lobbyGetDTO.getLobbyId());
+        assertNull(lobbyGetDTO.getLobbyName());
+        assertNull(lobbyGetDTO.getHost());
+        assertNull(lobbyGetDTO.getMembers());
     }
 
 }
