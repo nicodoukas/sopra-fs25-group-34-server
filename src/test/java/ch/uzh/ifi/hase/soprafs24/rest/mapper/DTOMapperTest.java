@@ -1,24 +1,16 @@
 package ch.uzh.ifi.hase.soprafs24.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-import ch.uzh.ifi.hase.soprafs24.entity.Lobby;
-import ch.uzh.ifi.hase.soprafs24.entity.Player;
-import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
-import ch.uzh.ifi.hase.soprafs24.entity.ProfilePicture;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.UserPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyPostDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.LobbyGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerGetDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
-import ch.uzh.ifi.hase.soprafs24.rest.dto.SongCardGetDTO;
+import ch.uzh.ifi.hase.soprafs24.entity.*;
+import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -33,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class DTOMapperTest {
     @Test
     public void test_convertUserPostDTOtoEntity_success() {
-        // create UserPostDTO
         UserPostDTO userPostDTO = new UserPostDTO();
         userPostDTO.setUsername("username");
         userPostDTO.setPassword("password123");
@@ -43,10 +34,8 @@ public class DTOMapperTest {
         userPostDTO.setToken("token123");
         userPostDTO.setId(1L);
 
-        // MAP -> Create user
         User user = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
 
-        // check content
         assertEquals(userPostDTO.getUsername(), user.getUsername());
         assertEquals(userPostDTO.getPassword(), user.getPassword());
         assertEquals(userPostDTO.getCreation_date(), user.getCreation_date());
@@ -81,7 +70,6 @@ public class DTOMapperTest {
 
     @Test
     public void test_convertEntityToUserGetDTO_success() {
-        // create User
         User user = new User();
         user.setId(1L);
         user.setUsername("firstname@lastname");
@@ -98,10 +86,8 @@ public class DTOMapperTest {
         user.setProfilePicture(profilePicture);
         user.setDescription("test description");
 
-        // MAP -> Create UserGetDTO
         UserGetDTO userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
 
-        // check content
         assertEquals(user.getId(), userGetDTO.getId());
         assertEquals(user.getUsername(), userGetDTO.getUsername());
         assertEquals(user.getPassword(), userGetDTO.getPassword());
@@ -541,5 +527,101 @@ public class DTOMapperTest {
         assertNull(songCardGetDTO.getSongURL());
     }
 
+    @Test
+    public void test_convertEntitytoGameGetDTO_success() {
+        Game game = new Game();
+        game.setGameId(1L);
+        game.setGameName("testGame");
+        game.setTurnCount(3);
+
+        Player host = new Player();
+        host.setUserId(1L);
+        host.setUsername("testHostPlayer");
+        game.setHost(host);
+
+        Player player1 = new Player();
+        player1.setUserId(2L);
+        player1.setUsername("Player1");
+
+        Player player2 = new Player();
+        player2.setUserId(3L);
+        player2.setUsername("Player2");
+
+        List<Player> players = Arrays.asList(host, player1, player2);
+        game.setPlayers(players);
+
+        Queue<Player> turnOrder = new LinkedList<>(players);
+        game.setTurnOrder(turnOrder);
+
+        Round round = new Round();
+        round.setRoundNr(1);
+        game.setCurrentRound(round);
+
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+
+        assertEquals(game.getGameId(), gameGetDTO.getGameId());
+        assertEquals(game.getGameName(), gameGetDTO.getGameName());
+        assertEquals(game.getTurnCount(), gameGetDTO.getTurnCount());
+        assertEquals(game.getHost(), gameGetDTO.getHost());
+        assertEquals(game.getPlayers(), gameGetDTO.getPlayers());
+        assertEquals(game.getTurnOrder(), gameGetDTO.getTurnOrder());
+        assertEquals(game.getCurrentRound(), gameGetDTO.getCurrentRound());
+    }
+
+    @Test
+    public void test_convertEntitytoGameGetDTO_failure() {
+        Game game = new Game();
+        game.setGameId(null);
+        game.setGameName(null);
+        game.setTurnCount(0);
+        game.setHost(null);
+        game.setPlayers(null);
+        game.setTurnOrder(null);
+        game.setCurrentRound(null);
+
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntitytoGameGetDTO(game);
+
+        assertNotNull(gameGetDTO);
+        assertNull(gameGetDTO.getGameId());
+        assertNull(gameGetDTO.getGameName());
+        assertEquals(0, gameGetDTO.getTurnCount());
+        assertNull(gameGetDTO.getHost());
+        assertNull(gameGetDTO.getPlayers());
+        assertNull(gameGetDTO.getTurnOrder());
+        assertNull(gameGetDTO.getCurrentRound());
+    }
+
+    @Test
+    public void test_convertGuessPostDTOtoEntity_success() {
+        GuessPostDTO guessPostDTO = new GuessPostDTO();
+        guessPostDTO.setGuessedTitle("  Schizophrenia  ");
+        guessPostDTO.setGuessedArtist("  Sonic Youth  ");
+
+        Player player = new Player();
+        player.setUserId(1L);
+        player.setUsername("testPlayer");
+        guessPostDTO.setPlayer(player);
+
+        Guess guess = DTOMapper.INSTANCE.convertGuessPostDTOtoEntity(guessPostDTO);
+
+        assertEquals("Schizophrenia", guess.getGuessedTitle());
+        assertEquals("Sonic Youth", guess.getGuessedArtist());
+        assertEquals(player, guess.getPlayer());
+    }
+
+    @Test
+    public void test_convertGuessPostDTOtoEntity_failure() {
+        GuessPostDTO guessPostDTO = new GuessPostDTO();
+        guessPostDTO.setGuessedTitle(null);
+        guessPostDTO.setGuessedArtist(null);
+        guessPostDTO.setPlayer(null);
+
+        Guess guess = DTOMapper.INSTANCE.convertGuessPostDTOtoEntity(guessPostDTO);
+
+        assertNotNull(guess);
+        assertNull(guess.getGuessedTitle());
+        assertNull(guess.getGuessedArtist());
+        assertNull(guess.getPlayer());
+    }
 
 }
