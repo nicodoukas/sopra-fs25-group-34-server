@@ -137,6 +137,7 @@ public class GameController {
     @MessageMapping("/startNewRound")
     public void startNewRound(@Payload Map<String, String> body){
         Long id = Long.valueOf(body.get("gameId"));
+        String gameId = body.get("gameId");
         Game game = gameService.getGameById(id);
         int roundnr_sent = Integer.parseInt(body.get("roundNr"));
         int roundnr_actual = game.getCurrentRound().getRoundNr();
@@ -144,9 +145,8 @@ public class GameController {
             return;
         }
         gameService.startNewRound(game);
-        webSocketMessenger.sendMessage("/games/" + body.get("gameId"), "start-new-round", null);
+        webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
         roundLockManager.unlock(id);
-    
     }
 
     @MessageMapping("/delete")
