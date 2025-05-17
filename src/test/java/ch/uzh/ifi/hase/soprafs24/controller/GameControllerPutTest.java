@@ -63,7 +63,7 @@ public class GameControllerPutTest {
         mockPlayer.setGameId(10L);
         mockPlayer.setUsername("testUsername");
         mockPlayer.setCoinBalance(2);
-        mockPlayer.setTimeline(List.of(mockSongCard)); // We assume it was inserted
+        mockPlayer.setTimeline(List.of(mockSongCard));
     }
 
 
@@ -105,7 +105,7 @@ public class GameControllerPutTest {
         updatedPlayer.setUserId(userId);
         updatedPlayer.setGameId(gameId);
         updatedPlayer.setUsername("testUsername");
-        updatedPlayer.setCoinBalance(3);  // Now set to 3 to simulate GameService adding one
+        updatedPlayer.setCoinBalance(3);
         updatedPlayer.setTimeline(List.of(mockSongCard));
 
         PlayerPutDTO playerPutDTO = new PlayerPutDTO();
@@ -133,13 +133,13 @@ public class GameControllerPutTest {
         boughtCard.setTitle("default");
         boughtCard.setArtist("default");
         boughtCard.setSongURL("default");
-        boughtCard.setYear(2000);  // Fixed the year for predictability, other than using Random()
+        boughtCard.setYear(2000);
 
         Player updatedPlayer = new Player();
         updatedPlayer.setUserId(userId);
         updatedPlayer.setGameId(gameId);
         updatedPlayer.setUsername("testUsername");
-        updatedPlayer.setCoinBalance(0); // let's assume the player had 3 coins at the start
+        updatedPlayer.setCoinBalance(0);
         updatedPlayer.setTimeline(List.of(mockSongCard, boughtCard));
 
         Mockito.when(gameService.buySongCard(gameId, userId)).thenReturn(updatedPlayer);

@@ -1,5 +1,8 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Round implements Serializable {
     private Player activePlayer;
     private SongCard songCard;
@@ -8,6 +11,7 @@ public class Round implements Serializable {
     private int challengerPlacement;
     private Player challenger;
     private String previewURL;
+    private Set<Long> declinedChallenge = new HashSet<>(); //Id of players that declined challenge
 
     public Player getActivePlayer(){
         return this.activePlayer;
@@ -50,6 +54,11 @@ public class Round implements Serializable {
     }
     public void setPreviewURL(String previewURL){
         this.previewURL = previewURL;
+    }
+    public Set<Long> getDeclinedChallenge(){return this.declinedChallenge;}
+    public void setDeclinedChallenge(Set<Long> declinedChallenge){this.declinedChallenge = declinedChallenge;}
+    public void userDeclinesChallenge(Long userId){
+        this.declinedChallenge.add(userId);
     }
 
 }

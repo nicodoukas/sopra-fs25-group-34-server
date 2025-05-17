@@ -132,7 +132,7 @@ public class GameServiceTest {
     public void addCoinToPlayer_coinBalance5_doesNotAddCoin() {
         Player player = new Player();
         player.setUserId(1L);
-        player.setCoinBalance(5); // 5 is the maximum amount of coins a player can have
+        player.setCoinBalance(5);
 
         testGame.setPlayers(List.of(player));
 
@@ -142,7 +142,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void insertSongCardIntoTimeline_success() {
+    public void insertSongCardIntoTimeline_whenTimelineEmpty_success() {
         Player player = new Player();
         player.setUserId(1L);
         player.setTimeline(new ArrayList<>());
@@ -167,6 +167,47 @@ public class GameServiceTest {
     }
 
     @Test
+    public void insertSongCardIntoTimeline_whenTimelinePopulated_success() {
+        Player player = new Player();
+        player.setUserId(1L);
+
+        SongCard firstSongCard = new SongCard();
+        firstSongCard.setTitle("Song 1");
+        firstSongCard.setArtist("Artist 1");
+        firstSongCard.setYear(1970);
+        firstSongCard.setSongURL("https://song1.com");
+
+        SongCard secondSongCard = new SongCard();
+        secondSongCard.setTitle("Song 2");
+        secondSongCard.setArtist("Blur");
+        secondSongCard.setYear(1994);
+        secondSongCard.setSongURL("https://song2.com");
+
+        player.setTimeline(new ArrayList<>(List.of(firstSongCard, secondSongCard)));
+        testGame.setPlayers(List.of(player));
+
+        SongCard newSongCard = new SongCard();
+        newSongCard.setTitle("SongInsert");
+        newSongCard.setArtist("ArtistInsert");
+        newSongCard.setYear(1979);
+        newSongCard.setSongURL("https://songinsert.com");
+
+        int position = 1;
+
+        Player result = gameService.insertSongCardIntoTimeline(testGame.getGameId(), player.getUserId(), newSongCard, position);
+
+        assertEquals(3, result.getTimeline().size());
+        assertEquals("Song 1", result.getTimeline().get(0).getTitle());
+        assertEquals("SongInsert", result.getTimeline().get(1).getTitle());
+        assertEquals("Song 2", result.getTimeline().get(2).getTitle());
+
+        assertEquals(1970, result.getTimeline().get(0).getYear());
+        assertEquals(1979, result.getTimeline().get(1).getYear());
+        assertEquals(1994, result.getTimeline().get(2).getYear());
+    }
+
+
+    @Test
     public void checkGuess_correctGuess_addsCoin() {
         Player player = new Player();
         player.setUserId(1L);
@@ -184,12 +225,10 @@ public class GameServiceTest {
         testGame.setCurrentRound(round);
         testGame.setPlayers(List.of(player));
 
-        // Note that the guess is correct
         Guess guess = new Guess();
         guess.setGuessedTitle("Disorder");
         guess.setGuessedArtist("Joy Division");
 
-        // Therefore checkGuess should return True and a coin should be added
         boolean result = gameService.checkGuess(testGame, guess, player.getUserId());
 
         assertTrue(result);
@@ -214,12 +253,10 @@ public class GameServiceTest {
         testGame.setCurrentRound(round);
         testGame.setPlayers(List.of(player));
 
-        // Here the player guessed the correct band, but the wrong song
         Guess guess = new Guess();
         guess.setGuessedTitle("Transmission");
         guess.setGuessedArtist("Joy Division");
 
-        // Therefore, the entire guess is false, so checkGuess should return false and no coin is added
         boolean result = gameService.checkGuess(testGame, guess, player.getUserId());
 
         assertFalse(result);
@@ -230,14 +267,13 @@ public class GameServiceTest {
     public void buySongCard_enoughCoins_success() {
         Player player = new Player();
         player.setUserId(1L);
-        player.setCoinBalance(3); // 3 coins, so player is able to buy a card
+        player.setCoinBalance(3);
         player.setTimeline(new ArrayList<>());
 
         testGame.setPlayers(List.of(player));
 
         Player result = gameService.buySongCard(testGame.getGameId(), player.getUserId());
 
-        // Assert: Coin balance decreased and one default song added
         assertEquals(0, result.getCoinBalance(), "Expected player to have spent 3 coins");
 
         assertEquals(1, result.getTimeline().size(), "Expected timeline to have 1 song");
@@ -250,12 +286,11 @@ public class GameServiceTest {
     public void buySongCard_notEnoughCoins_throwsException() {
         Player player = new Player();
         player.setUserId(1L);
-        player.setCoinBalance(2); // not enough coins to buy a songCard
+        player.setCoinBalance(2);
         player.setTimeline(new ArrayList<>());
 
         testGame.setPlayers(List.of(player));
 
-        // Assert that an exception is thrown when trying to buy a song card (from Player.java, line 50)
         Exception exception = assertThrows(IllegalStateException.class, () -> {
             gameService.buySongCard(testGame.getGameId(), player.getUserId());
         });

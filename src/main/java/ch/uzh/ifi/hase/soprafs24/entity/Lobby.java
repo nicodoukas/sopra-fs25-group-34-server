@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
-import ch.uzh.ifi.hase.soprafs24.entity.User;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +58,9 @@ public class Lobby implements Serializable {
     }
 
     public void setHost(User host) {
+        if (host == null) {
+            return;
+        }
         this.host = host;
         joinLobby(host);
     }

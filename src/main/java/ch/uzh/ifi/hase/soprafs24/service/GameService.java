@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -157,5 +158,30 @@ public class GameService {
 
         }
         userRepository.flush();
+    }
+
+    public Game updateActivePlayerPlacement(Game game, Integer placement) {
+        game.getCurrentRound().setActivePlayerPlacement(placement);
+        return game;
+    }
+
+    public Game updateChallengerPlacement(Game game, Integer placement) {
+        game.getCurrentRound().setChallengerPlacement(placement);
+        return game;
+    }
+
+    public boolean declinesChallenge(Long gameId, Long userId) {
+        Game game = getGameById(gameId);
+        Round round = game.getCurrentRound();
+        round.userDeclinesChallenge(userId);
+        Set<Long> declinedChallenge = round.getDeclinedChallenge();
+
+        List<Long> nonActivePlayerIds = game.getPlayers().stream()
+                .map(Player::getUserId)
+                .filter(id -> !id.equals(round.getActivePlayer().getUserId()))
+                .toList();
+
+        //if all players declined => return true, else false:
+        return declinedChallenge.containsAll(nonActivePlayerIds);
     }
 }

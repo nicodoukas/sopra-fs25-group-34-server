@@ -55,15 +55,17 @@ public class Player implements Serializable {
         }
         this.coinBalance -= 3;
 
+        // add a default song card
         SongCard defaultSongCard = new SongCard();
         defaultSongCard.setTitle("default");
         defaultSongCard.setArtist("default");
         defaultSongCard.setSongURL("default");
 
+        // with a random year between 1950 and 2025
         int randomYear = new Random().nextInt(2025 - 1950 + 1) + 1950;
         defaultSongCard.setYear(randomYear);
 
         this.timeline.add(defaultSongCard);
-        this.timeline.sort(Comparator.comparingInt(SongCard::getYear));
+        this.timeline.sort(Comparator.comparingInt(SongCard::getYear)); // sort the timeline so default card is inserted at correct position
     }
 }

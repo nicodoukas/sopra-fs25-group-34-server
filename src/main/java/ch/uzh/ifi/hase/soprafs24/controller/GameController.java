@@ -10,6 +10,7 @@ import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
 import ch.uzh.ifi.hase.soprafs24.entity.Round;
 import ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger;
+import ch.uzh.ifi.hase.soprafs24.websocket.RoundLockManager;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +28,13 @@ public class GameController {
 
     private final WebSocketMessenger webSocketMessenger;
 
-    GameController(GameService gameService, UserService userService, WebSocketMessenger webSocketMessenger) {
+    private final RoundLockManager roundLockManager;
+
+    GameController(GameService gameService, UserService userService, WebSocketMessenger webSocketMessenger, RoundLockManager roundLockManager) {
         this.gameService = gameService;
         this.userService = userService;
         this.webSocketMessenger = webSocketMessenger;
+        this.roundLockManager = roundLockManager;
     }
 
     @GetMapping("/games/{gameId}")
@@ -131,10 +135,18 @@ public class GameController {
     }
 
     @MessageMapping("/startNewRound")
-    public void startNewRound(String gameId){
-        Game game = gameService.getGameById(Long.valueOf(gameId));
+    public void startNewRound(@Payload Map<String, String> body){
+        Long id = Long.valueOf(body.get("gameId"));
+        String gameId = body.get("gameId");
+        Game game = gameService.getGameById(id);
+        int roundnr_sent = Integer.parseInt(body.get("roundNr"));
+        int roundnr_actual = game.getCurrentRound().getRoundNr();
+        if (!roundLockManager.tryLock(id) || (roundnr_sent != roundnr_actual)) {
+            return;
+        }
         gameService.startNewRound(game);
         webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
+        roundLockManager.unlock(id);
     }
 
     @MessageMapping("/delete")
@@ -147,9 +159,12 @@ public class GameController {
         webSocketMessenger.sendMessage("/games/"+lobbyId, "update-lobby", null);
     }
     @MessageMapping("/startchallenge")
-    public void startChallenge(String gameId){
-        webSocketMessenger.sendMessage("/games/"+gameId, "start-challenge", null);
+    public void startChallenge(PlacementMessage placementMessage){
+        Game game = gameService.getGameById(Long.valueOf(placementMessage.getGameId()));
+        game = gameService.updateActivePlayerPlacement(game, placementMessage.getPlacement());
+        webSocketMessenger.sendMessage("/games/"+placementMessage.getGameId(), "start-challenge", game);
     }
+
     @MessageMapping("/deleteGame")
     public void deleteGame(String gameId) {
         webSocketMessenger.sendMessage("/games/" + gameId, "delete-game", null);
@@ -169,7 +184,7 @@ public class GameController {
 
         if (round.getChallenger()==null){
             round.setChallenger(challenger);
-            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-accepted", userId);
+            webSocketMessenger.sendMessage("/games/"+gameId, "challenge-accepted", game);
         }
         else{
             webSocketMessenger.sendMessage("/games/"+gameId, "challenge-denied", userId);
@@ -182,4 +197,18 @@ public class GameController {
         webSocketMessenger.sendMessage("/games/" + gameId, "back-to-lobby", null);
     }
 
+    @MessageMapping("/userDeclinesChallenge")
+    public void userDeclinesChallenge(Map<String,String> body) {
+        Long gameId = Long.parseLong(body.get("gameId"));
+        Long userId = Long.parseLong(body.get("userId"));
+        boolean declined = gameService.declinesChallenge(gameId, userId);
+        if (declined){
+            webSocketMessenger.sendMessage("/games/" + gameId, "end-round", null);
+        }
+    }
+    @MessageMapping("/userAcceptsChallenge")
+    public void userAcceptsChallenge(Map<String, String> body){
+        Long gameId = Long.parseLong(body.get("gameId"));
+        webSocketMessenger.sendMessage("/games/" + gameId, "end-round", null);
+    }
 }
