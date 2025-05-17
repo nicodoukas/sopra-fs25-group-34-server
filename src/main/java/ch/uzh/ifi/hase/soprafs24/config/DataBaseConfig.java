@@ -41,7 +41,7 @@ public class DataBaseConfig {
         }
         catch (Exception e) {
             System.err.println("Error fetching DB_PASSWORD using Secret Manager: " + e.getMessage());
-            return null;
+            throw new IllegalStateException("Failed to retrieve DB password", e);
         }
     }
 }
