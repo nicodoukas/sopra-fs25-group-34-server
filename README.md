@@ -1,36 +1,74 @@
-# SoPra RESTful Service Template FS25
+# SoPra FS25 Group 34 Server - Hitster
 
-## Getting started with Spring Boot
--   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
--   Guides: http://spring.io/guides
-    -   Building a RESTful Web Service: http://spring.io/guides/gs/rest-service/
-    -   Building REST services with Spring: https://spring.io/guides/tutorials/rest/
+## Introduction
+If you love music, then Hitster is the game for you!
+Listen to the greatest hits of the past 100 years with your friends, 
+take turns arranging the songs in your timeline in chronological order, 
+all while taking a trip down memory lane!
+<br>
+Hitster combines the joy of listening to (mostly) great music and competing with your friends, to see who is the queen/king of music trivia. 
+And even if the music is not great, you can laugh about it with your friends.
+<br>
+We developed this digital version of Hitster so you can play with your friends, anywhere and anytime you want. 
+Nobody needs to own the physical game, you don't need to meet up in person and 
+by using a streaming service API, you are never going to run out of new songs to keep the game fresh.
+This way, we want to make the game as accessible as possible, while still being able to add new features and improvements.
+<br>
+<br>
+The rules are simple:
+1. Every player has his own timeline, initiated with one year.
+2. Play a snippet of a song for everyone to hear.
+3. Everyone can guess title and artist of the song to earn a coin.
+4. Place the song in the correct position in your timeline, based on its release year.
+5. Other players can challenge your placement if they think it is incorrect and place it at another
+   position.
+6. The player that placed it at the correct position, wins the card and it is placed in his own timeline.
+7. For 3 coins, you can buy a card into your timeline. Therefore, it is advantageous to guess title and
+   artist correctly.
+8. The game ends when the first player reaches 10 cards in his timeline.
 
-## Setup this Template with your IDE of choice
-Download your IDE of choice (e.g., [IntelliJ](https://www.jetbrains.com/idea/download/), [Visual Studio Code](https://code.visualstudio.com/), or [Eclipse](http://www.eclipse.org/downloads/)). Make sure Java 17 is installed on your system (for Windows, please make sure your `JAVA_HOME` environment variable is set to the correct version of Java).
+The primary goal of our Hitster application is to be fun, user-friendly 
+and to emulate the experience of playing the physical table-top game, while introducing new features and enhancements.
+This includes creating an intuitive and responsive user interface, while also being nice to look at. 
+Additionally, we need to ensure that the game works on Google Chrome, our target browser.
+The biggest upside of our digital version is the unlimited catalogue of songs. 
+The table-top version of this game contains a limited number of song-cards and can get repetitive after playing it a few times.
+By using Apple Music's huge library, our game stays fresh, even after many rounds.
 
-### IntelliJ
-If you consider to use IntelliJ as your IDE of choice, you can make use of your free educational license [here](https://www.jetbrains.com/community/education/#students).
-1. File -> Open... -> SoPra server template
-2. Accept to import the project as a `gradle project`
-3. To build right click the `build.gradle` file and choose `Run Build`
+## Table of Contents
+1. Introduction
+2. Technologies
+3. High-level components
+4. Launch & Deployment
+5. Roadmap
+6. Authors & Acknowledgement
+7. License
+8. Maybe UML diagrams
 
-### VS Code
-The following extensions can help you get started more easily:
--   `vmware.vscode-spring-boot`
--   `vscjava.vscode-spring-initializr`
--   `vscjava.vscode-spring-boot-dashboard`
--   `vscjava.vscode-java-pack`
+## Technologies
+- Java & Spring Boot Framework: This project uses java as main programming language and uses the Spring Boot Framework
+- JPA: used to persist data to database
+- Google Cloud: handling server deployment
+- Vercel: handling client deployment and hosting client
+- REST: used for communication between client and server
+- SonarQube: measures Code Quality
+- Docker: used to simplify building, testing and deploying application
+- Websockets: used for real-time updating of client, using STOMP (Messaging Protocol)
+- Apple Music API: used to fetch playlists containing the greatest hits of a decade and corresponding song metadata (Title, Artist, Release Year...)
 
-**Note:** You'll need to build the project first with Gradle, just click on the `build` command in the _Gradle Tasks_ extension. Then check the _Spring Boot Dashboard_ extension if it already shows `soprafs24` and hit the play button to start the server. If it doesn't show up, restart VS Code and check again.
+## High-level components
+- [LobbyController](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/controller/LobbyController.java): Handles the lobby logic, such as inviting a user to a lobby. Also serves as waiting room before the game starts.
+- [GameController](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/controller/GameController.java): Handles the entire game logic, with functions such as checking if a player's placement or guess is correct or updating the player (for example inserting a SongCard into their timeline or adding a coin to their balance).
+- [APIController](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/controller/APIController.java): Handles fetching of the playlists and songs directly from Apple Music's Library and directly converting them into a SongCard entity, which is used for every round of a game.
+- [WebSocketMessenger](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/websocket/WebSocketMessenger.java): Allows for real-time interaction between clients. Used for all WebSocket endpoints & functions, such as playing the same audio simultaneously on different clients.
 
-## Building with Gradle
-You can use the local Gradle Wrapper to build the application.
+## Launch & Deployment
+After cloning this GitHub repository locally on your own machine, the following steps can be taken to build the application:
+
+### Use the local Gradle Wrapper to build the application:
 -   macOS: `./gradlew`
 -   Linux: `./gradlew`
 -   Windows: `./gradlew.bat`
-
-More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html) and [Gradle](https://gradle.org/docs/).
 
 ### Build
 
@@ -52,36 +90,39 @@ You can verify that the server is running by visiting `localhost:8080` in your b
 ./gradlew test
 ```
 
-### Development Mode
-You can start the backend in development mode, this will automatically trigger a new build and reload the application
-once the content of a file has been changed.
+### Releases
 
-Start two terminal windows and run:
+You will work in your own branch, where you can work on your issues locally and freely commit and push to GitHub. 
+If you want to merge your contributions to the main branch, open a new merge request for other group members to check out and accept.
 
-`./gradlew build --continuous`
+## Roadmap
+### Our next 3 features to be implemented:
+### 1. Global Leaderboard
+On the server side, this includes adding statistics for each user and corresponding functions to calculate and save them to the user during/after a game.
+These statistics include:
+- Nr. of Games played
+- Nr. of Games won
+- Win rate
+- Percentage of correct Title & Artist guesses
+- Average timeline length at the end of a game
 
-and in the other one:
+### 2. Game History
+On the server side, this means persisting all games to an external database, as we only save them in memory right now and delete them after finishing.
+Additionally, new fields and functions must be added to the player and game, such as their rank in the game, game length and date of the game.
 
-`./gradlew bootRun`
+### 3. Individual profile picture
+On the server side, this includes adjusting our current ProfilePicture handling to allow the upload and persist external non-predefined images to the database.
 
-If you want to avoid running all tests with every change, use the following command instead:
+## Authors & Acknowledgement
+- [Julia Würsch](https://github.com/monolino)
+- [Anja Lindenmann](https://github.com/AnchaXD)
+- [Nico Doukas](https://github.com/nicodoukas)
+- [Philip Keller](https://github.com/phikell)
 
-`./gradlew build --continuous -xtest`
+We would like to thank our TA, Diyar Taskiran, for his continuous support throughout the development of this project.
+Additional thanks go out to the SoPra FS25 organizing staff for making this project prossible.
 
-## API Endpoint Testing with Postman
-We recommend using [Postman](https://www.getpostman.com) to test your API Endpoints.
+## License
+[Apache-2.0 License](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/LICENSE)
 
-## Debugging
-If something is not working and/or you don't know what is going on. We recommend using a debugger and step-through the process step-by-step.
-
-To configure a debugger for SpringBoot's Tomcat servlet (i.e. the process you start with `./gradlew bootRun` command), do the following:
-
-1. Open Tab: **Run**/Edit Configurations
-2. Add a new Remote Configuration and name it properly
-3. Start the Server in Debug mode: `./gradlew bootRun --debug-jvm`
-4. Press `Shift + F9` or the use **Run**/Debug "Name of your task"
-5. Set breakpoints in the application where you need it
-6. Step through the process one step at a time
-
-## Testing
-Have a look here: https://www.baeldung.com/spring-boot-testing
+## maybe insert UML diagrams
