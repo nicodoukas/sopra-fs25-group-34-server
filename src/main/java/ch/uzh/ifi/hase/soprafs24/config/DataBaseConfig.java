@@ -10,8 +10,8 @@ import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Profile;
 
-@Configuration
-@Profile("prod")
+//@Configuration
+//@Profile("prod")
 public class DataBaseConfig {
 
     @Bean
