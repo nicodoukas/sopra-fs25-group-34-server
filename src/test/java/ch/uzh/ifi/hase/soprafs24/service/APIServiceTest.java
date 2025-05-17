@@ -13,12 +13,13 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 
 
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@ActiveProfiles("test")
 public class APIServiceTest {
     @Mock
     private WebClient.Builder webClientBuilder;

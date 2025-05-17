@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.*;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * Tests if the mapping between the internal and the external/API representation
  * works.
  */
+@ActiveProfiles("test")
 public class DTOMapperTest {
     @Test
     public void test_convertUserPostDTOtoEntity_success() {
