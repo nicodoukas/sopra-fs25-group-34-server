@@ -9,6 +9,7 @@ import ch.uzh.ifi.hase.soprafs24.storage.LobbyStorage;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ActiveProfiles("test")
 public class LobbyServiceIntegrationTest {
 
     @Autowired

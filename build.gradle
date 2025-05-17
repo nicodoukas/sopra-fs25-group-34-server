@@ -80,6 +80,7 @@ test {
     useJUnitPlatform()
     testLogging.showStandardStreams = true
     maxParallelForks = 1
+    systemProperty 'spring.profiles.active', 'test'
 }
 
 File secretPropsFile = file('./local.properties')
