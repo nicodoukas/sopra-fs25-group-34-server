@@ -1,7 +1,9 @@
 package ch.uzh.ifi.hase.soprafs24.service;
 
 import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs24.entity.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs24.entity.User;
+import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +36,17 @@ public class UserServiceIntegrationTest {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private PictureRepository pictureRepository;
+
   @BeforeEach
   public void setup() {
+      if (pictureRepository.count() == 0) {
+          ProfilePicture profilePicture = new ProfilePicture();
+          profilePicture.setId(1L);
+          profilePicture.setUrl("https://img.freepik.com/premium-vector/profile-icon_838328-1033.jpg");
+          pictureRepository.saveAndFlush(profilePicture);
+      }
     userRepository.deleteAll();
   }
 
