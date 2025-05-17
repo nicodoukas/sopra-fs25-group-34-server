@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.server.ResponseStatusException;
+import ch.uzh.ifi.hase.soprafs24.websocket.RoundLockManager;
 
 import java.util.List;
 import java.util.Queue;
@@ -50,6 +51,9 @@ public class GameControllerGetTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private RoundLockManager roundLockManager;
 
     private Game game;
 

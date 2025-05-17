@@ -6,6 +6,7 @@ import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
 import ch.uzh.ifi.hase.soprafs24.service.GameService;
 import ch.uzh.ifi.hase.soprafs24.service.UserService;
+import ch.uzh.ifi.hase.soprafs24.websocket.RoundLockManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,9 @@ public class GameControllerPutTest {
 
     @MockBean
     private PictureRepository pictureRepository;
+
+    @MockBean
+    private RoundLockManager roundLockManager;
 
     @MockBean
     private GameService gameService;

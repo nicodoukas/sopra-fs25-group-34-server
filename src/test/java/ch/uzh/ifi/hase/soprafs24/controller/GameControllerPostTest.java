@@ -11,6 +11,7 @@ import ch.uzh.ifi.hase.soprafs24.rest.dto.GuessPostDTO;
 import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Round;
 import ch.uzh.ifi.hase.soprafs24.entity.Guess;
+import ch.uzh.ifi.hase.soprafs24.websocket.RoundLockManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,9 @@ public class GameControllerPostTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private RoundLockManager roundLockManager;
 
     @MockBean
     private ch.uzh.ifi.hase.soprafs24.websocket.WebSocketMessenger webSocketMessenger;
