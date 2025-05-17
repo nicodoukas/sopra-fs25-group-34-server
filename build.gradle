@@ -53,6 +53,9 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-secretmanager:2.31.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'com.google.cloud.sql:postgres-socket-factory:1.17.0'
 }
 
 bootJar {
