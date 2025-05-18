@@ -3,8 +3,7 @@ import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.GameStorage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +16,7 @@ import java.util.Set;
 @Transactional
 public class GameService {
 
-    // TODO: at the moment we log nothing here - remove logger or actually log activities?
-    private final Logger log = LoggerFactory.getLogger(GameService.class);
-
     private final GameStorage gameStorage;
-    // TODO: we also do not need the userRepository, remove if we wont need in future
     private final UserRepository userRepository;
     private final APIHandler apiHandler;
     private final LobbyService lobbyService;
@@ -116,7 +111,6 @@ public class GameService {
         return game;
     }
 
-    // TODO: depending on how we use it, we need to refactor this to get only the gameId and not the game? or to return the round instead of the whole game?
     public Game startNewRound(Game game) {
         SongCard newSongCard = apiHandler.getNewSongCard();
         game.startNewRound(newSongCard);
