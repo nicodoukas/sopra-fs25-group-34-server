@@ -99,8 +99,38 @@ public class UserControllerPutTest {
         Mockito.verify(userService, Mockito.times(1)).setStatusToPlaying(userId);
     }
 
+  // PUT /logout
+  @Test
+  public void logout_success() throws Exception {
+      Long userId = 1L;
 
-  // DELETE /users/{userId}/friends/{userId2} success
+      Mockito.doNothing().when(userService).logout(userId);
+
+      MockHttpServletRequestBuilder putRequest = put("/logout")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(userId.toString());
+
+      mockMvc.perform(putRequest)
+              .andExpect(status().isNoContent());
+
+      Mockito.verify(userService, Mockito.times(1)).logout(userId);
+  }
+
+    @Test
+  public void logout_userNotFound_throwsNotFound() throws Exception {
+      Long userId = 1L;
+
+      Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
+              .when(userService).logout(userId);
+
+      MockHttpServletRequestBuilder putRequest = put("/logout")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(userId.toString());
+
+      mockMvc.perform(putRequest).andExpect(status().isNotFound());
+  }
+
+    // DELETE /users/{userId}/friends/{userId2} success
   @Test
   public void deleteFriend_existingUser_success() throws Exception {
     User user = new User();

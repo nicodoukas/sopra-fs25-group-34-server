@@ -198,4 +198,71 @@ public class UserControllerPostTest {
     mockMvc.perform(postRequest)
             .andExpect(status().isNotFound());
   }
+
+    // POST /login
+  @Test
+  public void login_success() throws Exception {
+      User user = new User();
+      user.setId(1L);
+      user.setUsername("testUsername");
+      user.setPassword("testPassword");
+      user.setStatus(UserStatus.ONLINE);
+      user.setCreation_date(new Date());
+      user.setBirthday(new Date());
+
+      UserPostDTO userPostDTO = new UserPostDTO();
+      userPostDTO.setUsername("testUsername");
+      userPostDTO.setPassword("testPassword");
+
+      given(userService.getUserByUsername("testUsername")).willReturn(user);
+      Mockito.doNothing().when(userService).login(user.getId());
+
+      MockHttpServletRequestBuilder postRequest = post("/login")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(ControllerTestUtils.asJsonString(userPostDTO));
+
+      mockMvc.perform(postRequest)
+              .andExpect(status().isAccepted())
+              .andExpect(jsonPath("$.id", is(user.getId().intValue())))
+              .andExpect(jsonPath("$.username", is(user.getUsername())))
+              .andExpect(jsonPath("$.status", is(user.getStatus().toString())));
+  }
+
+  @Test
+  public void login_invalidPassword_throwsUnauthorized() throws Exception {
+      User user = new User();
+      user.setId(1L);
+      user.setUsername("testUsername");
+      user.setPassword("testPassword");
+
+      UserPostDTO userPostDTO = new UserPostDTO();
+      userPostDTO.setUsername("testUsername");
+      userPostDTO.setPassword("wrongPassword");
+
+      given(userService.getUserByUsername("testUsername")).willReturn(user);
+
+      MockHttpServletRequestBuilder postRequest = post("/login")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(ControllerTestUtils.asJsonString(userPostDTO));
+
+      mockMvc.perform(postRequest)
+              .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void login_nonExistentUser_throwsNotFound() throws Exception {
+      UserPostDTO userPostDTO = new UserPostDTO();
+      userPostDTO.setUsername("nonExistentUser");
+      userPostDTO.setPassword("testPassword");
+
+      given(userService.getUserByUsername("nonExistentUser"))
+              .willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+      MockHttpServletRequestBuilder postRequest = post("/login")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(ControllerTestUtils.asJsonString(userPostDTO));
+
+      mockMvc.perform(postRequest).andExpect(status().isNotFound());
+  }
+
 }

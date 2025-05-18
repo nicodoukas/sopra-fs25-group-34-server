@@ -626,4 +626,23 @@ public class DTOMapperTest {
         assertNull(guess.getPlayer());
     }
 
+    @Test
+    public void test_PlacementMessage_success() {
+        PlacementMessage placementMessage = new PlacementMessage();
+        String gameId = "1";
+        Integer placement = 2;
+        placementMessage.setGameId(gameId);
+        placementMessage.setPlacement(placement);
+        assertEquals(gameId, placementMessage.getGameId());
+        assertEquals(placement, placementMessage.getPlacement());
+    }
+    @Test
+    public void test_PlacementMessage_failure() {
+        PlacementMessage placementMessage = new PlacementMessage();
+        placementMessage.setGameId(null);
+        placementMessage.setPlacement(null);
+        assertNull(placementMessage.getGameId());
+        assertNull(placementMessage.getPlacement());
+    }
+
 }
