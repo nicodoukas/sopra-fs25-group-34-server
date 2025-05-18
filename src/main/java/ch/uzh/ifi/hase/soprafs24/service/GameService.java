@@ -140,6 +140,7 @@ public class GameService {
         }
         else {
             game.leaveGame(user);
+            lobbyService.leaveOrDeleteLobby(gameId, userId);
 
             //if the leaving player was the active player -> new round with next player as active player
             if (game.getCurrentRound().getActivePlayer().getUserId().equals(userId)) {
