@@ -18,6 +18,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 
 import java.util.Map;
+import java.util.List;
 
 @RestController
 public class GameController {
@@ -69,10 +70,31 @@ public class GameController {
                                      @PathVariable Long userId,
                                      @RequestBody PlayerPutDTO playerPutDTO) {
         Player updatedPlayer;
+        Round currentRound = gameService.getGameById(gameId).getCurrentRound();
         // You call this function from the client either to add a coin, or to update the timeline
         if (playerPutDTO.getAddCoin()) {
             updatedPlayer = gameService.addCoinToPlayer(gameId, userId);
-        } else {
+        } else if (userId != currentRound.getActivePlayer().getUserId()){
+            // find correct position to insert songCard into own timeline
+            Player currentPlayer = gameService.getPlayerInGame(gameId, userId);
+            List<SongCard> timeline = currentPlayer.getTimeline();
+            SongCard newCard = playerPutDTO.getSongCard();
+            int insertPosition = 0;
+
+            for (int i = 0; i < timeline.size(); i++) {
+                if (newCard.getYear() < timeline.get(i).getYear()) {
+                    break;
+                }
+                insertPosition++;
+            }
+            updatedPlayer = gameService.insertSongCardIntoTimeline(
+                gameId,
+                userId,
+                newCard,
+                insertPosition
+            );
+        }
+        else {
             updatedPlayer = gameService.insertSongCardIntoTimeline(
                     gameId,
                     userId,
@@ -207,8 +229,8 @@ public class GameController {
         }
     }
     @MessageMapping("/userAcceptsChallenge")
-    public void userAcceptsChallenge(Map<String, String> body){
-        Long gameId = Long.parseLong(body.get("gameId"));
+    public void userAcceptsChallenge(String gameId_string){
+        Long gameId = Long.parseLong(gameId_string);
         webSocketMessenger.sendMessage("/games/" + gameId, "end-round", null);
     }
 }
