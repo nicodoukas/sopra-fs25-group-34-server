@@ -15,6 +15,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 
@@ -106,5 +109,73 @@ public class LobbyServiceTest {
         assertTrue(user.getOpenLobbyInvitations().isEmpty());
     }
 
+    @Test
+    public void leaveOrDeleteLobby_hostLeaves_deletesLobbyAndUpdatesMembers() {
+        User hostUser = new User();
+        hostUser.setId(1L);
+        hostUser.setLobbyId(1L);
+
+        User member1 = new User();
+        member1.setId(2L);
+        member1.setLobbyId(1L);
+
+        User member2 = new User();
+        member2.setId(3L);
+        member2.setLobbyId(1L);
+
+        Lobby lobby = new Lobby();
+        lobby.setLobbyId(1L);
+        lobby.setHost(hostUser);
+        lobby.setMembers(List.of(hostUser, member1, member2));
+
+        Mockito.when(lobbyStorage.getLobbyById(1L)).thenReturn(lobby);
+        Mockito.when(userService.getUserById(1L)).thenReturn(hostUser);
+        Mockito.when(userService.getUserById(2L)).thenReturn(member1);
+        Mockito.when(userService.getUserById(3L)).thenReturn(member2);
+
+        lobbyService.leaveOrDeleteLobby(1L, 1L);
+
+        Mockito.verify(userRepository, Mockito.times(1)).save(hostUser);
+        Mockito.verify(userRepository, Mockito.times(1)).save(member1);
+        Mockito.verify(userRepository, Mockito.times(1)).save(member2);
+        Mockito.verify(lobbyStorage, Mockito.times(1)).deleteLobby(1L);
+        Mockito.verify(userRepository, Mockito.times(1)).flush();
+
+        assertNull(hostUser.getLobbyId());
+        assertNull(member1.getLobbyId());
+        assertNull(member2.getLobbyId());
+    }
+
+    @Test
+    public void leaveOrDeleteLobby_memberLeaves_updatesMemberAndLobby() {
+        User hostUser = new User();
+        hostUser.setId(1L);
+        hostUser.setLobbyId(1L);
+
+        User member1 = new User();
+        member1.setId(2L);
+        member1.setLobbyId(1L);
+
+        User member2 = new User();
+        member2.setId(3L);
+        member2.setLobbyId(1L);
+
+        Lobby lobby = new Lobby();
+        lobby.setLobbyId(1L);
+        lobby.setHost(hostUser);
+        lobby.setMembers(new ArrayList<>(List.of(hostUser, member1, member2)));
+
+        Mockito.when(lobbyStorage.getLobbyById(1L)).thenReturn(lobby);
+        Mockito.when(userService.getUserById(2L)).thenReturn(member1);
+
+        lobbyService.leaveOrDeleteLobby(1L, 2L);
+
+        Mockito.verify(userRepository, Mockito.times(1)).save(member1);
+        Mockito.verify(lobbyStorage, Mockito.never()).deleteLobby(1L);
+        Mockito.verify(userRepository, Mockito.times(1)).flush();
+
+        assertNull(member1.getLobbyId());
+        assertFalse(lobby.getMembers().contains(member1));
+    }
 
 }
