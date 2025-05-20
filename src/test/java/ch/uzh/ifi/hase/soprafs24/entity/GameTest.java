@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs24.entity;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,7 +9,6 @@ import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ActiveProfiles("test")
 public class GameTest {
 
     @Test

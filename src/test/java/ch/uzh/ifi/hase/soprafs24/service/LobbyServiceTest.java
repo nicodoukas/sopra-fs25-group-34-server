@@ -13,12 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 
-@ActiveProfiles("test")
 public class LobbyServiceTest {
     @Mock
     private LobbyStorage lobbyStorage;

@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs24.controller;
 
+import ch.uzh.ifi.hase.soprafs24.entity.Game;
 import ch.uzh.ifi.hase.soprafs24.entity.Player;
+import ch.uzh.ifi.hase.soprafs24.entity.Round;
 import ch.uzh.ifi.hase.soprafs24.entity.SongCard;
 import ch.uzh.ifi.hase.soprafs24.repository.PictureRepository;
 import ch.uzh.ifi.hase.soprafs24.rest.dto.PlayerPutDTO;
@@ -17,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -28,7 +29,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(GameController.class)
-@ActiveProfiles("test")
 public class GameControllerPutTest {
 
     @Autowired
@@ -53,6 +53,7 @@ public class GameControllerPutTest {
 
     private Player mockPlayer;
     private SongCard mockSongCard;
+    private Game mockGame;
 
     @BeforeEach
     public void setup() {
@@ -70,6 +71,15 @@ public class GameControllerPutTest {
         mockPlayer.setUsername("testUsername");
         mockPlayer.setCoinBalance(2);
         mockPlayer.setTimeline(List.of(mockSongCard));
+
+        mockGame = new Game();
+        mockGame.setGameId(10L);
+        mockGame.setPlayers(List.of(mockPlayer));
+        mockGame.setCurrentRound(new Round());
+        mockGame.getCurrentRound().setActivePlayer(mockPlayer);
+
+
+        Mockito.when(gameService.getGameById(10L)).thenReturn(mockGame);
     }
 
 
