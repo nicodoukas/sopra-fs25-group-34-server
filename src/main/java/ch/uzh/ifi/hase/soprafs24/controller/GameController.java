@@ -166,6 +166,12 @@ public class GameController {
         if (!roundLockManager.tryLock(id) || (roundnr_sent != roundnr_actual)) {
             return;
         }
+        if (gameService.isFinished(game)){
+            webSocketMessenger.sendMessage("/games/"+gameId, "delete-game", null);
+            gameService.leaveOrDeleteGame(id, game.getHost().getUserId());
+            roundLockManager.unlock(id);
+            return;
+        }
         gameService.startNewRound(game);
         webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
         roundLockManager.unlock(id);

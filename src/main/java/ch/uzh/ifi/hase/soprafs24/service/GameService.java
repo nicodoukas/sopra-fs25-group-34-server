@@ -179,4 +179,13 @@ public class GameService {
         //if all players declined => return true, else false:
         return declinedChallenge.containsAll(nonActivePlayerIds);
     }
+    public boolean isFinished(Game game){
+        Round round = game.getCurrentRound();
+        Player active = round.getActivePlayer();
+        Player challenger = roung.getChallenger();
+        if (active.getTimeline().size()==10 || challenger.getTimeline().size()==10){
+            return true;
+        }
+        return false;
+    }
 }
