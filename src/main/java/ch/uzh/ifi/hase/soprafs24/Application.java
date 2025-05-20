@@ -37,7 +37,7 @@ public class Application {
     };
   }
 
-  //store predefined profilepictures
+    //store predefined profilepictures
     @Bean
     public CommandLineRunner seedProfilePictures(PictureRepository pictureRepository) {
         return args -> {
