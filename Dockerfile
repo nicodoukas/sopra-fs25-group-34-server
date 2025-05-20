@@ -11,7 +11,7 @@ COPY settings.gradle .
 COPY src ./src
 
 # Run the Gradle build to generate the .jar
-RUN gradle clean build
+RUN gradle clean build ---refresh-dependencies
 
 # Step 2: Create the runtime image with the JAR
 FROM eclipse-temurin:17-jdk
