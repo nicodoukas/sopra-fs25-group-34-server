@@ -111,6 +111,10 @@ public class GameController {
     public PlayerGetDTO buySongCard(@PathVariable Long gameId, @RequestBody String userId) {
         Long userIdLong = Long.valueOf(userId);
         Player updatedPlayer = gameService.buySongCard(gameId, userIdLong);
+        Game game = gameService.getGameById(gameId);
+        if (gameService.isFinished(game)){
+            webSocketMessenger.sendMessage("/games/" + gameId, "delete-game", null);
+        }
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
     }
 
