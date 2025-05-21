@@ -111,6 +111,10 @@ public class GameController {
     public PlayerGetDTO buySongCard(@PathVariable Long gameId, @RequestBody String userId) {
         Long userIdLong = Long.valueOf(userId);
         Player updatedPlayer = gameService.buySongCard(gameId, userIdLong);
+        Game game = gameService.getGameById(gameId);
+        if (gameService.isFinished(game)){
+            webSocketMessenger.sendMessage("/games/" + gameId, "delete-game", null);
+        }
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(updatedPlayer);
     }
 
@@ -164,6 +168,12 @@ public class GameController {
         int roundnr_sent = Integer.parseInt(body.get("roundNr"));
         int roundnr_actual = game.getCurrentRound().getRoundNr();
         if (!roundLockManager.tryLock(id) || (roundnr_sent != roundnr_actual)) {
+            return;
+        }
+        if (gameService.isFinished(game)){
+            webSocketMessenger.sendMessage("/games/"+gameId, "delete-game", null);
+            gameService.leaveOrDeleteGame(id, game.getHost().getUserId());
+            roundLockManager.unlock(id);
             return;
         }
         gameService.startNewRound(game);

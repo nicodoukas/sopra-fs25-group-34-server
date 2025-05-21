@@ -179,4 +179,12 @@ public class GameService {
         //if all players declined => return true, else false:
         return declinedChallenge.containsAll(nonActivePlayerIds);
     }
+    public boolean isFinished(Game game){
+        for (Player player : game.getPlayers()){
+            if (player.getTimeline().size()==10){
+                return true;
+            }
+        }
+        return false;
+    }
 }
