@@ -59,7 +59,7 @@ By using Apple Music's huge library, our game stays fresh, even after many round
 ## High-level components
 - [LobbyController](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/controller/LobbyController.java): Handles the lobby logic, such as inviting a user to a lobby. Also serves as waiting room before the game starts.
 - [GameController](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/controller/GameController.java): Handles the entire game logic, with functions such as checking if a player's placement or guess is correct or updating the player (for example inserting a SongCard into their timeline or adding a coin to their balance).
-- [APIController](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/controller/APIController.java): Handles fetching of the playlists and songs directly from Apple Music's Library and directly converting them into a SongCard entity, which is used for every round of a game.
+- [APIService](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/service/APIService.java): Handles fetching of the playlists and songs directly from Apple Music's Library and directly converting them into a SongCard entity, which is used for every round of a game.
 - [WebSocketMessenger](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/src/main/java/ch/uzh/ifi/hase/soprafs24/websocket/WebSocketMessenger.java): Allows for real-time interaction between clients. Used for all WebSocket endpoints & functions, such as playing the same audio simultaneously on different clients.
 
 ## Launch & Deployment
