@@ -181,7 +181,7 @@ public class GameService {
     }
     public boolean isFinished(Game game){
         for (Player player : game.getPlayers()){
-            if (player.getTimeline().size()==10){
+            if (player.getTimeline().size() >= 10){
                 return true;
             }
         }
