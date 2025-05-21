@@ -112,6 +112,7 @@ public class GameController {
         Long userIdLong = Long.valueOf(userId);
         Player updatedPlayer = gameService.buySongCard(gameId, userIdLong);
         Game game = gameService.getGameById(gameId);
+        System.out.println(gameService.isFinished(game));
         if (gameService.isFinished(game)){
             webSocketMessenger.sendMessage("/games/" + gameId, "delete-game", null);
         }
@@ -170,9 +171,9 @@ public class GameController {
         if (!roundLockManager.tryLock(id) || (roundnr_sent != roundnr_actual)) {
             return;
         }
+        System.out.println("Round: " + roundnr_actual + " isFinished? "+ gameService.isFinished(game));
         if (gameService.isFinished(game)){
             webSocketMessenger.sendMessage("/games/"+gameId, "delete-game", null);
-            gameService.leaveOrDeleteGame(id, game.getHost().getUserId());
             roundLockManager.unlock(id);
             return;
         }
