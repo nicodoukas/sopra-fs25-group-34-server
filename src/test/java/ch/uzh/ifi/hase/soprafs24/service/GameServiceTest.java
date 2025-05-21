@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs24.service;
 import ch.uzh.ifi.hase.soprafs24.entity.*;
 import ch.uzh.ifi.hase.soprafs24.repository.UserRepository;
 import ch.uzh.ifi.hase.soprafs24.storage.GameStorage;
+import ch.uzh.ifi.hase.soprafs24.constant.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -300,5 +301,139 @@ public class GameServiceTest {
         assertEquals(0, player.getTimeline().size(), "Timeline should remain empty");
     }
 
+    @Test
+    public void leaveOrDeleteGame_hostDeletesGame_success() {
+        User hostUser = new User();
+        hostUser.setId(1L);
+        hostUser.setStatus(UserStatus.PLAYING);
+
+        Player hostPlayer = new Player();
+        hostPlayer.setUserId(1L);
+
+        Player otherPlayer = new Player();
+        otherPlayer.setUserId(2L);
+
+        User otherUser = new User();
+        otherUser.setId(2L);
+        otherUser.setStatus(UserStatus.PLAYING);
+
+        List<Player> players = List.of(hostPlayer, otherPlayer);
+        testGame.setPlayers(players);
+        testGame.setHost(hostPlayer);
+
+        Mockito.when(userService.getUserById(1L)).thenReturn(hostUser);
+        Mockito.when(userService.getUserById(2L)).thenReturn(otherUser);
+
+        gameService.leaveOrDeleteGame(testGame.getGameId(), hostUser.getId());
+
+        Mockito.verify(userRepository, Mockito.times(2)).save(Mockito.any(User.class));
+        Mockito.verify(gameStorage, Mockito.times(1)).deleteGame(testGame.getGameId());
+        assertEquals(UserStatus.ONLINE, hostUser.getStatus());
+        assertEquals(UserStatus.ONLINE, otherUser.getStatus());
+    }
+
+    @Test
+    public void leaveOrDeleteGame_playerLeavesGame_success() {
+        User hostUser = new User();
+        hostUser.setId(1L);
+        hostUser.setStatus(UserStatus.PLAYING);
+
+        Player hostPlayer = new Player();
+        hostPlayer.setUserId(1L);
+
+        Player leavingPlayer = new Player();
+        leavingPlayer.setUserId(2L);
+
+        User leavingUser = new User();
+        leavingUser.setId(2L);
+        leavingUser.setStatus(UserStatus.PLAYING);
+
+        List<Player> players = new ArrayList<>(List.of(hostPlayer, leavingPlayer));
+        testGame.setPlayers(players);
+        testGame.setHost(hostPlayer);
+
+        Round round = new Round();
+        round.setActivePlayer(hostPlayer);
+        testGame.setCurrentRound(round);
+
+        Mockito.when(userService.getUserById(1L)).thenReturn(hostUser);
+        Mockito.when(userService.getUserById(2L)).thenReturn(leavingUser);
+
+        gameService.leaveOrDeleteGame(testGame.getGameId(), leavingUser.getId());
+
+        Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
+        Mockito.verify(gameStorage, Mockito.never()).deleteGame(Mockito.anyLong());
+        assertEquals(UserStatus.ONLINE, leavingUser.getStatus());
+        assertNull(leavingUser.getLobbyId());
+        assertFalse(testGame.getPlayers().contains(leavingPlayer));
+    }
+
+
+    @Test
+    public void updateActivePlayerPlacement_success() {
+        Round round = new Round();
+        round.setActivePlayerPlacement(0);
+        testGame.setCurrentRound(round);
+
+        Game updatedGame = gameService.updateActivePlayerPlacement(testGame, 2);
+        assertEquals(2, updatedGame.getCurrentRound().getActivePlayerPlacement());
+    }
+
+    @Test
+    public void updateChallengerPlacement_success() {
+        Round round = new Round();
+        round.setChallengerPlacement(0);
+        testGame.setCurrentRound(round);
+
+        Game updatedGame = gameService.updateChallengerPlacement(testGame, 1);
+        assertEquals(1, updatedGame.getCurrentRound().getChallengerPlacement());
+    }
+
+    @Test
+    public void declinesChallenge_allPlayersDeclined_returnsTrue() {
+        Player activePlayer = new Player();
+        activePlayer.setUserId(1L);
+
+        Player challenger1 = new Player();
+        challenger1.setUserId(2L);
+
+        Player challenger2 = new Player();
+        challenger2.setUserId(3L);
+
+        List<Player> players = List.of(activePlayer, challenger1, challenger2);
+        testGame.setPlayers(players);
+
+        Round round = new Round();
+        round.setActivePlayer(activePlayer);
+        round.userDeclinesChallenge(2L);
+
+        testGame.setCurrentRound(round);
+
+        boolean result = gameService.declinesChallenge(testGame.getGameId(), 3L);
+        assertTrue(result);
+    }
+
+    @Test
+    public void declinesChallenge_notAllPlayersDeclined_returnsFalse() {
+        Player activePlayer = new Player();
+        activePlayer.setUserId(1L);
+
+        Player challenger1 = new Player();
+        challenger1.setUserId(2L);
+
+        Player challenger2 = new Player();
+        challenger2.setUserId(3L);
+
+        List<Player> players = List.of(activePlayer, challenger1, challenger2);
+        testGame.setPlayers(players);
+
+        Round round = new Round();
+        round.setActivePlayer(activePlayer);
+
+        testGame.setCurrentRound(round);
+
+        boolean result = gameService.declinesChallenge(testGame.getGameId(), 3L);
+        assertFalse(result);
+    }
 
 }
