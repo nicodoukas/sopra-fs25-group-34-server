@@ -168,18 +168,13 @@ public class GameController {
         Game game = gameService.getGameById(id);
         int roundnr_sent = Integer.parseInt(body.get("roundNr"));
         int roundnr_actual = game.getCurrentRound().getRoundNr();
-        if (!roundLockManager.tryLock(id) || (roundnr_sent != roundnr_actual)) {
-            return;
-        }
         System.out.println("Round: " + roundnr_actual + " isFinished? "+ gameService.isFinished(game));
         if (gameService.isFinished(game)){
             webSocketMessenger.sendMessage("/games/"+gameId, "delete-game", null);
-            roundLockManager.unlock(id);
             return;
         }
         gameService.startNewRound(game);
         webSocketMessenger.sendMessage("/games/"+gameId, "start-new-round", null);
-        roundLockManager.unlock(id);
     }
 
     @MessageMapping("/delete")
