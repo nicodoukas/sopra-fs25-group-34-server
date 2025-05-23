@@ -124,5 +124,3 @@ Additional thanks go out to the SoPra FS25 organizing staff for making this proj
 
 ## License
 [Apache-2.0 License](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/LICENSE)
-
-## maybe insert UML diagrams
