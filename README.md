@@ -113,6 +113,11 @@ Additionally, new fields and functions must be added to the player and game, suc
 ### 3. Individual profile picture
 On the server side, this includes adjusting our current ProfilePicture handling to allow the upload and persist external non-predefined images to the database.
 
+### 4. Adequate function to check correctness of guesses
+Right now, when guessing the Title and Artist of a Song, the spelling is very sensitive when it comes to special characters, which we would like to make more flexible.
+For example, for the song title "Don't Look Back in Anger", the guess "Dont Look Back in Anger" is wrong, which can be frustrating.
+This task includes writing a function that checks for equivalence of two strings in a more flexible way.
+
 ## Authors & Acknowledgement
 - [Julia Würsch](https://github.com/monolino)
 - [Anja Lindenmann](https://github.com/AnchaXD)
@@ -120,7 +125,7 @@ On the server side, this includes adjusting our current ProfilePicture handling 
 - [Philip Keller](https://github.com/phikell)
 
 We would like to thank our TA, Diyar Taskiran, for his continuous support throughout the development of this project.
-Additional thanks go out to the SoPra FS25 organizing staff for making this project prossible.
+Additional thanks go out to the SoPra FS25 organizing staff for making this project possible.
 
 ## License
 [Apache-2.0 License](https://github.com/nicodoukas/sopra-fs25-group-34-server/blob/main/LICENSE)
