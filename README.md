@@ -43,7 +43,6 @@ By using Apple Music's huge library, our game stays fresh, even after many round
 5. Roadmap
 6. Authors & Acknowledgement
 7. License
-8. Maybe UML diagrams
 
 ## Technologies
 - Java & Spring Boot Framework: This project uses java as main programming language and uses the Spring Boot Framework
@@ -96,7 +95,7 @@ You will work in your own branch, where you can work on your issues locally and 
 If you want to merge your contributions to the main branch, open a new merge request for other group members to check out and accept.
 
 ## Roadmap
-### Our next 3 features to be implemented:
+### Our next 4 features to be implemented:
 ### 1. Global Leaderboard
 On the server side, this includes adding statistics for each user and corresponding functions to calculate and save them to the user during/after a game.
 These statistics include:
